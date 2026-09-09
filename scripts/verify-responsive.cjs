@@ -24,10 +24,14 @@ const root = path.resolve(__dirname, '..');
   }
   for(const name of fs.readdirSync(root).filter(n=>n.endsWith('.dc.html'))) {
     const html=fs.readFileSync(path.join(root,name),'utf8');
-    for(const [,body] of html.matchAll(/<a\s[^>]*>(.*?)<\/a>/gs)) {
-      assert(!['Proteomics','Bulk transcriptomics','Single-cell transcriptomics'].includes(body.trim()), `${name}: modality is still clickable`);
+    if(name==='Home.dc.html') {
+      const header=html.slice(0,html.indexOf('</header>'));
+      for(const [label,target] of [['Proteomics','Proteomics Samples.dc.html'],['Bulk transcriptomics','Bulk Samples.dc.html'],['Single-cell transcriptomics','Single-cell Samples.dc.html']]) {
+        const links=Array.from(header.matchAll(/<a\s+href="([^"]+)"([^>]*)>(.*?)<\/a>/gs));
+        assert(links.some(([,href,attrs,text])=>href===target&&text===label&&attrs.includes('style-hover=')),`${label}: missing sample-map link or hover style`);
+      }
     }
     assert(html.includes('assets/brand/fold/stacked-'), `${name}: missing stacked logo`);
   }
-  console.log('PASS six UMAPs keep consistent proportions at laptop and ultrawide sizes (proteomics 1.4x horizontal), including zoom, pan, dots and annotations; all page headers use stacked logos and non-clickable modality labels.');
+  console.log('PASS six UMAPs keep consistent proportions at laptop and ultrawide sizes (proteomics 1.4x horizontal), including zoom, pan, dots and annotations; home modality links open their sample maps and retain hover styles.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
