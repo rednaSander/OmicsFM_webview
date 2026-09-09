@@ -61,17 +61,16 @@ html[data-mobile=true] .mobile-menu-toggle{display:flex;position:fixed;top:10px;
 html[data-mobile=true] input,html[data-mobile=true] select{font-size:16px!important}
 html[data-mobile=true] button,html[data-mobile=true] input,html[data-mobile=true] select{touch-action:manipulation}
 html[data-mobile=true] .home-content{padding:48px 20px 0!important;gap:56px!important}
-html[data-mobile=true] [data-screen-label=Hero]{--mobile-plot-height:clamp(300px,49svh,460px);height:auto!important;min-height:0!important;padding-top:var(--mobile-plot-height)}
+html[data-mobile=true] [data-screen-label=Hero]{--mobile-plot-height:clamp(300px,49svh,460px);height:auto!important;min-height:0!important;padding-top:calc(var(--mobile-plot-height) + 44px)}
 html[data-mobile=true] [data-screen-label=Hero]>canvas{width:100%!important;height:var(--mobile-plot-height)!important;right:0!important;bottom:auto!important;touch-action:pan-y}
 html[data-mobile=true] .hero-rail{display:none!important}
-html[data-mobile=true] .hero-readout{top:12px!important;left:16px!important;right:16px!important;font-size:10px!important;gap:8px!important;padding-top:18px}
-html[data-mobile=true] .hero-scene-index{position:absolute;top:0;left:50%;transform:translateX(-50%)}
-html[data-mobile=true] .hero-readout>span:first-child{max-width:100%!important;gap:8px!important}
+html[data-mobile=true] .hero-readout{top:12px!important;left:16px!important;right:16px!important;font-size:clamp(8px,2.2vw,10px)!important;letter-spacing:.05em!important;gap:8px!important;justify-content:center!important}
+html[data-mobile=true] .hero-readout>span:first-child{max-width:100%!important;gap:8px!important;align-items:center;white-space:nowrap}
 html[data-mobile=true] .hero-readout>span:last-child{display:none!important}
 html[data-mobile=true] .hero-axes{height:var(--mobile-plot-height)!important;right:0!important;bottom:auto!important}
-html[data-mobile=true] .hero-axis-label{left:28px!important;right:auto!important;bottom:12px!important;font-size:9px!important;line-height:14px}
+html[data-mobile=true] .hero-axis-label{left:50%!important;right:auto!important;bottom:12px!important;font-size:9px!important;line-height:14px;transform:translateX(-50%);white-space:nowrap}
 html[data-mobile=true] .mobile-hero-bottom-left{display:block}
-html[data-mobile=true] .hero-dots{left:50%!important;right:auto!important;top:calc(var(--mobile-plot-height) - 62px)!important;transform:translateX(-50%)!important;flex-direction:row!important;gap:2px!important}
+html[data-mobile=true] .hero-dots{left:50%!important;right:auto!important;top:var(--mobile-plot-height)!important;transform:translateX(-50%)!important;flex-direction:row!important;gap:2px!important}
 html[data-mobile=true] .hero-dots button{height:44px!important;width:26px!important;align-items:center}
 html[data-mobile=true] .hero-dots button span{height:15px!important;width:4px!important}
 html[data-mobile=true] [data-screen-label="Carousel card"]{position:relative!important;width:100%!important;bottom:auto!important;left:auto!important;gap:0!important;padding:0!important;min-height:0;background:var(--mobile-carousel-card-bg,#131316)!important;color:var(--ui-fg-f4f4f5,#F4F4F5)!important}
