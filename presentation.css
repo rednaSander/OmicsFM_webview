@@ -19,6 +19,8 @@ html[data-theme=light] .theme-toggle .theme-moon{display:block}
 .mobile-menu>a{display:flex}
 .mobile-modality-toggle{display:none}
 .representation-controls{display:none}
+html[data-mobile=false] .representation-cards{grid-auto-rows:max-content!important;align-content:space-between;gap:28px!important}
+html[data-mobile=false] .representation-cards>div>div:last-child{margin-top:0!important}
 .mobile-footer-logo{display:none}
 .modality-content{display:contents}
 /* DC serializes inline accent colours to RGB. Only match the text colour itself. */
