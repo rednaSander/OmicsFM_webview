@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmicsFM</title>
+<script src="./assets/vendor/react.production.min.js"></script>
+<script src="./assets/vendor/react-dom.production.min.js"></script>
+<script src="./site.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&amp;family=Space+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0A0A0C;color:#F4F4F5;font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#F4F4F5;text-decoration:none}a:hover{color:#C0FE04}
+*{box-sizing:border-box}
+input::placeholder{color:#5C5C68}
+@keyframes settle{0%{text-shadow:-5px 0 #5100FD,5px 0 #FC2D76;opacity:.85}100%{text-shadow:0 0 transparent;opacity:1}}
+@keyframes loadline{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@keyframes trisweep{0%{background-position:0% 0}100%{background-position:56.25% 0}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#0A0A0C;color:#F4F4F5">
+
+<!-- Header -->
+<header ref="{{ hdrRef }}" data-screen-label="Header" style="position:sticky;top:0;z-index:40;height:72px;display:flex;align-items:stretch;gap:0;padding:0 0 0 {{ edgePad }};background:#000">
+  <a href="#top" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/small_logo_colors_dark_fixed.svg" alt="OmicsFM" style="height:44px;width:auto;display:block"></a>
+  <div style="flex:1 1 0;min-width:16px"></div>
+  <nav style="display:flex;align-items:center;gap:{{ navGap }};flex:none;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
+    <a href="Proteomics Samples.dc.html" style="display:inline-flex;align-items:center;padding:7px {{ navPad }};color:#F4F4F5;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C">Proteomics</a>
+    <a href="Bulk Samples.dc.html" style="display:inline-flex;align-items:center;padding:7px {{ navPad }};color:#F4F4F5;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">Bulk transcriptomics</a>
+    <a href="Single-cell Samples.dc.html" style="display:inline-flex;align-items:center;padding:7px {{ navPad }};color:#F4F4F5;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C">Single-cell transcriptomics</a>
+    
+    <a href="#what" style="display:inline-flex;align-items:center;padding:7px {{ navPad }};color:#F4F4F5;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#F4F4F5;color:#0A0A0C">About</a><a href="#compare" style="display:inline-flex;align-items:stretch;padding:0;color:#F4F4F5;white-space:nowrap;background-size:900% 100%;background-position:0% 0" style-hover="background-image:linear-gradient(115deg,#C0FE04 0 16.66%,#5100FD 16.66% 33.33%,#FC2D76 33.33% 50%,#C0FE04 50% 66.66%,#5100FD 66.66% 83.33%,#FC2D76 83.33% 100%);animation:trisweep 5.4s linear infinite"><span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:7px {{ navPad }};background-size:900% 100%;background-position:0% 0;color:inherit" style-hover="background-image:linear-gradient(115deg,#0A0A0C 0 16.66%,#F4F4F5 16.66% 33.33%,#0A0A0C 33.33% 50%,#0A0A0C 50% 66.66%,#F4F4F5 66.66% 83.33%,#0A0A0C 83.33% 100%);-webkit-background-clip:text;background-clip:text;color:transparent;animation:trisweep 5.4s linear infinite">Compare</span></a>
+  </nav>
+  <div style="flex:1 1 0;min-width:16px"></div>
+  <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;align-self:stretch;flex:none">
+    <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><div style="display:flex;justify-content:flex-end;flex:none">
+    <label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};flex:none;padding:0 14px;background:#1B1B20;color:#9A9AA6" style-focus="background:#2A2A31">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
+      <input type="text" placeholder="Search a protein, gene, tissue or project…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:13px;min-width:0">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9A9AA6;background:#2A2A31;padding:1px 5px">/</span>
+    </label>
+    </div></sc-if>
+    <sc-if value="{{ showCode }}" hint-placeholder-val="{{ true }}"><a href="https://github.com/CompOmics/OmicsFM" title="Code &amp; downloads" style="display:flex;flex:none;width:40px;height:40px;align-items:center;justify-content:center;background:#1B1B20;color:#9A9AA6" style-hover="color:#0A0A0C;background:#F4F4F5">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><path d="M4.5 3.5 1.5 7l3 3.5M9.5 3.5l3 3.5-3 3.5"></path></svg>
+    </a></sc-if>
+    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C">Read the paper</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- Hero -->
+<section data-screen-label="Hero" onMouseEnter="{{ pauseCarousel }}" onMouseLeave="{{ resumeCarousel }}" onFocus="{{ focusCarousel }}" onBlur="{{ blurCarousel }}" style="position:relative;overflow:hidden;height:calc(100vh - 124px);min-height:640px;background:#0A0A0C">
+  <canvas ref="{{ hA }}" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};width:calc(100% - {{ colW }});height:100%;display:block;opacity:{{ opA }};transition:opacity 600ms ease-out"></canvas>
+  <canvas ref="{{ hB }}" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};width:calc(100% - {{ colW }});height:100%;display:block;opacity:{{ opB }};transition:opacity 600ms ease-out"></canvas>
+  <div style="position:absolute;top:24px;left:{{ edgePad }};right:{{ readoutRight }};display:flex;justify-content:space-between;gap:24px;align-items:flex-start;line-height:1.6;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;pointer-events:none">
+    <span style="display:flex;gap:16px;max-width:60%"><span style="color:#9A9AA6;flex:none">{{ sceneIndex }}</span><span><span style="color:{{ sceneColor }};transition:color 400ms">{{ sceneModality }}</span><span>{{ sceneReadoutRest }}</span></span></span><span style="flex:none;text-align:right">COMPOMICS · VIB-UGENT · GHENT · APACHE 2.0</span>
+  </div>
+  <div style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};pointer-events:none">
+    <span style="position:absolute;top:12px;left:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
+    <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
+    <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
+    <sc-if value="{{ sceneHasAxes }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;right:28px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6">{{ sceneAxisX }} → · {{ sceneAxisY }} ↑</div>
+    </sc-if>
+  </div>
+  <div style="position:absolute;top:0;bottom:0;right:0;width:{{ colW }};background:#000;overflow:hidden">
+    <svg aria-label="OmicsFM" style="position:absolute;top:50%;left:calc(50% + 10px);width:{{ wmW }};height:auto;max-width:none;display:block;transform:translate(-50%,-50%) rotate(90deg)" xmlns="http://www.w3.org/2000/svg" viewBox="0 255 2800 520" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTplNDYxNWQ1My1lNTE0LTQwOTQtOWU4OC0wNzM4Yzc4ZTMwNDUAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaPykgAVIxn1dnfabCS6oja8AAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDozMDVjODA4YS0zOGNhLTQ4MWUtYjZhNS1jZWEzM2UwNTVkMWZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNobjTu009fIqf8JrHNWj3qVwAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgggUJGepucIPITtcOCeSDBJWT4FPsRMGZLlO2ts0LZK8qkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaPo3wFil21mp4nJLE02RUKkAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCD4uaKwKuoeFaMenzABy9Cv7fxU5cb/0jLoy0qTTvtN+2RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiAZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmU0NjE1ZDUzLWU1MTQtNDA5NC05ZTg4LTA3MzhjNzhlMzA0NS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmNlODE5MmFlLTljZmMtNDBhNy04MWVmLTczMzViOWI5Y2M1ZHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCBQkZ6m5wg8hO1w4J5IMElZPgU+xEwZkuU7a2zQtkryqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgghZBwdUdBKhi/l4OpCwoVlULDzu0qxCZwpzPE5sqNfjOiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggc8nwCWt78/kzC4jdDLa1FTN1aAg3RkOOQlNPI2fDuk90Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQJB65AqERvrzWwnpx2SnLc7c4+Uta+DnB1W0FA9Toz/iGzJ1I0qjeXNUbiF77+/8b+lP2vR2VA41dmr1mXWYJR8=</c2pa:manifest></metadata><g transform="translate(-926 -1327)"><text fill="#FFFFFF" font-family="Audiowide,Audiowide_MSFontService,sans-serif" font-weight="400" font-size="573" transform="matrix(1 0 0 1 1405.79 2033)">mics</text><rect x="1491" y="1731" width="275" height="33" fill="#FFFFFF"></rect><rect x="1642.5" y="1787.5" width="65" height="241" stroke="#FFFFFF" stroke-width="6.875" stroke-miterlimit="8" fill="#FFFFFF"></rect><path d="M1354.52 1861.05C1331.48 1961.75 1224.06 2023.09 1114.6 1998.05 1005.14 1973 935.078 1871.06 958.12 1770.35 981.162 1669.64 1088.58 1608.31 1198.04 1633.35 1307.5 1658.4 1377.56 1760.34 1354.52 1861.05Z" stroke="#FFFFFF" stroke-width="55.0011" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1111.42 1827.62C1106.01 1802.78 1120.92 1778.43 1144.72 1773.25 1168.51 1768.07 1192.19 1784.01 1197.6 1808.86 1203.01 1833.71 1188.11 1858.05 1164.31 1863.23 1140.51 1868.42 1116.83 1852.47 1111.42 1827.62Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1294.99 1843.28C1293.57 1850.87 1283.6 1870.7 1272.72 1887.55 1272.72 1887.56 1272.72 1887.56 1272.72 1887.57" stroke="#FFFFFF" stroke-width="41.25" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1291.48 1838.64 1303.72 1844.19" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1283.14 1853.72 1295.78 1860.65" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1274.49 1869.27 1286.7 1876.34" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1264.83 1885.68 1278.16 1893.45" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1065.68 1764.96C1074.86 1747.99 1091.84 1732.96 1113.68 1722.49" stroke="#FFFFFF" stroke-width="16.0417" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1013.54 1796.11C1028 1751.54 1061.14 1713.16 1105.12 1690.03" stroke="#FFFFFF" stroke-width="16.0417" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1060.61 1781.99C1062.89 1785.93 1061.29 1791.13 1057.02 1793.6 1052.76 1796.06 1047.46 1794.87 1045.17 1790.93 1042.89 1786.98 1044.49 1781.79 1048.76 1779.32 1053.02 1776.85 1058.33 1778.04 1060.61 1781.99Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1254.69 1729.66C1258.1 1735.54 1255.7 1743.29 1249.34 1746.97 1242.99 1750.65 1235.08 1748.87 1231.67 1742.99 1228.27 1737.1 1230.66 1729.36 1237.02 1725.68 1243.37 1722 1251.28 1723.78 1254.69 1729.66Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1082.42 1887.44C1084.09 1890.33 1082.91 1894.15 1079.78 1895.96 1076.65 1897.78 1072.75 1896.9 1071.08 1894 1069.4 1891.1 1070.58 1887.29 1073.71 1885.47 1076.84 1883.66 1080.74 1884.54 1082.42 1887.44Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1214.35 1722.96C1216.02 1725.86 1214.84 1729.67 1211.71 1731.49 1208.58 1733.3 1204.68 1732.42 1203.01 1729.53 1201.33 1726.63 1202.51 1722.81 1205.64 1721 1208.77 1719.19 1212.67 1720.06 1214.35 1722.96Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1188.73 1939.85C1181.24 1941.75 1159.07 1941.04 1139.2 1938.27 1139.19 1938.27 1139.19 1938.27 1139.18 1938.27" stroke="#FFFFFF" stroke-width="41.25" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1191.46 1934.71 1191.58 1948.15" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1174.27 1933.48 1173.31 1947.87" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1156.53 1932.18 1155.25 1946.24" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1137.58 1930.32 1136.14 1945.68" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><g transform="translate(-20 14)"><path d="M3629 1718 3629 2037 3629 2037 3389 2037 3389 1598 3509 1598C3575.27 1598 3629 1651.73 3629 1718Z" fill="#5100FD" fill-rule="evenodd"></path><rect x="2800" y="1764" width="74.0002" height="272" fill="#5100FD"></rect><rect x="2799" y="1730" width="330" height="74.9999" fill="#5100FD"></rect><rect x="3339" y="1646" width="123" height="392" fill="#5100FD"></rect><rect x="3212" y="1600" width="320" height="73.9999" fill="#5100FD"></rect><path d="M3257 1678 3354.08 1678C3373.36 1678 3389 1693.64 3389 1712.92L3389 2069 3257 2069Z" fill-rule="evenodd"></path><path d="M2799 1599 3129 1599 3129 1675 2799 1675Z" fill="#5100FD" fill-rule="evenodd"></path><rect x="2759.5" y="1696.5" width="99" height="69.0001" stroke="#000000" stroke-width="6.875" stroke-miterlimit="8"></rect><path d="M2799 1762.38C2799 1744.5 2813.5 1730 2831.38 1730L2890.62 1730C2908.5 1730 2923 1744.5 2923 1762.38L2923 1765.62C2923 1783.5 2908.5 1798 2890.62 1798L2831.38 1798C2813.5 1798 2799 1783.5 2799 1765.62Z" fill="#5100FD" fill-rule="evenodd"></path><rect x="3184" y="1637" width="72.9998" height="401" fill="#5100FD"></rect><path d="M0 0 272 0C294.091-9.93047e-15 312 17.9086 312 39.9999L312 79.9997 0 79.9997Z" fill="#5100FD" fill-rule="evenodd" transform="matrix(-1 0 0 1 3496 1598)"></path><path d="M3462 1679 3518.26 1679C3539.1 1679 3556 1695.9 3556 1716.74L3556 2080 3462 2080Z" fill-rule="evenodd"></path></g><g transform="translate(20 -14)"><path d="M3629 1718 3629 2037 3629 2037 3389 2037 3389 1598 3509 1598C3575.27 1598 3629 1651.73 3629 1718Z" fill="#FC2D76" fill-rule="evenodd"></path><rect x="2800" y="1764" width="74.0002" height="272" fill="#FC2D76"></rect><rect x="2799" y="1730" width="330" height="74.9999" fill="#FC2D76"></rect><rect x="3339" y="1646" width="123" height="392" fill="#FC2D76"></rect><rect x="3212" y="1600" width="320" height="73.9999" fill="#FC2D76"></rect><path d="M3257 1678 3354.08 1678C3373.36 1678 3389 1693.64 3389 1712.92L3389 2069 3257 2069Z" fill-rule="evenodd"></path><path d="M2799 1599 3129 1599 3129 1675 2799 1675Z" fill="#FC2D76" fill-rule="evenodd"></path><rect x="2759.5" y="1696.5" width="99" height="69.0001" stroke="#000000" stroke-width="6.875" stroke-miterlimit="8"></rect><path d="M2799 1762.38C2799 1744.5 2813.5 1730 2831.38 1730L2890.62 1730C2908.5 1730 2923 1744.5 2923 1762.38L2923 1765.62C2923 1783.5 2908.5 1798 2890.62 1798L2831.38 1798C2813.5 1798 2799 1783.5 2799 1765.62Z" fill="#FC2D76" fill-rule="evenodd"></path><rect x="3184" y="1637" width="72.9998" height="401" fill="#FC2D76"></rect><path d="M0 0 272 0C294.091-9.93047e-15 312 17.9086 312 39.9999L312 79.9997 0 79.9997Z" fill="#FC2D76" fill-rule="evenodd" transform="matrix(-1 0 0 1 3496 1598)"></path><path d="M3462 1679 3518.26 1679C3539.1 1679 3556 1695.9 3556 1716.74L3556 2080 3462 2080Z" fill-rule="evenodd"></path></g><path d="M3629 1718 3629 2037 3629 2037 3389 2037 3389 1598 3509 1598C3575.27 1598 3629 1651.73 3629 1718Z" fill="#C0FE04" fill-rule="evenodd"></path><rect x="2800" y="1764" width="74.0002" height="272" fill="#C0FE04"></rect><rect x="2799" y="1730" width="330" height="74.9999" fill="#C0FE04"></rect><rect x="3339" y="1646" width="123" height="392" fill="#C0FE04"></rect><rect x="3212" y="1600" width="320" height="73.9999" fill="#C0FE04"></rect><path d="M3257 1678 3354.08 1678C3373.36 1678 3389 1693.64 3389 1712.92L3389 2069 3257 2069Z" fill-rule="evenodd"></path><path d="M2799 1599 3129 1599 3129 1675 2799 1675Z" fill="#C0FE04" fill-rule="evenodd"></path><rect x="2759.5" y="1696.5" width="99" height="69.0001" stroke="#000000" stroke-width="6.875" stroke-miterlimit="8"></rect><path d="M2799 1762.38C2799 1744.5 2813.5 1730 2831.38 1730L2890.62 1730C2908.5 1730 2923 1744.5 2923 1762.38L2923 1765.62C2923 1783.5 2908.5 1798 2890.62 1798L2831.38 1798C2813.5 1798 2799 1783.5 2799 1765.62Z" fill="#C0FE04" fill-rule="evenodd"></path><rect x="3184" y="1637" width="72.9998" height="401" fill="#C0FE04"></rect><path d="M0 0 272 0C294.091-9.93047e-15 312 17.9086 312 39.9999L312 79.9997 0 79.9997Z" fill="#C0FE04" fill-rule="evenodd" transform="matrix(-1 0 0 1 3496 1598)"></path><path d="M3462 1679 3518.26 1679C3539.1 1679 3556 1695.9 3556 1716.74L3556 2080 3462 2080Z" fill-rule="evenodd"></path></g></svg>
+  </div>
+  <div style="position:absolute;right:{{ dotsRight }};top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;align-items:center">
+    <sc-for list="{{ sceneDots }}" as="d" hint-placeholder-count="6">
+      <button onClick="{{ d.go }}" title="{{ d.title }}" style="width:16px;height:28px;padding:0;border:0;cursor:pointer;background:transparent;display:flex;justify-content:center"><span style="display:block;height:100%;width:2px;background:{{ d.bg }};transition:background 200ms"></span></button>
+    </sc-for>
+  </div>
+  <div ref="{{ hCard }}" data-screen-label="Carousel card" style="position:absolute;left:0;bottom:48px;width:{{ cardW }};display:flex;flex-direction:column;gap:12px;padding:24px 28px 0 28px;background:{{ sceneColor }};color:{{ sceneFg }};transition:background 400ms ease-out,color 400ms ease-out">
+    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.8"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
+    <div style="font-size:{{ cardTitleFont }};font-weight:600;line-height:1.2;letter-spacing:-0.01em;text-wrap:balance">{{ sceneTitle }}</div>
+    <p style="margin:0;font-size:14px;line-height:1.5;text-wrap:pretty">{{ sceneText }}</p>
+    <div style="display:flex;justify-content:flex-end;margin:8px -28px 0 0">
+      <a href="{{ sceneUrl }}" style="display:inline-flex;align-items:center;height:44px;padding:0 22px;background:#0A0A0C;color:{{ sceneLinkColor }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color 400ms ease-out;outline:2px solid transparent;outline-offset:-2px" style-hover="outline-color:currentColor">Start exploring</a>
+    </div>
+  </div>
+  
+</section>
+<!-- Modality bar -->
+<div data-screen-label="Modality bar" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;height:52px;font-family:'JetBrains Mono',monospace;font-size:{{ barFont }};letter-spacing:{{ barSpacing }};text-transform:uppercase;font-weight:500">
+  <a href="#modalities" style="display:flex;align-items:center;justify-content:space-between;padding:0 {{ barPad }};background:{{ barBg_proteomics }};color:{{ barFg_proteomics }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span>01 · Proteomics</span><span style="flex:none">48,837 profiles</span></a>
+  <a href="#modalities" style="display:flex;align-items:center;justify-content:space-between;padding:0 {{ barPad }};background:{{ barBg_bulk }};color:{{ barFg_bulk }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>02 · Bulk transcriptomics</span><span style="flex:none">680,216 profiles</span></a>
+  <a href="#modalities" style="display:flex;align-items:center;justify-content:space-between;padding:0 {{ barPad }};background:{{ barBg_sc }};color:{{ barFg_sc }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span>03 · Single-cell transcriptomics</span><span style="flex:none">4,550,106 cells</span></a>
+</div>
+<!-- Modality cards -->
+<section id="modalities" data-screen-label="Modalities" style="scroll-margin-top:72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:0 0 4px;background:#000">
+    <div onMouseEnter="{{ hover_proteomics }}" onMouseLeave="{{ hoverNone }}" style="display:flex;flex-direction:column;background:#000;color:#F4F4F5">
+      <div style="padding:4px 32px 0;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04"><span>1,143 PRIDE projects · DDA &amp; DIA</span></div>
+      <div style="padding:24px 32px 24px;display:flex;flex-direction:column;gap:18px;flex:1">
+        
+        <p style="margin:0;font-size:16px;line-height:1.5;color:#9A9AA6;text-wrap:pretty">Public PRIDE proteomes, reprocessed and quality-filtered, with tissue, disease and instrument metadata recovered from the manuscripts.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 32px 32px"><a href="Proteomics Samples.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span>Samples</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">SST</span></a><a href="Proteomics Attention.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span>Attention</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">NET</span></a><a href="Proteomics Proteins.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span>Proteins</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">ID</span></a></div>
+    </div>
+    <div onMouseEnter="{{ hover_bulk }}" onMouseLeave="{{ hoverNone }}" style="display:flex;flex-direction:column;background:#000;color:#F4F4F5" style-hover="color:#F4F4F5">
+      <div style="padding:4px 32px 0;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#8B5CFF"><span>ARCHS4 · 7,684 GEO series</span></div>
+      <div style="padding:24px 32px 24px;display:flex;flex-direction:column;gap:18px;flex:1">
+        <div style="display:flex;align-items:center;gap:16px">
+          
+          
+        </div>
+        <p style="margin:0;font-size:16px;line-height:1.5;color:#9A9AA6;text-wrap:pretty">ARCHS4 bulk RNA-seq profiles projected onto the shared protein vocabulary, so every gene can be compared to its protein.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 32px 32px"><a href="Bulk Samples.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>Samples</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">SST</span></a><a href="Bulk Attention.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>Attention</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">NET</span></a><a href="Bulk Genes.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>Genes</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">ID</span></a></div>
+    </div>
+    <div onMouseEnter="{{ hover_sc }}" onMouseLeave="{{ hoverNone }}" style="display:flex;flex-direction:column;background:#000;color:#F4F4F5" style-hover="color:#F4F4F5">
+      <div style="padding:4px 32px 0;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#FC2D76"><span>CELLxGENE Census · 722 cell types</span></div>
+      <div style="padding:24px 32px 24px;display:flex;flex-direction:column;gap:18px;flex:1">
+        
+        <p style="margin:0;font-size:16px;line-height:1.5;color:#9A9AA6;text-wrap:pretty">CELLxGENE Census cells across 722 cell types, sampled inversely to cell-type frequency so rare types are seen as often as common ones.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 32px 32px"><a href="Single-cell Samples.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span>Cells</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">SST</span></a><a href="Single-cell Genes.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span>Genes</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">ID</span></a></div>
+    </div>
+</section>
+
+
+<div style="display:flex;flex-direction:column;gap:200px;padding:120px 64px 0">
+<!-- About -->
+<section id="what" data-screen-label="What is OmicsFM" style="scroll-margin-top:72px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px;align-items:stretch">
+  <div style="display:flex;flex-direction:column;gap:28px;min-width:0">
+  <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap">
+    <span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:#5C5C68;flex:none;white-space:nowrap">01 / 03</span>
+    <h2 style="margin:0;font-size:28px;font-weight:500;letter-spacing:-0.01em">What is OmicsFM?</h2>
+  </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <p style="margin: 0; font-size: 22px; line-height: 1.4; color: #F4F4F5; text-wrap: pretty; text-align: left">Public repositories hold tens of thousands of omics experiments. Put together, they can reveal biological structure that no single study shows.</p>
+  <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #9A9AA6; text-wrap: pretty; text-align: justify; hyphens: auto">For transcriptomics this has already happened. Atlases with millions of single cells let <em style="color:#F4F4F5;font-style:normal">foundation models</em> such as scGPT, Geneformer and scPRINT learn what genes and cells look like, simply by hiding part of each expression profile and reconstructing it from the rest. Those representations now power cell-type annotation, integration and gene-network inference.</p>
+  <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #9A9AA6; text-wrap: pretty; text-align: justify; hyphens: auto">But a transcript is not a protein. Between the two lie translation, folding, modification, trafficking, complex assembly and degradation, so mRNA is often an unreliable proxy for the proteins that actually do the work. Proteomics measures those proteins directly. Yet no foundation model existed for it, because the public proteomics data were raw spectra with scattered metadata, not analysis-ready matrices.</p>
+  
+  <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #9A9AA6; text-wrap: pretty; text-align: justify; hyphens: auto">OmicsFM changes that. We reprocessed 1,397 public PRIDE projects into 48,837 quality-filtered protein abundance profiles, rebuilt their sample metadata, and pretrained a transformer on them with the same trick: hide some proteins, predict them from the others. No labels needed. We then trained the identical architecture on bulk RNA-seq (ARCHS4) and single-cell RNA-seq (CELLxGENE Census), so the three modalities can be compared head-to-head. Despite far fewer training profiles, the proteomics model matches or outperforms its transcriptomics counterparts on most tasks. Our preprint is out: for the full story, press <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="color:#F4F4F5;font-weight:600" style-hover="color:#C0FE04">Read the paper</a> in the top-right corner.</p>
+  <p style="margin:0;font-size:17px;line-height:1.6;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">This website has one aim: to let anybody explore the biological structure the model learned on its own. During training it saw zero annotations. No tissue labels, no protein families, no pathways, no interactions; only abundance values. Every label you can toggle in the explorers (tissue, disease, protein family, curated complex membership) is an overlay drawn from external sources such as PRIDE metadata, CORUM, Gene Ontology, STRING and Reactome, placed on top of the model’s representations after the fact. Where an overlay lines up with the structure, the model found it by itself; where it does not, that is worth a look too.</p><p style="margin:0;font-size:17px;line-height:1.6;color:#F4F4F5;text-wrap:pretty"><span style="color:#C0FE04;font-weight:600">Three biologically meaningful representations</span> fall out of pretraining. This site lets you explore each of them.</p>
+    </div>
+  </div>
+    <div style="display:grid;grid-template-columns:1fr;grid-auto-rows:1fr;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:12px;padding:28px 28px 32px;background:#131316;min-width:0">
+      <div style="display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68"><span style="color:#C0FE04">01 · Samples</span><span>SST</span></div>
+      <div style="font-size:22px;font-weight:500;letter-spacing:-0.01em;line-height:1.2;text-wrap:balance">One vector per sample.</div>
+      <p style="margin:0;font-size:15px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">The sample summary token (SST) condenses an entire abundance profile into a single vector. Without ever seeing a tissue label, these vectors cluster samples by tissue across independent studies, and keep more biological structure than alternative representations.</p>
+      <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#F4F4F5">→ Clustering · nearest-neighbour search · tissue separation</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;padding:28px 28px 32px;background:#131316;min-width:0">
+      <div style="display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68"><span style="color:#C0FE04">02 · Attention</span><span>Network</span></div>
+      <div style="font-size:22px;font-weight:500;letter-spacing:-0.01em;line-height:1.2;text-wrap:balance">Which proteins the model relies on.</div>
+      <p style="margin:0;font-size:15px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">Attention weights show which proteins the model uses to predict which others. These networks recover known relationships, from complexes to functional interactions, and clustering them exposes pathway-level organisation. They are context-dependent: a protein’s partners change between tissues, matching known condition-specific interactions.</p>
+      <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#F4F4F5">→ Partner discovery · pathway context · tissue comparison</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;padding:28px 28px 32px;background:#131316;min-width:0">
+      <div style="display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68"><span style="color:#C0FE04">03 · Proteins</span><span>Identity</span></div>
+      <div style="font-size:22px;font-weight:500;letter-spacing:-0.01em;line-height:1.2;text-wrap:balance">One learned vector per protein.</div>
+      <p style="margin:0;font-size:15px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">During training the model learns an identity embedding for every protein, shaped only by co-occurrence and co-variation. These embeddings predict protein properties such as gene essentiality, and combining them across proteomics, RNA and protein-language models (ESM-C) predicts better than any single source.</p>
+      <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#F4F4F5">→ Family discovery · essentiality · cross-modality comparison</div>
+    </div>
+    </div>
+</section>
+
+<!-- Tasks -->
+<section data-screen-label="Tasks" style="background:#000;margin:0 -64px;padding:180px 64px">
+  <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:28px;flex-wrap:wrap">
+    <span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:#5C5C68;flex:none;white-space:nowrap">02 / 03</span>
+    <h2 style="margin:0;font-size:28px;font-weight:500;letter-spacing:-0.01em;display:flex;align-items:center;gap:14px">What can I do here?</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
+    <a href="Proteomics Attention.dc.html?tissue=brain" onMouseEnter="{{ tHover0 }}" onMouseLeave="{{ tLeave }}" style="position:relative;display:flex;flex-direction:column;background:#131316;color:#F4F4F5;overflow:hidden;transition:transform 400ms cubic-bezier(.2,.8,.2,1);transform:{{ tLift0 }}" style-hover="color:#F4F4F5">
+      <span style="position:absolute;inset:0;border:2px solid #C0FE04;opacity:{{ tBar0 }};transition:opacity 300ms ease-out;pointer-events:none;z-index:2"></span>
+      <span style="position:absolute;inset:0;background:#C0FE04;opacity:{{ tFlash0 }};transition:opacity 500ms ease-out;pointer-events:none;z-index:1;mix-blend-mode:screen"></span>
+      <div style="position:relative;aspect-ratio:16/10;background:#0A0A0C;overflow:hidden">
+        <canvas ref="{{ cEgo }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;transform:{{ tZoom0 }};transition:transform 600ms cubic-bezier(.2,.8,.2,1)"></canvas>
+        <sc-if value="{{ showReadout }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:10px;left:14px;right:14px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:9px;color:#5C5C68;pointer-events:none"><span>Brain · community map</span><span>Attention</span></div></sc-if>
+        <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+      </div>
+      <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
+        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">Find proteins the model links to yours</div>
+        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">Type a protein, pick a tissue, see its top attention partners and which ones curated databases already know.</div>
+        <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW0 }};height:1px;background:#C0FE04;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Attention</span></div>
+      </div>
+    </a>
+    <a href="Proteomics Samples.dc.html" onMouseEnter="{{ tHover1 }}" onMouseLeave="{{ tLeave }}" style="position:relative;display:flex;flex-direction:column;background:#131316;color:#F4F4F5;overflow:hidden;transition:transform 400ms cubic-bezier(.2,.8,.2,1);transform:{{ tLift1 }}" style-hover="color:#F4F4F5">
+      <span style="position:absolute;inset:0;border:2px solid #C0FE04;opacity:{{ tBar1 }};transition:opacity 300ms ease-out;pointer-events:none;z-index:2"></span>
+      <span style="position:absolute;inset:0;background:#C0FE04;opacity:{{ tFlash1 }};transition:opacity 500ms ease-out;pointer-events:none;z-index:1;mix-blend-mode:screen"></span>
+      <div style="position:relative;aspect-ratio:16/10;background:#0A0A0C;overflow:hidden">
+        <canvas ref="{{ cSamples }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;transform:{{ tZoom1 }};transition:transform 600ms cubic-bezier(.2,.8,.2,1)"></canvas>
+        <sc-if value="{{ showReadout }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:10px;left:14px;right:14px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:9px;color:#5C5C68;pointer-events:none"><span>Proteomics · SST · UMAP</span><span>8,359 pts · tissue</span></div></sc-if>
+        <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+      </div>
+      <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
+        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">See whether tissues separate</div>
+        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">Brain samples highlighted against the other tissues. Open the map to compare tissues, diseases and independent projects.</div>
+        <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW1 }};height:1px;background:#C0FE04;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Samples</span></div>
+      </div>
+    </a>
+    <a href="Proteomics Proteins.dc.html" onMouseEnter="{{ tHover2 }}" onMouseLeave="{{ tLeave }}" style="position:relative;display:flex;flex-direction:column;background:#131316;color:#F4F4F5;overflow:hidden;transition:transform 400ms cubic-bezier(.2,.8,.2,1);transform:{{ tLift2 }}" style-hover="color:#F4F4F5">
+      <span style="position:absolute;inset:0;border:2px solid #C0FE04;opacity:{{ tBar2 }};transition:opacity 300ms ease-out;pointer-events:none;z-index:2"></span>
+      <span style="position:absolute;inset:0;background:#C0FE04;opacity:{{ tFlash2 }};transition:opacity 500ms ease-out;pointer-events:none;z-index:1;mix-blend-mode:screen"></span>
+      <div style="position:relative;aspect-ratio:16/10;background:#0A0A0C;overflow:hidden">
+        <canvas ref="{{ cFamilies }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;transform:{{ tZoom2 }};transition:transform 600ms cubic-bezier(.2,.8,.2,1)"></canvas>
+        <sc-if value="{{ showReadout }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:10px;left:14px;right:14px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:9px;color:#5C5C68;pointer-events:none"><span>Proteomics · identity · UMAP</span><span>11,475 proteins · 40 families</span></div></sc-if>
+        <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+      </div>
+      <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
+        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">Browse protein families the model discovered</div>
+        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">Highlight keratins, histones or another family on the current identity map, then inspect nearby proteins.</div>
+        <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW2 }};height:1px;background:#C0FE04;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Proteins</span></div>
+      </div>
+    </a>
+    <a href="#compare" onMouseEnter="{{ tHover3 }}" onMouseLeave="{{ tLeave }}" style="position:relative;display:flex;flex-direction:column;background:#131316;color:#F4F4F5;overflow:hidden;transition:transform 400ms cubic-bezier(.2,.8,.2,1);transform:{{ tLift3 }}" style-hover="color:#F4F4F5">
+      <span style="position:absolute;inset:0;border:2px solid #F4F4F5;opacity:{{ tBar3 }};transition:opacity 300ms ease-out;pointer-events:none;z-index:2"></span>
+      <span style="position:absolute;inset:0;background:#F4F4F5;opacity:{{ tFlash3 }};transition:opacity 500ms ease-out;pointer-events:none;z-index:1;mix-blend-mode:screen"></span>
+      <div style="position:relative;aspect-ratio:16/10;background:#0A0A0C;overflow:hidden">
+        <canvas ref="{{ cAgree }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;transform:{{ tZoom3 }};transition:transform 600ms cubic-bezier(.2,.8,.2,1)"></canvas>
+        <sc-if value="{{ showReadout }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;top:10px;left:14px;right:14px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:9px;color:#5C5C68;pointer-events:none"><span>Proteomics · Bulk · SC</span><span>Histones · identity</span></div></sc-if>
+        <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+      </div>
+      <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
+        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">Ask whether proteomics and RNA agree</div>
+        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">The same protein in three learned spaces. Shared neighbourhoods are robust; proteomics-only ones hint at post-transcriptional control.</div>
+        <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#F4F4F5;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW3 }};height:1px;background:#F4F4F5;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Compare</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Compare teaser -->
+<section id="compare" data-screen-label="Compare teaser" style="scroll-margin-top:72px">
+  <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:28px;flex-wrap:wrap">
+    <span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:#5C5C68;flex:none;white-space:nowrap">03 / 03</span>
+    <h2 style="margin:0;font-size:28px;font-weight:500;letter-spacing:-0.01em;display:flex;align-items:center;gap:14px"><span>One architetcure , three modalities.</span></h2>
+  </div>
+  <p style="margin:-8px 0 24px;font-size:16px;color:#9A9AA6;max-width:720px;line-height:1.5;text-wrap:pretty">Each modality learns its own identity space for the same 20,272 proteins. Pick a family to see where each model puts it. The three maps are separate embeddings, not one aligned space.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">
+    <sc-for list="{{ familyChips }}" as="chip" hint-placeholder-count="6">
+      <button onClick="{{ chip.select }}" style="height:34px;padding:0 14px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;border:0;background:{{ chip.bg }};color:{{ chip.fg }};transition:background 150ms ease-out,color 150ms ease-out" style-hover="background:#2A2A31">{{ chip.name }}</button>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+    <div style="position:relative;aspect-ratio:1/1;background:#131316;overflow:hidden">
+      <canvas ref="{{ cProt }}" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+      <div style="position:absolute;top:14px;left:16px;right:16px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:#5C5C68;pointer-events:none"><span style="color:#C0FE04;flex:none">Proteomics</span><span style="text-align:right">{{ statProt }}</span></div>
+      <div style="position:absolute;bottom:14px;left:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#9A9AA6;pointer-events:none;white-space:nowrap">UMAP 1 → · UMAP 2 ↑</div>
+      <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:10px;height:10px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:10px;height:10px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:10px;height:10px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:10px;height:10px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+    </div>
+    <div style="position:relative;aspect-ratio:1/1;background:#131316;overflow:hidden">
+      <canvas ref="{{ cBulk }}" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+      <div style="position:absolute;top:14px;left:16px;right:16px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:#5C5C68;pointer-events:none"><span style="color:#8B5CFF;flex:none">Bulk transcriptomics</span><span style="text-align:right">{{ statBulk }}</span></div>
+      <div style="position:absolute;bottom:14px;left:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#9A9AA6;pointer-events:none;white-space:nowrap">UMAP 1 → · UMAP 2 ↑</div>
+      <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:10px;height:10px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:10px;height:10px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:10px;height:10px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:10px;height:10px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+    </div>
+    <div style="position:relative;aspect-ratio:1/1;background:#131316;overflow:hidden">
+      <canvas ref="{{ cSc }}" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+      <div style="position:absolute;top:14px;left:16px;right:16px;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:#5C5C68;pointer-events:none"><span style="color:#FC2D76;flex:none">Single-cell transcriptomics</span><span style="text-align:right">{{ statSc }}</span></div>
+      <div style="position:absolute;bottom:14px;left:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#9A9AA6;pointer-events:none;white-space:nowrap">UMAP 1 → · UMAP 2 ↑</div>
+      <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:10px;height:10px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:10px;height:10px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:10px;height:10px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:10px;height:10px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:stretch;gap:20px;margin-top:20px;flex-wrap:wrap">
+    
+    <a href="#compare" style="display:inline-flex;align-items:stretch;min-height:48px;padding:0;background-color:#1B1B20;background-size:900% 100%;background-position:0% 0;color:#F4F4F5;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:12px;font-weight:600;white-space:nowrap" style-hover="background-image:linear-gradient(115deg,#C0FE04 0 16.66%,#5100FD 16.66% 33.33%,#FC2D76 33.33% 50%,#C0FE04 50% 66.66%,#5100FD 66.66% 83.33%,#FC2D76 83.33% 100%);animation:trisweep 5.4s linear infinite"><span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0 24px;min-height:48px;background-size:900% 100%;background-position:0% 0;color:inherit" style-hover="background-image:linear-gradient(115deg,#0A0A0C 0 16.66%,#F4F4F5 16.66% 33.33%,#0A0A0C 33.33% 50%,#0A0A0C 50% 66.66%,#F4F4F5 66.66% 83.33%,#0A0A0C 83.33% 100%);-webkit-background-clip:text;background-clip:text;color:transparent;animation:trisweep 5.4s linear infinite">Open Compare</span></a>
+  </div>
+</section>
+</div>
+
+<!-- Footer -->
+<footer id="about" data-screen-label="Footer" style="margin-top:112px;padding:56px 64px 64px;background:#000;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;scroll-margin-top:72px">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:center;gap:16px"><svg aria-label="OmicsFM" style="height:22px;width:auto;display:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 255 2800 520" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo1NjZkMWIyZC1kMDBmLTQxNDEtYWViOS1jYTUxYTM4YzdlNWYAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaAD7y9zypXuQWGxqTw7E2TgAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpjYTIxYjM4MC0wOTljLTQ0YWEtYTBkMC1kYTRkZDZmNDQzZmFscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNornkiSyQg468mnPwqtdJWugAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggzVfp0U1muYPCtqpAg4gSMXCmGtwguDFY3GWYn8uIxeOkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaIq93vsPSLyhBNqq+XJ8FSsAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCD92kJs+2GqBF2wUcRxESFFMuvYk/eaSXLrifbw8iTuXmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiAZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjU2NmQxYjJkLWQwMGYtNDE0MS1hZWI5LWNhNTFhMzhjN2U1Zi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjQ3MDFiMTVjLTAzZDMtNGQ1NS04YjAyLWY0YjhmZmVjNDg4NXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDNV+nRTWa5g8K2qkCDiBIxcKYa3CC4MVjcZZify4jF46JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggMfAe21JPYbJ9VhdNeDwtTZWr9+rJNL+aHA8aoSiipkSiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggqSD0O623ZsnBT68io9jiImS8qwmC9jJge7o+E16HPWV0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQMThLh0G3lWG6e5xMCDZomrPizVDi34wem916gk54HNFjNOT/mAFUBOIdz8k1O1NmtOngUgZpwCVbWjdZTIqGwE=</c2pa:manifest></metadata><g transform="translate(-926 -1327)"><text fill="#FFFFFF" font-family="Audiowide,Audiowide_MSFontService,sans-serif" font-weight="400" font-size="573" transform="matrix(1 0 0 1 1405.79 2033)">mics</text><rect x="1491" y="1731" width="275" height="33" fill="#FFFFFF"></rect><rect x="1642.5" y="1787.5" width="65" height="241" stroke="#FFFFFF" stroke-width="6.875" stroke-miterlimit="8" fill="#FFFFFF"></rect><path d="M1354.52 1861.05C1331.48 1961.75 1224.06 2023.09 1114.6 1998.05 1005.14 1973 935.078 1871.06 958.12 1770.35 981.162 1669.64 1088.58 1608.31 1198.04 1633.35 1307.5 1658.4 1377.56 1760.34 1354.52 1861.05Z" stroke="#FFFFFF" stroke-width="55.0011" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1111.42 1827.62C1106.01 1802.78 1120.92 1778.43 1144.72 1773.25 1168.51 1768.07 1192.19 1784.01 1197.6 1808.86 1203.01 1833.71 1188.11 1858.05 1164.31 1863.23 1140.51 1868.42 1116.83 1852.47 1111.42 1827.62Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1294.99 1843.28C1293.57 1850.87 1283.6 1870.7 1272.72 1887.55 1272.72 1887.56 1272.72 1887.56 1272.72 1887.57" stroke="#FFFFFF" stroke-width="41.25" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1291.48 1838.64 1303.72 1844.19" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1283.14 1853.72 1295.78 1860.65" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1274.49 1869.27 1286.7 1876.34" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1264.83 1885.68 1278.16 1893.45" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1065.68 1764.96C1074.86 1747.99 1091.84 1732.96 1113.68 1722.49" stroke="#FFFFFF" stroke-width="16.0417" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1013.54 1796.11C1028 1751.54 1061.14 1713.16 1105.12 1690.03" stroke="#FFFFFF" stroke-width="16.0417" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1060.61 1781.99C1062.89 1785.93 1061.29 1791.13 1057.02 1793.6 1052.76 1796.06 1047.46 1794.87 1045.17 1790.93 1042.89 1786.98 1044.49 1781.79 1048.76 1779.32 1053.02 1776.85 1058.33 1778.04 1060.61 1781.99Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1254.69 1729.66C1258.1 1735.54 1255.7 1743.29 1249.34 1746.97 1242.99 1750.65 1235.08 1748.87 1231.67 1742.99 1228.27 1737.1 1230.66 1729.36 1237.02 1725.68 1243.37 1722 1251.28 1723.78 1254.69 1729.66Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1082.42 1887.44C1084.09 1890.33 1082.91 1894.15 1079.78 1895.96 1076.65 1897.78 1072.75 1896.9 1071.08 1894 1069.4 1891.1 1070.58 1887.29 1073.71 1885.47 1076.84 1883.66 1080.74 1884.54 1082.42 1887.44Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1214.35 1722.96C1216.02 1725.86 1214.84 1729.67 1211.71 1731.49 1208.58 1733.3 1204.68 1732.42 1203.01 1729.53 1201.33 1726.63 1202.51 1722.81 1205.64 1721 1208.77 1719.19 1212.67 1720.06 1214.35 1722.96Z" fill="#FFFFFF" fill-rule="evenodd"></path><path d="M1188.73 1939.85C1181.24 1941.75 1159.07 1941.04 1139.2 1938.27 1139.19 1938.27 1139.19 1938.27 1139.18 1938.27" stroke="#FFFFFF" stroke-width="41.25" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1191.46 1934.71 1191.58 1948.15" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1174.27 1933.48 1173.31 1947.87" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1156.53 1932.18 1155.25 1946.24" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M1137.58 1930.32 1136.14 1945.68" stroke="#000000" stroke-width="9.16667" stroke-linecap="round" stroke-miterlimit="8" fill="none" fill-rule="evenodd"></path><path d="M3629 1718 3629 2037 3629 2037 3389 2037 3389 1598 3509 1598C3575.27 1598 3629 1651.73 3629 1718Z" fill="#F4F4F5" fill-rule="evenodd"></path><rect x="2800" y="1764" width="74.0002" height="272" fill="#F4F4F5"></rect><rect x="2799" y="1730" width="330" height="74.9999" fill="#F4F4F5"></rect><rect x="3339" y="1646" width="123" height="392" fill="#F4F4F5"></rect><rect x="3212" y="1600" width="320" height="73.9999" fill="#F4F4F5"></rect><path d="M3257 1678 3354.08 1678C3373.36 1678 3389 1693.64 3389 1712.92L3389 2069 3257 2069Z" fill-rule="evenodd"></path><path d="M2799 1599 3129 1599 3129 1675 2799 1675Z" fill="#F4F4F5" fill-rule="evenodd"></path><rect x="2759.5" y="1696.5" width="99" height="69.0001" stroke="#000000" stroke-width="6.875" stroke-miterlimit="8"></rect><path d="M2799 1762.38C2799 1744.5 2813.5 1730 2831.38 1730L2890.62 1730C2908.5 1730 2923 1744.5 2923 1762.38L2923 1765.62C2923 1783.5 2908.5 1798 2890.62 1798L2831.38 1798C2813.5 1798 2799 1783.5 2799 1765.62Z" fill="#F4F4F5" fill-rule="evenodd"></path><rect x="3184" y="1637" width="72.9998" height="401" fill="#F4F4F5"></rect><path d="M0 0 272 0C294.091-9.93047e-15 312 17.9086 312 39.9999L312 79.9997 0 79.9997Z" fill="#F4F4F5" fill-rule="evenodd" transform="matrix(-1 0 0 1 3496 1598)"></path><path d="M3462 1679 3518.26 1679C3539.1 1679 3556 1695.9 3556 1716.74L3556 2080 3462 2080Z" fill-rule="evenodd"></path></g></svg></div>
+    <p style="margin:0;font-size:13px;line-height:1.5;color:#9A9AA6;max-width:300px;text-wrap:pretty">Sander Heyndrickx, Ralf Gabriels, Harikrishnan Ramadasan, Lennart Martens, Tine Claeys. CompOmics, VIB-UGent Center for Medical Biotechnology, Ghent.</p>
+    <div style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68;line-height:1.8">6 checkpoints · 4.9M parameters<br>Apache 2.0 · © 2026 CompOmics</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;font-size:14px">
+    <div style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68;margin-bottom:4px">Explore</div>
+    <a href="#modalities" style="color:#F4F4F5" style-hover="color:#C0FE04">Proteomics</a>
+    <a href="Bulk Samples.dc.html" style="color:#F4F4F5" style-hover="color:#8B5CFF">Bulk transcriptomics</a>
+    <a href="#modalities" style="color:#F4F4F5" style-hover="color:#FC2D76">Single-cell transcriptomics</a>
+    <a href="#compare" style="color:#F4F4F5" style-hover="color:#9A9AA6">Compare</a>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;font-size:14px">
+    <div style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68;margin-bottom:4px">Code &amp; data</div>
+    <a href="https://github.com/CompOmics/OmicsFM" style="color:#F4F4F5" style-hover="color:#C0FE04">github.com/CompOmics/OmicsFM</a>
+    <a href="https://huggingface.co/rednaSander/omicsfm" style="color:#F4F4F5" style-hover="color:#C0FE04">Checkpoints · huggingface.co/rednaSander/omicsfm</a>
+    <a href="https://huggingface.co/datasets/rednaSander/omicsfm-data" style="color:#F4F4F5" style-hover="color:#C0FE04">Corpora · omicsfm-data</a>
+    <a href="https://doi.org/10.5281/zenodo.22069867" style="color:#F4F4F5" style-hover="color:#C0FE04">Tissue networks · Zenodo</a>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#C0FE04;background:#131316;padding:8px 12px;align-self:flex-start;margin-top:4px">pip install omicsfm</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+    <div style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#5C5C68;margin-bottom:4px">Cite</div>
+    <p style="margin:0;line-height:1.5;color:#9A9AA6;text-wrap:pretty">Heyndrickx S., Gabriels R., Ramadasan H., Martens L., Claeys T. <em style="color:#F4F4F5">OmicsFM brings proteomics into the foundation model era.</em> 2026.</p>
+    <a href="#about" style="font-size:13px;color:#F4F4F5;font-weight:500" style-hover="color:#C0FE04">Copy citation →</a>
+  </div>
+</footer>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accents&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;minimal&quot;,&quot;balanced&quot;,&quot;full&quot;],&quot;default&quot;:&quot;balanced&quot;,&quot;tsType&quot;:&quot;'minimal'|'balanced'|'full'&quot;,&quot;section&quot;:&quot;Marathon layer&quot;}}">
+class Component extends DCLogic {
+  state = { family: 'cytosolic ribosome', data: null, scene: 0, front: 0, hoverMod: null, tHover: -1 };
+  cEgo = React.createRef(); cSamples = React.createRef(); cFamilies = React.createRef(); cAgree = React.createRef();
+  cProt = React.createRef(); cBulk = React.createRef(); cSc = React.createRef();
+  hA = React.createRef(); hB = React.createRef(); hCard = React.createRef(); hdrRef = React.createRef();
+  CHIPS = ['cytosolic ribosome', 'histones', 'keratins', 'proteasome', 'immunoglobulins', 'tubulins', 'OXPHOS complexes', 'collagens'];
+  PAL = ['#4E9AF1','#F28E2B','#59A14F','#E15759','#76B7B2','#EDC948','#B07AA1','#AEC7E8','#9C755F','#BAB0AC','#1F77B4','#FFBB78','#2CA02C','#98DF8A','#D62728','#FF9896','#8C564B','#C49C94','#17BECF','#9EDAE5'];
+  MOD = { proteomics: '#C0FE04', bulk: '#8B5CFF', single_cell: '#FC2D76' };
+  MODNAME = { proteomics: 'Proteomics', bulk: 'Bulk transcriptomics', single_cell: 'Single-cell transcriptomics' };
+  homeHeaderLayout(width) {
+    const W = Math.max(320, width), k = Math.max(.6, Math.min(1, W / 1440));
+    const edge = Math.round(64 * k), colW = Math.round(270 * k);
+    const pad = W >= 1200 ? 12 : 8, gap = W >= 1200 ? 8 : 2;
+    const searchW = Math.round(Math.max(180, 300 * k)), showCode = W >= 1280;
+    const targetFont = W >= 1200 ? 13 : W >= 1000 ? 12 : 11;
+    const textUnits = [...Object.values(this.MODNAME), 'About', 'Compare'].reduce((n, label) => n + label.length * .74, 0);
+    const chrome = edge + 30 + 32 + colW + 12 + (showCode ? 52 : 0);
+    const showSearch = W >= 1180 && W - chrome - searchW - 12 >= textUnits * 11 + 10 * pad + 4 * gap;
+    const available = W - chrome - (showSearch ? searchW + 12 : 0);
+    const font = Math.floor(Math.min(targetFont, (available - 10 * pad - 4 * gap - 4) / textUnits) * 10) / 10;
+    return {navFont: Math.max(1, font) + 'px', navGap: gap + 'px', navPad: pad + 'px',
+      searchW: searchW + 'px', showSearch, showCode,
+      navAvailableWidth: available, navRequiredWidth: textUnits * Math.max(1, font) + 10 * pad + 4 * gap};
+  }
+  SCENES = [
+    { kind: 'family', mod: 'proteomics', family: 'histones', url: 'Proteomics Proteins.dc.html', title: 'Histones form their own island.', text: 'Protein abundance becomes a map of relationships. Histones are highlighted here; the model learned their identities without being given their family labels.' },
+    { kind: 'family', mod: 'bulk', family: 'protocadherins', url: 'Bulk Genes.dc.html', title: 'Protocadherins share a neighbourhood.', text: 'A family of cell-adhesion genes stands out in the bulk RNA identity map. Protocadherins are highlighted against the other genes; their family labels were added after training.' },
+    { kind: 'family', mod: 'single_cell', family: 'zinc fingers', url: 'Single-cell Genes.dc.html', title: 'Gene families, learned from single cells.', text: 'Zinc-finger genes light up across the single-cell identity map. Family annotations are added afterwards, revealing structure learned from gene expression.' },
+    { kind: 'samples', mod: 'proteomics', tissue: 'blood', label: 'Blood', url: 'Proteomics Samples.dc.html', title: 'A tissue atlas, built from proteins.', text: 'Blood samples are highlighted in lime against the other tissues across 8,359 proteomes. Explore how sample identities relate across independent projects.' },
+    { kind: 'samples', mod: 'single_cell', group: 'Neural · neurons', label: 'Neurons', url: 'Single-cell Samples.dc.html', title: 'Neurons in a world of cells.', text: 'Neuronal cell types are highlighted in pink across the single-cell sample map. The other cells stay in grey, keeping one lineage in focus.' },
+    { kind: 'network', mod: 'bulk', community: 'Ribosome', url: 'Bulk Attention.dc.html?tissue=brain', title: 'A ribosomal attention community.', text: 'One community in the brain’s bulk attention network is enriched for ribosomal genes. Follow its connections, then inspect the supporting reference annotations.' },
+    { kind: 'family', mod: 'proteomics', family: 'immunoglobulins', url: 'Proteomics Proteins.dc.html', title: 'An antibody family comes into focus.', text: 'Immunoglobulins are highlighted in the protein identity map. Explore their neighbourhood and compare it with other protein families, annotated after training.' },
+    { kind: 'samples', mod: 'bulk', tissue: 'frontal cortex', label: 'Frontal cortex', url: 'Bulk Samples.dc.html', title: 'Frontal cortex across bulk RNA studies.', text: 'Frontal cortex samples are highlighted across the bulk transcriptomics sample map. Open the atlas to compare these samples across independent projects.' },
+    { kind: 'samples', mod: 'single_cell', group: 'Immune · T cells', label: 'T cells', url: 'Single-cell Samples.dc.html', title: 'T cells in the single-cell landscape.', text: 'T-cell types are highlighted in pink against the wider cell atlas. Open the map to explore their subtypes and compare the datasets they come from.' },
+    { kind: 'network', mod: 'bulk', community: 'Oxidative phosphorylation', url: 'Bulk Attention.dc.html?tissue=brain', title: 'An attention community for energy production.', text: 'This brain network community is enriched for oxidative phosphorylation genes. Explore its attention connections and the pathway annotations overlaid on them.' },
+  ];
+
+  componentDidMount() {
+    OmicsFM.loadJSON('data/home_carousel.json')
+      .then(data => { for (const f of Object.values(data.features)) { const excluded = f.families.indexOf('Integrator complex'); if (excluded >= 0) for (const p of f.pts) if (p[2] === excluded) p[2] = -1; } this.setState({ data, carousel: data }); requestAnimationFrame(() => this.drawAll()); }).catch(e => console.error('home data', e));
+    this.startTimer();
+    this._ro = new ResizeObserver(() => this.drawAll());
+    this._hro = new ResizeObserver(([en]) => { const w = Math.round(this.hdrRef.current?.getBoundingClientRect().width || en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); });
+    this.hdrRef.current && this._hro.observe(this.hdrRef.current);
+    [this.cEgo, this.cSamples, this.cFamilies, this.cAgree, this.cProt, this.cBulk, this.cSc, this.hA, this.hB, this.hCard].forEach(r => r.current && this._ro.observe(r.current));
+  }
+  componentWillUnmount() { this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); this.stopTimer(); }
+  componentDidUpdate() { if (this.state.data && this._drawnFamily !== this.state.family) { this._drawnFamily = this.state.family; this.drawAll(); } }
+  startTimer() { this.stopTimer(); if (this._heroHovered || this._heroFocused) return; this._t = setInterval(() => { if (this.state.data) this.goScene((this.state.scene + 1) % this.SCENES.length); }, 6000); }
+  stopTimer() { if (this._t) clearInterval(this._t); this._t = null; }
+  goScene(i) {
+    if (!this.state.data) return;
+    const back = 1 - this.state.front;
+    this.drawScene(back, i);
+    this.setState({ scene: i, front: back });
+  }
+
+  prep(c) {
+    if (!c) return null;
+    const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+    if (!w || !h) return null;
+    if (c.width !== w * dpr || c.height !== h * dpr) { c.width = w * dpr; c.height = h * dpr; }
+    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    return { ctx, w, h };
+  }
+  bounds(pts) {
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (const p of pts) { if (p[0] < x0) x0 = p[0]; if (p[0] > x1) x1 = p[0]; if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1]; }
+    return { x0, x1, y0, y1 };
+  }
+  scatter(c, pts, colorOf, opts = {}) {
+    const g = this.prep(c); if (!g) return;
+    const { ctx, w, h } = g, pad = opts.pad ?? 26, b = this.bounds(pts);
+    const aTop = opts.top ?? 0, aBottom = opts.bottom ?? h, H = aBottom - aTop;
+    const left = opts.left ?? 0, right = opts.right ?? w, W = right - left;
+    const stretch=opts.stretchX||1;
+    const s = Math.min((W - 2 * pad) / ((b.x1 - b.x0 || 1)*stretch), (H - 2 * pad) / (b.y1 - b.y0 || 1));
+    const ox = left + (W - s * (b.x1 - b.x0)*stretch) / 2, oy = (H - s * (b.y1 - b.y0)) / 2;
+    const r = opts.r ?? 1.6, top = [];
+    const X = p => ox + (p[0] - b.x0) * s * stretch, Y = p => aBottom - (oy + (p[1] - b.y0) * s);
+    ctx.globalAlpha = opts.alpha ?? 0.85;
+    for (const p of pts) {
+      const col = colorOf(p); if (!col) continue;
+      if (col.top) { top.push([p, col.color]); continue; }
+      ctx.fillStyle = col;
+      if (opts.round) { ctx.beginPath(); ctx.arc(X(p), Y(p), r, 0, Math.PI * 2); ctx.fill(); }
+      else ctx.fillRect(X(p) - r / 2, Y(p) - r / 2, r, r);
+    }
+    ctx.globalAlpha = 1;
+    for (const [p, color] of top) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(X(p), Y(p), (opts.rTop ?? 2.6), 0, Math.PI * 2); ctx.fill();
+    }
+    if (opts.labels) {
+      ctx.font = (opts.labelFont || '500 11px "JetBrains Mono", monospace'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (const { text, pts: lp, color, position, offsetX = 0, offsetY = 0 } of opts.labels) {
+        if (!lp.length) continue;
+        let mx = 0, my = 0; for (const p of lp) { mx += X(p); my += Y(p); } mx /= lp.length; my /= lp.length;
+        const tw = ctx.measureText(text).width;
+        if (position === 'right') {
+          const nearby = lp.filter(p => Math.abs(Y(p) - my) < 12);
+          mx = Math.max(...(nearby.length ? nearby : lp).map(X)) + (opts.rTop ?? 2.6) + 7 + tw / 2;
+        }
+        mx += offsetX; my += offsetY;
+        ctx.fillStyle = 'rgba(10,10,12,.75)'; ctx.fillRect(mx - tw / 2 - 5, my - 9, tw + 10, 18);
+        ctx.fillStyle = color; ctx.fillText(text, mx, my);
+      }
+    }
+    return { X, Y, w, h, ctx };
+  }
+  drawFamily(c, mod, family, color, big) {
+    const d = big ? this.state.carousel : this.state.data; if (!d) return 0;
+    const f = d.features[mod], fi = f.families.indexOf(family); let n = 0;
+    const fam = f.pts.filter(p => p[2] === fi);
+    if (big) {
+      const g = this.heroFrame(c, f.pts, fam); if (!g) return fam.length;
+      const {ctx,X,Y} = g;
+      ctx.fillStyle = '#36363F'; ctx.globalAlpha = .72;
+      for (const p of f.pts) { if (p[2] !== fi) ctx.fillRect(X(p),Y(p),1.5,1.5); }
+      ctx.globalAlpha = 1; ctx.fillStyle = color;
+      for (const p of fam) {ctx.beginPath();ctx.arc(X(p),Y(p),3.5,0,Math.PI*2);ctx.fill();}
+      const annotations=f.familyAnnotations?.[family];
+      this.heroLabels(g,annotations?annotations.map(label=>({...label,color})): [{text:family,color,textColor:mod==='bulk'?'#BCA4FF':color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0}]);
+      return fam.length;
+    }
+    this.scatter(c, f.pts, p => { if (p[2] === fi) { n++; return { top: true, color }; } return '#3A3A44'; },
+      big ? { pad: 24, r: 1.25, rTop: 3.6, alpha: 0.7, ...this.heroArea(c) } : { pad: 40, r: 1.5, rTop: 2.8, alpha: 0.9 });
+    return n;
+  }
+  drawEgo(c) {
+    const n=this.state.carousel?.taskNetwork,g=this.prep(c);if(!n||!g)return;
+    const {ctx,w,h}=g,b=this.bounds(n.pts),community=n.communities.find(c=>c.name==='Ribosome')?.id;
+    const scale=Math.min((w-36)/(b.x1-b.x0||1),(h-36)/(b.y1-b.y0||1));
+    const X=p=>w/2+(p[0]-(b.x0+b.x1)/2)*scale,Y=p=>h/2+(p[1]-(b.y0+b.y1)/2)*scale;
+    const focused=n.pts.filter(p=>p[3]===community);
+    for(const [a,b] of n.edges){const on=n.pts[a][3]===community&&n.pts[b][3]===community;ctx.strokeStyle=on?'rgba(244,244,245,.5)':'rgba(108,108,120,.16)';ctx.lineWidth=on?.8:.5;ctx.beginPath();ctx.moveTo(X(n.pts[a]),Y(n.pts[a]));ctx.lineTo(X(n.pts[b]),Y(n.pts[b]));ctx.stroke();}
+    for(const p of n.pts){const on=p[3]===community;ctx.fillStyle=on?'#C0FE04':'#45454F';ctx.beginPath();ctx.arc(X(p),Y(p),on?2.1:1.1,0,Math.PI*2);ctx.fill();}
+    if(focused.length){const x=Math.max(42,Math.min(w-42,focused.reduce((sum,p)=>sum+X(p),0)/focused.length)),y=Math.max(16,Math.min(h-16,focused.reduce((sum,p)=>sum+Y(p),0)/focused.length-20));ctx.font='500 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#0A0A0C';ctx.fillRect(x-36,y-8,72,16);ctx.fillStyle='#C0FE04';ctx.fillText('RIBOSOME',x,y);}
+  }
+  drawSamples(c) {
+    const s=this.state.carousel?.samples.proteomics;if(!s)return;
+    const brain=s.classes.findIndex(cl=>cl.name==='brain'),points=s.pts.filter(p=>p[2]===brain);
+    this.scatter(c,s.pts,p=>p[2]===brain?{top:true,color:'#C0FE04'}:'#36363F',
+      {pad:16,r:1.1,rTop:2,alpha:.7,stretchX:1.65,labelFont:'500 10px "JetBrains Mono", monospace',labels:[{text:'BRAIN',pts:points,color:'#C0FE04',offsetX:0,offsetY:-48}]});
+  }
+  heroArea(c) {
+    const card = this.hCard.current, h = c.clientHeight, w = c.clientWidth;
+    if (w >= 900) return { left: Math.min((card?.clientWidth || w * .42) + 24, w * .48), right: w - 24, top: 72, bottom: h - 60 };
+    return { left: 12, right: w - 12, top: 64, bottom: card ? h - card.offsetHeight - 80 : h - 64 };
+  }
+  heroFrame(c, pts, highlighted, invert = true, options = {}) {
+    const g = this.prep(c); if (!g) return null;
+    const {w,h} = g, b = this.bounds(pts), card = this.hCard.current;
+    const blocked = {right:Math.min((card?.clientWidth || w*.42)+20,w-28),top:h-(card?.offsetHeight || 220)-48-20};
+    const stretch=options.stretchX||1,left=28,right=w-34,top=80,bottom=h-46,dx=(b.x1-b.x0||1)*stretch,dy=b.y1-b.y0||1;
+    const base=Math.min((right-left)/dx,(bottom-top)/dy), yy=p=>invert?b.y1-p[1]:p[1]-b.y0;
+    const totals={}; if(options.allowOverlap)for(const p of highlighted)totals[p[2]]=(totals[p[2]]||0)+1;
+    let chosen=null;
+    // Search the largest uniform fit whose highlighted points avoid the card.
+    // Grey context may run behind it. Only the atlas opts into horizontal stretch.
+    for(let level=0;level<48&&!chosen;level++) {
+      const scale=base*Math.pow(.97,level), freeX=right-left-dx*scale,freeY=bottom-top-dy*scale;
+      let best=null;
+      for(let xi=0;xi<=10;xi++) for(let yi=0;yi<=10;yi++) {
+        const x=left+freeX*xi/10,y=top+freeY*yi/10;
+        const hidden=p=>x+(p[0]-b.x0)*stretch*scale<blocked.right+7&&y+yy(p)*scale>blocked.top-7;
+        if(options.allowOverlap){let count=0,reject=false;const groups={};for(const p of highlighted)if(hidden(p)){count++;groups[p[2]]=(groups[p[2]]||0)+1;if(count>highlighted.length*.12||groups[p[2]]>totals[p[2]]*.55){reject=true;break;}}if(reject)continue;}
+        else if(highlighted.some(hidden)) continue;
+        const score=Math.abs(x+dx*scale/2-w*.52)+Math.abs(y+dy*scale/2-(top+bottom)/2);
+        if(!best||score<best.score) best={scale,x,y,score};
+      }
+      if(best) chosen=best;
+    }
+    if(!chosen) {const scale=Math.min((right-blocked.right-12)/dx,(bottom-top)/dy);chosen={scale,x:blocked.right+12,y:top};}
+    const X=p=>chosen.x+(p[0]-b.x0)*stretch*chosen.scale,Y=p=>chosen.y+yy(p)*chosen.scale;
+    const result={...g,X,Y,b,blocked,highlighted,scale:chosen.scale,base};
+    this._heroFit=result;
+    return result;
+  }
+  heroLabels(g, labels) {
+    const {ctx,w,h,X,Y,b,blocked}=g,placed=[];
+    ctx.font=`500 ${labels.length===1?13:12}px "JetBrains Mono", monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    for(const label of labels) {
+      if(!label.pts.length) continue;
+      const grid=new Map(),cw=(b.x1-b.x0||1)/35,ch=(b.y1-b.y0||1)/35;
+      for(const p of label.pts) {const key=Math.floor((p[0]-b.x0)/cw)+','+Math.floor((p[1]-b.y0)/ch),cell=grid.get(key)||[0,0,0];cell[0]++;cell[1]+=p[0];cell[2]+=p[1];grid.set(key,cell);}
+      const mode=[...grid.values()].sort((a,b)=>b[0]-a[0])[0],anchor=[mode[1]/mode[0],mode[2]/mode[0]],ax=X(anchor),ay=Y(anchor);
+      const text=label.text.toUpperCase(),width=ctx.measureText(text).width+16,height=23;
+      const valid=(x,y)=>x-width/2>=18&&x+width/2<=w-24&&y-height/2>=76&&y+height/2<=h-34&&
+        !(x-width/2<blocked.right&&y+height/2>blocked.top)&&!placed.some(p=>Math.abs(p.x-x)<(p.width+width)/2+7&&Math.abs(p.y-y)<(p.height+height)/2+6);
+      let position=null;
+      for(let radius=label.distance??22;radius<Math.max(w,h)&&!position;radius+=14) {
+        for(let k=0;k<24;k++) {const a=-Math.PI/2+k*Math.PI/12,x=ax+(label.offsetX??0)+Math.cos(a)*radius,y=ay+(label.offsetY??0)+Math.sin(a)*radius;if(valid(x,y)){position={x,y};break;}}
+      }
+      if(!position) {for(let y=90;y<h-40&&!position;y+=28)for(let x=width/2+20;x<w-width/2-24;x+=20)if(valid(x,y)){position={x,y};break;}}
+      if(!position) continue;
+      const {x,y}=position;
+      ctx.fillStyle='rgba(10,10,12,.94)';ctx.fillRect(x-width/2,y-height/2,width,height);ctx.fillStyle=label.textColor||label.color;ctx.fillText(text,x,y);
+      placed.push({text,x,y,width,height});
+    }
+    this._heroLabels=placed;
+    return placed;
+  }
+  drawAtlas(c, mod, scene) {
+    const s = this.state.carousel?.samples[mod]; if (!s) return;
+    const sc=scene||this.SCENES.find(sc=>sc.kind==='samples'&&sc.mod===mod),group=sc.group?s.groups.find(g=>g.name===sc.group):null;
+    const keep=sc.tissue?new Set([s.classes.findIndex(cl=>cl.name===sc.tissue)]):group?new Set(group.classes):null,highlighted=keep?s.pts.filter(p=>keep.has(p[2])):s.pts,g=this.heroFrame(c,s.pts,highlighted,true,mod==='proteomics'?{stretchX:1.4,allowOverlap:true}:{});if(!g)return;
+    const {ctx,X,Y}=g;
+    if(keep){ctx.fillStyle='#36363F';ctx.globalAlpha=.65;for(const p of s.pts)if(!keep.has(p[2]))ctx.fillRect(X(p),Y(p),1.3,1.3);}
+    ctx.globalAlpha=.92;
+    for(const p of highlighted){ctx.fillStyle=keep?this.MOD[mod]:s.classes[p[2]].color;ctx.beginPath();ctx.arc(X(p),Y(p),keep?1.7:2,0,Math.PI*2);ctx.fill();}
+    ctx.globalAlpha=1;
+    this.heroLabels(g,keep?[{text:sc.label,color:this.MOD[mod],pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?360:sc.tissue==='frontal cortex'?-50:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
+  }
+  drawNetwork(c, scene) {
+    const source = this.state.carousel?.network;if(!source)return;
+    const sc=scene||this.SCENES.find(s=>s.kind==='network');
+    const n=sc.community==='Oxidative phosphorylation'?{...source,pts:source.pts.map(p=>[-p[1],p[0],p[2],p[3]])}:source;
+    const community=n.communities.find(c=>c.name===sc.community)?.id,highlighted=n.pts.filter(p=>p[3]===community);
+    const g=this.heroFrame(c,n.pts,highlighted,false);if(!g)return;const {ctx,X,Y}=g;
+    const degrees = new Array(n.pts.length).fill(0);
+    for (const [a,b,curated] of n.edges) {
+      degrees[a]++; degrees[b]++;
+      const focus=n.pts[a][3]===community&&n.pts[b][3]===community;
+      ctx.strokeStyle = focus ? 'rgba(244,244,245,.48)' : 'rgba(108,108,120,.1)'; ctx.lineWidth = focus?.9:.6;
+      ctx.beginPath(); ctx.moveTo(X(n.pts[a]),Y(n.pts[a])); ctx.lineTo(X(n.pts[b]),Y(n.pts[b])); ctx.stroke();
+    }
+    n.pts.forEach((p,i) => {const focus=p[3]===community;ctx.fillStyle=focus?'#AA83FF':'#36363F';ctx.beginPath();ctx.arc(X(p),Y(p),(focus?2:1)+Math.min(3.5,Math.sqrt(degrees[i])*.32),0,Math.PI*2);ctx.fill();});
+    this.heroLabels(g,[{text:sc.community,color:'#AA83FF',pts:highlighted,offsetX:sc.community==='Ribosome'?100:-290}]);
+  }
+  drawScene(which, i) {
+    const c = (which === 0 ? this.hA : this.hB).current, sc = this.SCENES[i]; if (!c || !this.state.data) return;
+    if (sc.kind === 'family') this.drawFamily(c, sc.mod, sc.family, this.MOD[sc.mod], true);
+    else if (sc.kind === 'samples') this.drawAtlas(c, sc.mod, sc);
+    else this.drawNetwork(c, sc);
+  }
+  drawFamilies(c) {
+    const f=this.state.carousel?.features.proteomics;if(!f)return;
+    const fi=f.families.indexOf('keratins'),family=f.pts.filter(p=>p[2]===fi);
+    this.scatter(c,f.pts,p=>p[2]===fi?{top:true,color:'#C0FE04'}:'#36363F',
+      {pad:20,r:1,rTop:2.3,alpha:.8,labelFont:'500 10px "JetBrains Mono", monospace',labels:[{text:'KERATINS',pts:family,color:'#C0FE04',position:'right'}]});
+  }
+  drawAgree(c) {
+    const d = this.state.data; const g = this.prep(c); if (!g || !d) return;
+    const { ctx, w, h } = g, mods = ['proteomics', 'bulk', 'single_cell'], cw = w / 3;
+    mods.forEach((m, k) => {
+      const f = d.features[m], fi = f.families.indexOf('histones'), b = this.bounds(f.pts), pad = 14;
+      const s = Math.min((cw - 2 * pad) / (b.x1 - b.x0), (h - 2 * pad - 20) / (b.y1 - b.y0)), ox = k * cw + (cw - s * (b.x1 - b.x0)) / 2, oy = 10 + (h - 20 - s * (b.y1 - b.y0)) / 2;
+      ctx.globalAlpha = 0.85; ctx.fillStyle = '#3A3A44';
+      for (const p of f.pts) if (p[2] !== fi) ctx.fillRect(ox + (p[0] - b.x0) * s, h - (oy + (p[1] - b.y0) * s), 1.2, 1.2);
+      ctx.globalAlpha = 1; ctx.fillStyle = this.MOD[m];
+      for (const p of f.pts) if (p[2] === fi) { ctx.beginPath(); ctx.arc(ox + (p[0] - b.x0) * s, h - (oy + (p[1] - b.y0) * s), 2.2, 0, Math.PI * 2); ctx.fill(); }
+      if (k) { ctx.strokeStyle = '#2A2A31'; ctx.beginPath(); ctx.moveTo(k * cw, 24); ctx.lineTo(k * cw, h - 8); ctx.stroke(); }
+    });
+    ctx.font='500 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#F4F4F5';ctx.fillText('HISTONES',w/2,13);
+  }
+  drawAll() {
+    if (!this.state.data) return;
+    this.drawScene(this.state.front, this.state.scene);
+    this.drawEgo(this.cEgo.current); this.drawSamples(this.cSamples.current); this.drawFamilies(this.cFamilies.current); this.drawAgree(this.cAgree.current);
+    const fam = this.state.family;
+    this._n = { p: this.drawFamily(this.cProt.current, 'proteomics', fam, '#C0FE04'), b: this.drawFamily(this.cBulk.current, 'bulk', fam, '#8B5CFF'), s: this.drawFamily(this.cSc.current, 'single_cell', fam, '#FC2D76') };
+    if (this._statKey !== fam + JSON.stringify(this._n)) { this._statKey = fam + JSON.stringify(this._n); this.forceUpdate(); }
+  }
+  sceneCount(sc) {
+    const d = this.state.carousel; if (!d || sc.kind !== 'family') return null;
+    const f = d.features[sc.mod], fi = f.families.indexOf(sc.family);
+    return f.pts.reduce((a, p) => a + (p[2] === fi), 0) + ' of ' + f.n.toLocaleString();
+  }
+  renderVals() {
+    const accents = this.props.accents ?? 'balanced', fam = this.state.family, d = this.state.data, n = this._n || {};
+    const tot = d ? { p: d.features.proteomics.n, b: d.features.bulk.n, s: d.features.single_cell.n } : {};
+    const stat = (k, t) => d ? `${fam} · ${n[k] ?? 0} of ${t.toLocaleString()} · UMAP` : 'loading…';
+    const si = this.state.scene, sc = this.SCENES[si], col = this.MOD[sc.mod], atlas = this.state.carousel?.samples[sc.mod], network = this.state.carousel?.network;
+    const readout = sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · UMAP · ${sc.family} · ${this.sceneCount(sc) ?? '…'}`
+      : sc.kind === 'samples' ? `${this.MODNAME[sc.mod]} · SST · UMAP · ${atlas?.n.toLocaleString() ?? '…'} ${sc.mod === 'single_cell' ? 'cells' : 'profiles'}`
+      : `${this.MODNAME[sc.mod]} · attention · brain · ${network?.edges.length.toLocaleString() ?? '…'} edges · communities`;
+    const tag = `${this.MODNAME[sc.mod]} · ${sc.kind === 'family' ? (sc.mod === 'proteomics' ? 'Proteins' : 'Genes') : sc.kind === 'samples' ? 'Samples' : 'Attention'}`;
+    return {
+      showBrackets: accents !== 'minimal',
+      showReadout: accents === 'full',
+      hA: this.hA, hB: this.hB, hCard: this.hCard, hdrRef: this.hdrRef,
+      pauseCarousel: () => { this._heroHovered = true; this.stopTimer(); }, resumeCarousel: () => { this._heroHovered = false; this.startTimer(); },
+      focusCarousel: () => { this._heroFocused = true; this.stopTimer(); }, blurCarousel: e => { if (!e.currentTarget.contains(e.relatedTarget)) { this._heroFocused = false; this.startTimer(); } },
+      ...Object.fromEntries([0,1,2,3].flatMap(i => { const on = this.state.tHover === i; return [
+        ['tHover' + i, () => this.setState({ tHover: i })],
+        ['tLift' + i, on ? 'translateY(-6px)' : 'translateY(0)'],
+        ['tBar' + i, on ? 1 : 0],
+        ['tFlash' + i, on ? 0.06 : 0],
+        ['tZoom' + i, on ? 'scale(1.06)' : 'scale(1)'],
+        ['tArrowW' + i, on ? '28px' : '12px'],
+      ]; })),
+      tLeave: () => this.setState({ tHover: -1 }),
+      hover_proteomics: () => this.setState({ hoverMod: 'proteomics' }), hover_bulk: () => this.setState({ hoverMod: 'bulk' }), hover_sc: () => this.setState({ hoverMod: 'sc' }), hoverNone: () => this.setState({ hoverMod: null }),
+      barBg_proteomics: this.state.hoverMod === 'proteomics' ? '#C0FE04' : '#000', barFg_proteomics: this.state.hoverMod === 'proteomics' ? '#0A0A0C' : '#C0FE04',
+      barBg_bulk: this.state.hoverMod === 'bulk' ? '#5100FD' : '#000', barFg_bulk: this.state.hoverMod === 'bulk' ? '#F4F4F5' : '#8B5CFF',
+      barBg_sc: this.state.hoverMod === 'sc' ? '#FC2D76' : '#000', barFg_sc: this.state.hoverMod === 'sc' ? '#0A0A0C' : '#FC2D76',
+      // one responsive scale from the measured page width: 1 at >=1440px, down to ~0.6 at 900px
+      ...(() => {
+        const W = this.state.headerW || 1440, k = Math.max(0.6, Math.min(1, W / 1440));
+        const colW = Math.round(270 * k), edge = Math.round(64 * k);
+        const heroH = Math.max(560, (typeof window !== 'undefined' ? window.innerHeight : 900) - 124);
+        return {
+          colW: colW + 'px', edgePad: Math.round(32 * k) + 'px',
+          ...this.homeHeaderLayout(W),
+          readoutRight: (colW + 80) + 'px', dotsRight: (colW + 24) + 'px',
+          wmW: Math.round(Math.min(heroH - 80, 2800 / 520 * (colW - 40))) + 'px',
+          cardW: 'clamp(280px,min(42%,calc(100% - ' + (colW + 2 * edge + 80) + 'px)),560px)',
+          cardTitleFont: Math.round(24 * Math.max(0.8, k)) + 'px',
+        };
+      })(),
+      // bar: longest cell is "03 · Single-cell transcriptomics" + "4,550,106 cells" ≈ 50 mono chars; fit into one third of the width
+      ...(() => {
+        const W = this.state.headerW || 1440, pad = W >= 1200 ? 32 : 12, gap = W >= 1200 ? 16 : 8, sp = W >= 1200 ? 0.1 : 0.04;
+        // longest cell: "03 · Single-cell transcriptomics" + "4,550,106 cells" = 47 glyphs; mono advance ≈ 0.6em + letter-spacing
+        const avail = W / 3 - 2 * pad - gap - 4, font = Math.max(7, Math.min(14, Math.floor(avail / (47 * (0.6 + sp)))));
+        return { barFont: font + 'px', barPad: pad + 'px', barGap: gap + 'px', barSpacing: sp + 'em' };
+      })(),
+      opA: this.state.front === 0 ? 1 : 0, opB: this.state.front === 1 ? 1 : 0,
+      sceneIndex: String(si + 1).padStart(2, '0') + ' / ' + String(this.SCENES.length).padStart(2, '0'),
+      sceneReadout: readout, sceneModality: this.MODNAME[sc.mod], sceneReadoutRest: readout.slice(this.MODNAME[sc.mod].length),
+      sceneHasAxes: sc.kind !== 'network', sceneAxisX: 'UMAP 1', sceneAxisY: 'UMAP 2', sceneTitle: sc.title, sceneText: sc.text, sceneColor: col === '#8B5CFF' ? '#5100FD' : col, sceneFg: col === '#8B5CFF' ? '#F4F4F5' : '#0A0A0C', sceneTag: tag, sceneUrl: sc.url, sceneLinkColor: col,
+      sceneDots: this.SCENES.map((s, i) => ({ title: s.title, bg: i === si ? col : '#3A3A44', go: () => { this.goScene(i); this.startTimer(); } })),
+      cEgo: this.cEgo, cSamples: this.cSamples, cFamilies: this.cFamilies, cAgree: this.cAgree, cProt: this.cProt, cBulk: this.cBulk, cSc: this.cSc,
+      statProt: stat('p', tot.p || 11475), statBulk: stat('b', tot.b || 18403), statSc: stat('s', tot.s || 9794),
+      familyChips: this.CHIPS.map(name => ({ name, bg: name === fam ? '#F4F4F5' : '#131316', fg: name === fam ? '#0A0A0C' : '#F4F4F5', select: () => this.setState({ family: name }) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

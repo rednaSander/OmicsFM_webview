@@ -1,0 +1,30 @@
+const assert = require('node:assert/strict');
+const {loadComponent} = require('./verify-site.cjs');
+
+(async () => {
+  const {instance:h} = await loadComponent('Home.dc.html');
+  for (const [w,height,cardWidth,cardHeight] of [[1126,654,560,216],[900,650,440,242],[740,640,380,265],[1300,850,560,230]]) {
+    for (const canvas of [h.hA.current,h.hB.current]) {canvas.clientWidth=w;canvas.clientHeight=height;}
+    h.hCard.current.clientWidth=cardWidth;h.hCard.current.offsetHeight=cardHeight;
+    for (let i=0;i<h.SCENES.length;i++) {
+      h.goScene(i);const g=h._heroFit;
+      assert(g.highlighted.length>0);
+      let hidden=0;
+      for (const point of g.highlighted) {
+        assert(Number.isFinite(g.X(point))&&Number.isFinite(g.Y(point)));
+        const overlaps=g.X(point)<cardWidth+12&&g.Y(point)>height-cardHeight-60;
+        if(i===3)hidden+=overlaps;else assert(!overlaps,`Highlight overlaps card: ${w}, scene ${i+1}`);
+      }
+      if(i===3)assert(hidden/g.highlighted.length<=.12,'Atlas overlap should remain limited');
+      const expected=h.SCENES[i].family==='immunoglobulins'?2:1;
+      assert.equal(h._heroLabels.length,expected,`Missing annotations: ${w}, scene ${i+1}`);
+      h._heroLabels.forEach((p,j) => {
+        assert(p.x-p.width/2>=0&&p.x+p.width/2<=w&&p.y-p.height/2>=0&&p.y+p.height/2<=height);
+        assert(!(p.x-p.width/2<cardWidth+12&&p.y+p.height/2>height-cardHeight-60),`Label overlaps card: ${w}, scene ${i+1}`);
+        for (const q of h._heroLabels.slice(j+1)) assert(Math.abs(p.x-q.x)>=(p.width+q.width)/2||Math.abs(p.y-q.y)>=(p.height+q.height)/2);
+      });
+    }
+  }
+  h.componentWillUnmount();
+  console.log('PASS ten scenes at four sizes: highlights clear the card, atlas dots may overlap up to 12%, focused annotations remain visible and do not overlap');
+})().catch(error => {console.error(error);process.exitCode=1;});

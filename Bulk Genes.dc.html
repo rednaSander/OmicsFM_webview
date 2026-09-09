@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmicsFM | Bulk transcriptomics Genes</title>
+<script src="./assets/vendor/react.production.min.js"></script>
+<script src="./assets/vendor/react-dom.production.min.js"></script>
+<script src="./site.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&amp;family=Space+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0A0A0C;color:#F4F4F5;font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#F4F4F5;text-decoration:none}a:hover{color:#8B5CFF}
+*{box-sizing:border-box}
+input::placeholder{color:#5C5C68}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#2A2A31}::-webkit-scrollbar-track{background:transparent}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:#2A2A31;outline:0;margin:14px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:#8B5CFF;border:0;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#8B5CFF;border:0;cursor:pointer;border-radius:0}
+</style>
+</helmet>
+<div style="height:100vh;background:#0A0A0C;color:#F4F4F5;display:flex;flex-direction:column;overflow:hidden">
+
+<header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:#000;flex:none">
+  <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/small_logo_bulk_transcriptomics_black.svg" alt="OmicsFM bulk transcriptomics" style="height:44px;width:auto;display:block"></a>
+  <nav style="display:flex;align-items:center;gap:{{ navGap }};margin-left:{{ edgePad }};min-width:0;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
+    <a href="Home.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#9A9AA6;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Home</a>
+    <span style="color:#5C5C68">/</span>
+    <a href="Home.dc.html#modalities" style="display:inline-flex;align-items:center;padding:7px 12px;background:#5100FD;color:#F4F4F5;white-space:nowrap">Bulk transcriptomics</a>
+    <span style="color:#5C5C68">/</span>
+    <a href="Bulk Samples.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Samples</a>
+    <a href="Bulk Attention.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Attention</a>
+    <span style="display:inline-flex;align-items:center;padding:7px 12px;color:#F4F4F5;white-space:nowrap">Genes</span>
+  </nav>
+  <div style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
+    <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:#1B1B20;color:#9A9AA6" style-focus="background:#2A2A31">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
+      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Highlight a gene, accession or KEGG pathway…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:13px;min-width:0">
+      <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;cursor:pointer">{{ queryHits }} ✕</button></sc-if>
+    </label></sc-if>
+    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">Read the paper</a>
+  </div>
+</header>
+
+<div data-screen-label="Title bar" style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:52px;padding:0 32px;background:#000;border-top:4px solid #0A0A0C;flex:none;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">
+  <div style="display:flex;align-items:center;gap:16px;min-width:0"><span style="color:#8B5CFF;white-space:nowrap;flex:none">02 · Bulk transcriptomics · Genes</span><span style="color:#5C5C68;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Learned identity embedding</span></div>
+  <div style="display:flex;align-items:center;gap:16px;color:#9A9AA6;flex:none;white-space:nowrap">
+    <sc-if value="{{ pathOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearPath }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#F4F4F5;color:#0A0A0C;transition:background 120ms ease-out" style-hover="background:#8B5CFF"><span>KEGG · {{ pathName }} · {{ pathHits }}</span><span>✕</span></button></sc-if>
+    <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#5100FD;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#F4F4F5"><span>highlighting “{{ query }}” · {{ queryHits }}</span><span>✕ reset</span></button></sc-if>
+    <span>{{ visibleCount }} of {{ totalCount }} genes</span><sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><span style="color:#5C5C68">≥ {{ minDet }} % · test-split profiles</span></sc-if>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:{{ leftW }} 6px minmax(0,1fr) {{ rightW }};gap:0;flex:1;min-height:0;background:#000">
+
+  <!-- Controls -->
+  <aside data-screen-label="Controls" style="background:#0A0A0C;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
+    <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:6px;flex:none">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Detected in at least</span><span style="color:#8B5CFF">{{ minDet }} % · {{ visibleCount }}</span></div>
+      <input type="range" min="0" max="100" step="1" value="{{ minDet }}" onChange="{{ onDet }}" onInput="{{ onDet }}">
+      <div style="display:flex;gap:4px">
+        <sc-for list="{{ detStops }}" as="s" hint-placeholder-count="4">
+          <button onClick="{{ s.pick }}" style="flex:1;padding:6px 0;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.06em;background:{{ s.bg }};color:{{ s.fg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">{{ s.label }}</button>
+        </sc-for>
+      </div>
+      <div style="font-size:12px;line-height:1.5;color:#5C5C68;text-wrap:pretty;margin-top:4px">0 % includes all 20,272 genes. Genes below 5 % are projected onto the saved map; the original positions stay fixed. Neighbours are calculated in the full model identity space.</div>
+    </div>
+    <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:10px;flex:none">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Colour by</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <button onClick="{{ modeFam }}" style="padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ modeFamBg }};color:{{ modeFamFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">Family</button>
+        <button onClick="{{ modeDet }}" style="padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ modeDetBg }};color:{{ modeDetFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">Detection</button>
+      </div>
+      <sc-if value="{{ isDetMode }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <div style="height:10px;background:linear-gradient(90deg,#440154,#3B528B,#21918C,#5EC962,#FDE725)"></div>
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#5C5C68"><span>1 %</span><span>10 %</span><span>100 % of profiles</span></div>
+          <div style="font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty">Frequently detected genes form the structured, family-rich part of the map. Rarely detected ones sit in the diffuse region.</div>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ isFamMode }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:16px 24px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;flex:none"><span>39 families</span><button onClick="{{ allFams }}" style="border:0;background:transparent;color:{{ allFamColor }};font:inherit;cursor:pointer;padding:0;flex:none">{{ allFamLabel }}</button></div>
+      <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;overflow-x:hidden;min-height:180px;flex:1">
+        <sc-for list="{{ famList }}" as="f" hint-placeholder-count="12">
+          <button onClick="{{ f.pick }}" onMouseEnter="{{ f.over }}" onMouseLeave="{{ famOut }}" style="display:flex;align-items:center;gap:10px;padding:6px 8px;border:0;cursor:pointer;font:inherit;font-size:12.5px;text-align:left;background:{{ f.bg }};color:{{ f.fg }};opacity:{{ f.opacity }};transition:background 120ms ease-out,opacity 120ms ease-out" style-hover="background:#1B1B20">
+            <span style="width:9px;height:9px;flex:none;background:{{ f.color }}"></span>
+            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.label }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68;flex:none">{{ f.n }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:8px;flex:none">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Overlays</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <sc-for list="{{ overlays }}" as="o" hint-placeholder-count="3">
+          <button onClick="{{ o.toggle }}" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border:0;cursor:pointer;font:inherit;font-size:12.5px;text-align:left;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#2A2A31"><span>{{ o.label }}</span><span style="width:26px;height:14px;background:{{ o.trackBg }};position:relative;flex:none;transition:background 120ms ease-out"><span style="position:absolute;top:2px;left:{{ o.knobLeft }};width:10px;height:10px;background:#0A0A0C;transition:left 120ms ease-out"></span></span></button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:20px 24px 20px;margin-top:auto;background:#000;display:flex;align-items:stretch;flex:none">
+      <div style="width:8px;flex:none;background:repeating-linear-gradient(135deg,#2A2A31 0 2px,#000 2px 6px)"></div>
+      <div style="padding:0 0 0 12px;font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto"><span style="color:#FFB020;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Read this</span>Identity embeddings are learned only from which genes co-occur and co-vary in abundance; the model never saw sequences or annotations. Families are an overlay.</div>
+    </div>
+  </aside>
+
+  <div onMouseDown="{{ startResize }}" title="Drag to resize the panel" style="cursor:col-resize;background:#000;display:flex;align-items:center;justify-content:center" style-hover="background:#1B1B20"><span style="width:2px;height:28px;background:{{ handleColor }}"></span></div>
+
+  <!-- Plot -->
+  <main data-screen-label="Plot" style="position:relative;background:#0A0A0C;min-width:0;min-height:0;overflow:hidden;margin-right:4px">
+    <canvas ref="{{ cv }}" onMouseMove="{{ onMove }}" onMouseLeave="{{ onLeave }}" onClick="{{ onPick }}" onWheel="{{ onWheel }}" onMouseDown="{{ onDown }}" onMouseUp="{{ onUp }}" onDoubleClick="{{ resetView }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:{{ cursor }}"></canvas>
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;pointer-events:none">
+      <span style="position:absolute;top:12px;left:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
+      <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
+      <span style="position:absolute;bottom:12px;left:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
+      <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
+      <div style="position:absolute;top:22px;left:32px;right:32px;display:flex;justify-content:space-between;gap:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;white-space:nowrap;overflow:hidden"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0"><span style="color:#8B5CFF">Bulk transcriptomics</span> · learned identity · UMAP · {{ readout }}</span><span>{{ zoomLabel }}</span></div>
+      <div style="position:absolute;bottom:22px;left:32px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6">UMAP 1 → · UMAP 2 ↑</div>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;bottom:22px;right:32px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;white-space:nowrap">Scroll to zoom · drag to pan · double-click to reset</div></sc-if>
+    </div>
+    <sc-if value="{{ showTip }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:{{ tipX }};top:{{ tipY }};transform:translate(14px,14px);pointer-events:none;background:#000;color:#F4F4F5;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:200px;max-width:300px;font-size:12px;line-height:1.4">
+        <div style="display:flex;align-items:center;gap:8px;font-weight:600"><span style="width:9px;height:9px;flex:none;background:{{ tipColor }}"></span><span>{{ tipGene }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68;font-weight:400">{{ tipAcc }}</span></div>
+        <div style="color:#9A9AA6;text-wrap:pretty">{{ tipDesc }}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9A9AA6;letter-spacing:.06em;text-transform:uppercase">{{ tipMeta }}</div>
+      </div>
+    </sc-if>
+  </main>
+
+  <!-- Inspector -->
+  <aside data-screen-label="Inspector" style="background:#000;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
+    <sc-if value="{{ infoClosed }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:12px">
+        <button onClick="{{ openInfo }}" title="What am I looking at?" style="width:36px;height:36px;border:0;cursor:pointer;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">i</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Selected gene</span><button onClick="{{ clearSel }}" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer" style-hover="background:#2A2A31">Clear ✕</button></div>
+          <div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:26px;font-weight:600;line-height:1.1">{{ selGene }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9A9AA6">{{ selAcc }}</div></div>
+          <div style="font-size:13px;line-height:1.45;color:#9A9AA6;text-wrap:pretty">{{ selDesc }}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Family</div><div style="font-size:12.5px;line-height:1.35;display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;flex:none;background:{{ selFamColor }}"></span><span>{{ selFam }}</span></div></div>
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Essentiality</div><div style="font-size:12.5px;line-height:1.35">{{ selChr }}</div></div>
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0;grid-column:1 / -1"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Detection</div><div style="font-size:12.5px;line-height:1.35">{{ selDet }}</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <a href="{{ selUniprot }}" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>UniProt</span><span>↗</span></a>
+          <a href="Bulk Attention.dc.html?tissue=brain&amp;protein={{ selAcc }}" style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#1B1B20;color:#9A9AA6;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5"><span>Open in Attention (brain)</span><span>→</span></a>
+          <a href="Home.dc.html#compare" style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#1B1B20;color:#9A9AA6;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5"><span>Compare across modalities</span><span>→</span></a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>20 nearest genes</span><span>identity space · 256-d</span></div>
+          <div style="display:flex;flex-direction:column;gap:1px">
+            <sc-for list="{{ neighbours }}" as="nb" hint-placeholder-count="10">
+              <button onClick="{{ nb.pick }}" onMouseEnter="{{ nb.over }}" onMouseLeave="{{ nbOut }}" style="display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:10px;padding:7px 10px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ nb.bg }};color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#1B1B20">
+                <span style="width:9px;height:9px;background:{{ nb.color }}"></span>
+                <span style="display:flex;align-items:baseline;gap:8px;min-width:0"><span style="font-size:12.5px;font-weight:500">{{ nb.gene }}</span><span style="font-size:11px;color:#5C5C68;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nb.fam }}</span></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9A9AA6">{{ nb.d }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty;padding-top:4px">{{ neighbourSummary }}</div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>What am I looking at?</span><button onClick="{{ closeInfo }}" title="Hide panel" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer;flex:none" style-hover="background:#2A2A31">Hide ✕</button></div>
+        <p style="margin:0;font-size:14px;line-height:1.55;color:#F4F4F5;text-wrap:pretty;text-align:justify;hyphens:auto">Each point is one gene: the identity vector the model learned for it during pretraining, reduced to two dimensions. Genes the model treats alike sit close together.</p>
+        <p style="margin:0;font-size:13px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">The model learned from gene expression across bulk RNA-seq profiles, without sequences, family labels or pathways. Family annotations are overlaid afterwards, so you can see which known groups occupy similar parts of the learned space. Raise the detection threshold to focus on genes observed more consistently. Detection here is measured in test-split profiles.</p>
+        <p style="margin:0;font-size:13px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">The same 39 family categories are used across modalities. Unlabelled genes are shown in grey. Family membership does not guarantee a shared neighbourhood: search a gene or pathway and inspect its nearest neighbours. Shared expression structure is not proof of a physical interaction.</p>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Hover</span>a point to read gene, family and detection rate.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>to pin it and see its twenty nearest genes in the model’s space.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Family</span>switch colouring to family and pick one to see it in violet against the rest.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Search</span>a gene (RPL3, KRT5) or a KEGG pathway (Ribosome, Oxidative phosphorylation) to light it up.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Try</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <sc-for list="{{ tryChips }}" as="t" hint-placeholder-count="5">
+              <button onClick="{{ t.go }}" style="padding:7px 10px;border:0;cursor:pointer;font:inherit;font-size:12px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { d: null, minDet: 5, mode: 'fam', fam: -1, famHover: -1, sel: -1, hover: -1, hoverNb: -1, query: '', path: -1, view: { k: 1, x: 0, y: 0 }, drag: null, ov: { labels: true, famOnly: false, mito: false }, infoClosed: false };
+  cv = React.createRef(); hdrRef = React.createRef();
+  PAL = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9a6324', '#aaffc3', '#808000', '#ffd8b1', '#ff6fb5', '#1f9e89', '#4E9AF1', '#c354c3'];
+  VIRIDIS = [[68,1,84],[72,40,120],[62,74,137],[49,104,142],[38,130,142],[31,158,137],[53,183,121],[109,205,89],[180,222,44],[253,231,37]];
+
+  componentDidMount() {
+    OmicsFM.loadJSON('data/identity_bulk.json').then(d => {
+      const excluded = new Set(['Integrator complex']);
+      d.fam = d.fam.map(f => excluded.has(d.families[f]?.name) ? -1 : f);
+      d.bounds = { x: [Infinity, -Infinity], y: [Infinity, -Infinity] };
+      for (let i = 0; i < d.n; i++) { if (!d.nb[i]) continue; const x = d.xy[2 * i], y = d.xy[2 * i + 1]; if (x < d.bounds.x[0]) d.bounds.x[0] = x; if (x > d.bounds.x[1]) d.bounds.x[1] = x; if (y < d.bounds.y[0]) d.bounds.y[0] = y; if (y > d.bounds.y[1]) d.bounds.y[1] = y; }
+      d.allBounds = d.bounds; if (d.referenceBounds) d.bounds = d.referenceBounds;
+      d.geneIndex = {}; d.gene.forEach((g, i) => { d.geneIndex[g.toUpperCase()] = i; }); d.acc.forEach((a, i) => { d.geneIndex[a.toUpperCase()] = i; });
+      const requested = new URLSearchParams(location.search).get('protein');
+      const selected = requested ? d.geneIndex[requested.toUpperCase()] : undefined;
+      this.setState({ d, ...(selected !== undefined ? {sel: selected, minDet: Math.min(this.state.minDet, d.det[selected])} : {}) }, () => this.draw());
+    }).catch(error => console.error('Explorer data:', error));
+    this._ro = new ResizeObserver(() => this.draw()); this.cv.current && this._ro.observe(this.cv.current);
+    this._hro = new ResizeObserver(([en]) => { const w = Math.round(en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); }); this.hdrRef.current && this._hro.observe(this.hdrRef.current);
+    this._keys = e => { if (e.key === 'Escape') this.setState({ sel: -1, query: '', path: -1 }); }; window.addEventListener('keydown', this._keys);
+    this._mm = e => { if (!this._rs) return; const w = Math.max(220, Math.min(560, this._rs.w0 + e.clientX - this._rs.x0)); if (w !== this.state.leftWpx) this.setState({ leftWpx: w }); };
+    this._mu = () => { if (this._rs) { this._rs = null; this.setState({ resizing: false }); } };
+    window.addEventListener('mousemove', this._mm); window.addEventListener('mouseup', this._mu);
+  }
+  componentWillUnmount() { this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); window.removeEventListener('keydown', this._keys); window.removeEventListener('mousemove', this._mm); window.removeEventListener('mouseup', this._mu); }
+  componentDidUpdate() { this.draw(); }
+
+  // ---- colour
+  viridis(t) { t = Math.max(0, Math.min(1, t)); const p = t * (this.VIRIDIS.length - 1), i = Math.floor(p), f = p - i, a = this.VIRIDIS[i], b = this.VIRIDIS[Math.min(i + 1, this.VIRIDIS.length - 1)]; return `rgb(${Math.round(a[0] + (b[0] - a[0]) * f)},${Math.round(a[1] + (b[1] - a[1]) * f)},${Math.round(a[2] + (b[2] - a[2]) * f)})`; }
+  famColor(f) { return f < 0 ? '#3A3A44' : f < 20 ? this.PAL[f] : `oklch(${[0.78, 0.62, 0.7][(f - 20) % 3]} 0.17 ${((f - 20) * 137.508 + 20) % 360})`; }
+  colorOf(i) {
+    const { d, mode, fam } = this.state;
+    if (mode === 'det') { const t = (Math.log10(Math.max(d.det[i], 1) / 100) + 2) / 2; return this.viridis(t); }
+    if (fam === -1) return this.famColor(d.fam[i]);
+    return d.fam[i] === fam ? '#8B5CFF' : '#3A3A44';
+  }
+  visible(i) { const { d, minDet, ov } = this.state; if (d.det[i] < minDet) return false; if (ov.famOnly && d.fam[i] < 0) return false; return true; }
+  matches(i) { const q = this.state.query.trim().toUpperCase(); if (!q) return false; const d = this.state.d; return d.gene[i].toUpperCase() === q || d.acc[i].toUpperCase() === q || (q.length >= 3 && (d.gene[i].toUpperCase().startsWith(q) || d.desc[i].toUpperCase().includes(q))); }
+  inPath(i) { const { d, path } = this.state; return path >= 0 && this._pathSet && this._pathSet.has(i); }
+  dimmed(i) { const { famHover, mode, fam, query, path, ov } = this.state, d = this.state.d; if (path >= 0) return !this.inPath(i); if (query.trim()) return !this.matches(i); if (mode === 'fam' && fam === -1 && famHover >= 0) return d.fam[i] !== famHover; return false; }
+
+  // ---- geometry
+  geom() {
+    const c = this.cv.current, d = this.state.d; if (!c || !d) return null;
+    const w = c.clientWidth, h = c.clientHeight, pad = 56, b = this.state.minDet < 5 ? (d.allBounds || d.bounds) : d.bounds, sx0 = (w - 2 * pad) / (b.x[1] - b.x[0]), sy0 = (h - 2 * pad) / (b.y[1] - b.y[0]);
+    const { k, x, y } = this.state.view, cx = w / 2, cy = h / 2;
+    const X = i => (pad + (d.xy[2 * i] - b.x[0]) * sx0 - cx) * k + cx + x, Y = i => (h - (pad + (d.xy[2 * i + 1] - b.y[0]) * sy0) - cy) * k + cy + y;
+    const P = (px, py) => [(pad + (px - b.x[0]) * sx0 - cx) * k + cx + x, (h - (pad + (py - b.y[0]) * sy0) - cy) * k + cy + y];
+    return { w, h, X, Y, P };
+  }
+  anchors() {
+    const d = this.state.d; if (this._anc) return this._anc; const b = d.bounds, cw = (b.x[1] - b.x[0]) / 40, ch = (b.y[1] - b.y[0]) / 40, grids = {};
+    for (let i = 0; i < d.n; i++) { const f = d.fam[i]; if (f < 0 || !d.nb[i] || (d.plotAnchors && !d.plotAnchors[i])) continue; const x = d.xy[2 * i], y = d.xy[2 * i + 1], key = Math.floor((x - b.x[0]) / cw) + ',' + Math.floor((y - b.y[0]) / ch); const gr = grids[f] = grids[f] || { cnt: {}, n: 0 }; gr.n++; const e = gr.cnt[key] = gr.cnt[key] || [0, 0, 0]; e[0]++; e[1] += x; e[2] += y; }
+    const out = []; for (const f in grids) { const gr = grids[f]; let best = null; for (const k in gr.cnt) { const e = gr.cnt[k]; if (!best || e[0] > best[0]) best = e; } out.push({ f: +f, n: gr.n, x: best[1] / best[0], y: best[2] / best[0] }); }
+    out.sort((a, b) => b.n - a.n); return this._anc = out;
+  }
+  draw() {
+    const c = this.cv.current, d = this.state.d, g = this.geom(); if (!c || !d || !g) return;
+    const dpr = window.devicePixelRatio || 1; if (c.width !== g.w * dpr || c.height !== g.h * dpr) { c.width = g.w * dpr; c.height = g.h * dpr; }
+    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, g.w, g.h);
+    const { sel, hover, hoverNb, mode, fam, ov, path } = this.state, q = this.state.query.trim(), n = d.n;
+    const r = Math.max(1.8, Math.min(4.6, 2.4 * Math.sqrt(this.state.view.k)));
+    const hasFocus = q || path >= 0 || (mode === 'fam' && fam >= 0);
+    // dim pass
+    ctx.globalAlpha = 0.35; ctx.fillStyle = '#26262C';
+    for (let i = 0; i < n; i++) if (this.visible(i) && this.dimmed(i)) ctx.fillRect(g.X(i) - r / 2, g.Y(i) - r / 2, r, r);
+    // colour pass (grouped by colour string)
+    ctx.globalAlpha = hasFocus ? 0.95 : 0.85;
+    const byCol = {}; for (let i = 0; i < n; i++) if (this.visible(i) && !this.dimmed(i)) { const k = this.colorOf(i); (byCol[k] = byCol[k] || []).push(i); }
+    // draw grey (unselected family) first so lime sits on top
+    const keys = Object.keys(byCol).sort((a, b) => (a === '#3A3A44' ? -1 : b === '#3A3A44' ? 1 : 0));
+    for (const k of keys) { ctx.fillStyle = k; const rr = k === '#8B5CFF' ? r * 0.75 : r * 0.55; for (const i of byCol[k]) { ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), rr, 0, 6.283); ctx.fill(); } }
+    ctx.globalAlpha = 1;
+    // family labels
+    if (ov.labels && !q && path < 0 && !(mode === 'fam' && fam >= 0)) {
+      ctx.font = '500 11px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const placed = [];
+      for (const a of this.anchors()) {
+        if (a.n < 15) continue;
+        let [lx, ly] = g.P(a.x, a.y); const t = d.families[a.f].name.toUpperCase(), tw = ctx.measureText(t).width + 10, th = 18;
+        for (let tries = 0; tries < 6; tries++) { const hit = placed.find(p => Math.abs(p.x - lx) < (p.w + tw) / 2 && Math.abs(p.y - ly) < th); if (!hit) break; ly = hit.y + th + 2; }
+        placed.push({ x: lx, y: ly, w: tw });
+        ctx.fillStyle = 'rgba(10,10,12,.8)'; ctx.fillRect(lx - tw / 2, ly - th / 2, tw, th); ctx.fillStyle = mode === 'fam' ? this.famColor(a.f) : '#F4F4F5'; ctx.fillText(t, lx, ly);
+      }
+    }
+    // selected family label
+    if (mode === 'fam' && fam >= 0 && !q && path < 0) { const a = this.anchors().find(a => a.f === fam); if (a) { ctx.font = '500 12px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const [lx, ly] = g.P(a.x, a.y); const t = d.families[fam].name.toUpperCase(), tw = ctx.measureText(t).width + 12; ctx.fillStyle = '#8B5CFF'; ctx.fillRect(lx - tw / 2, ly - 24, tw, 20); ctx.fillStyle = '#0A0A0C'; ctx.fillText(t, lx, ly - 14); } }
+    // query hits: white ring + label
+    if (q || path >= 0) {
+      ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let labelled = 0;
+      for (let i = 0; i < n; i++) { if (!this.visible(i) || this.dimmed(i)) continue; ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 5, 0, 6.283); ctx.strokeStyle = '#F4F4F5'; ctx.lineWidth = 2; ctx.stroke(); if (labelled < 40) { ctx.fillStyle = '#F4F4F5'; ctx.fillText(d.gene[i], g.X(i) + 8, g.Y(i)); labelled++; } }
+    }
+    // identity neighbours of selected
+    if (sel >= 0 && d.neigh[sel]) {
+      const nb = d.neigh[sel]; ctx.strokeStyle = 'rgba(244,244,245,.35)'; ctx.lineWidth = 1;
+      for (let j = 0; j < nb.length; j += 2) { if (!this.visible(nb[j])) continue; ctx.beginPath(); ctx.moveTo(g.X(sel), g.Y(sel)); ctx.lineTo(g.X(nb[j]), g.Y(nb[j])); ctx.stroke(); }
+      for (let j = 0; j < nb.length; j += 2) { const i = nb[j]; if (!this.visible(i)) continue; const hl = hoverNb === i; ctx.fillStyle = this.colorOf(i) === '#3A3A44' ? this.famColor(d.fam[i]) : this.colorOf(i); ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), hl ? 6 : 4, 0, 6.283); ctx.fill(); ctx.strokeStyle = '#F4F4F5'; ctx.lineWidth = hl ? 2 : 1; ctx.stroke(); }
+    }
+    const ring = (i, col) => { ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 8, 0, 6.283); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = this.colorOf(i); ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 4.5, 0, 6.283); ctx.fill(); };
+    if (hover >= 0 && hover !== sel) ring(hover, '#9A9AA6');
+    if (sel >= 0) { ring(sel, '#8B5CFF'); ctx.font = '600 12px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#8B5CFF'; ctx.fillText(d.gene[sel], g.X(sel) + 12, g.Y(sel)); }
+  }
+  nearest(mx, my) {
+    const g = this.geom(), d = this.state.d; if (!g) return -1; let best = -1, bd = 100;
+    for (let i = 0; i < d.n; i++) { if (!this.visible(i) || this.dimmed(i)) continue; const dx = g.X(i) - mx, dy = g.Y(i) - my, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } }
+    if (best < 0) for (let i = 0; i < d.n; i++) { if (!this.visible(i)) continue; const dx = g.X(i) - mx, dy = g.Y(i) - my, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } }
+    return best;
+  }
+  pos(e) { const r = this.cv.current.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  setPath(p) { const d = this.state.d; this._pathSet = p >= 0 ? new Set(d.pathways[p].idx) : null; this.setState({ path: p, query: '' }); }
+
+  renderVals() {
+    const { d, minDet, mode, fam, sel, hover, query, view, path, ov } = this.state;
+    const W = this.state.headerW || 1440, k = Math.max(0.6, Math.min(1, W / 1440));
+    let visibleCount = 0, queryHits = 0, famList = [], pathHits = 0;
+    if (d) {
+      for (let i = 0; i < d.n; i++) { if (this.visible(i)) { visibleCount++; if (query.trim() && this.matches(i)) queryHits++; if (path >= 0 && this.inPath(i)) pathHits++; } }
+      famList = d.families.map((f, i) => ({ label: f.name, n: f.n, color: fam === -1 ? this.famColor(i) : (fam === i ? '#8B5CFF' : '#3A3A44'), bg: fam === i ? '#1B1B20' : 'transparent', fg: '#F4F4F5', opacity: fam >= 0 && fam !== i ? 0.5 : 1, pick: () => this.setState({ fam: fam === i ? -1 : i, query: '', path: -1 }), over: () => this.setState({ famHover: i }) })).filter(f => f.label !== 'Integrator complex');
+    }
+    // pathway search: if the query matches a pathway name exactly (case-insensitive) and no gene, offer it
+    let pathMatch = -1; if (d && query.trim().length >= 4 && path < 0) { const q = query.trim().toLowerCase(); pathMatch = d.pathways.findIndex(p => p.name.toLowerCase() === q); if (pathMatch < 0) { const cands = d.pathways.map((p, i) => [p, i]).filter(([p]) => p.name.toLowerCase().includes(q)); if (cands.length === 1 && queryHits === 0) pathMatch = cands[0][1]; } }
+    if (pathMatch >= 0 && !this._autoPath) { this._autoPath = true; setTimeout(() => { this._autoPath = false; this.setPath(pathMatch); }, 0); }
+    const showTip = d && hover >= 0 && this._tip;
+    const famName = i => d.fam[i] >= 0 ? d.families[d.fam[i]].name : 'no curated family';
+    let neighbours = [], neighbourSummary = '';
+    if (d && sel >= 0 && d.neigh[sel]) {
+      const nb = d.neigh[sel]; let same = 0, k2 = 0;
+      for (let j = 0; j < nb.length; j += 2) { const i = nb[j]; k2++; if (d.fam[i] >= 0 && d.fam[i] === d.fam[sel]) same++; neighbours.push({ gene: d.gene[i], fam: d.fam[i] >= 0 ? d.families[d.fam[i]].name : '', d: nb[j + 1].toFixed(2), color: this.famColor(d.fam[i]), bg: this.state.hoverNb === i ? '#1B1B20' : 'transparent', pick: () => this.setState({ sel: i, hoverNb: -1, minDet: d.det[i] < minDet ? Math.floor(d.det[i]) : minDet, ov: { ...ov, famOnly: ov.famOnly && d.fam[i] >= 0 } }), over: () => this.setState({ hoverNb: i }) }); }
+      neighbourSummary = d.fam[sel] >= 0 ? `${same} of ${k2} nearest genes belong to the same curated family (${famName(sel)}), a family the model was never told about.` : `${d.gene[sel]} has no curated family; its neighbours are the model’s own opinion of what it resembles.`;
+    }
+    const det = i => `detected in ${d.det[i]} % of test-split profiles`;
+    const chr = i => d.chr[i] == null ? 'no DepMap score' : `Chronos ${d.chr[i]} · ${d.chr[i] < -1 ? 'commonly essential' : d.chr[i] < -0.5 ? 'often essential' : 'non-essential'}`;
+    const isFam = mode === 'fam';
+    return {
+      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: Math.round(Math.max(240, 340 * k)) + 'px', navFont: (W >= 1200 ? 13 : W >= 1000 ? 12 : 11) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
+      showSearch: W >= 1180, searchW: Math.round(Math.max(200, 320 * k)) + 'px', wide: W >= 1100,
+      leftW: (this.state.leftWpx || Math.round(Math.max(240, 340 * k))) + 'px', rightW: (!(d && sel >= 0) && this.state.infoClosed ? 56 : Math.round(Math.max(240, 340 * k))) + 'px',
+      startResize: e => { e.preventDefault(); this._rs = { x0: e.clientX, w0: this.state.leftWpx || Math.round(Math.max(240, 340 * k)) }; this.setState({ resizing: true }); }, handleColor: this.state.resizing ? '#8B5CFF' : '#2A2A31',
+      query, hasQuery: !!query.trim(), queryHits: queryHits.toLocaleString(), onQuery: e => this.setState({ query: e.target.value, path: -1 }), clearQuery: () => this.setState({ query: '' }),
+      pathOn: path >= 0, pathName: d && path >= 0 ? d.pathways[path].name : '', pathHits: pathHits.toLocaleString(), clearPath: () => this.setPath(-1),
+      visibleCount: visibleCount.toLocaleString(), totalCount: d ? d.total.toLocaleString() : '20,272', minDet,
+      onDet: e => this.setState({ minDet: +e.target.value }), detStops: [0, 5, 10, 20, 50, 100].map(v => ({ label: v + ' %', bg: minDet === v ? '#F4F4F5' : '#1B1B20', fg: minDet === v ? '#0A0A0C' : '#F4F4F5', pick: () => this.setState({ minDet: v }) })),
+      modeDet: () => this.setState({ mode: 'det' }), modeFam: () => this.setState({ mode: 'fam' }), isDetMode: !isFam, isFamMode: isFam,
+      modeDetBg: !isFam ? '#F4F4F5' : '#1B1B20', modeDetFg: !isFam ? '#0A0A0C' : '#F4F4F5', modeFamBg: isFam ? '#F4F4F5' : '#1B1B20', modeFamFg: isFam ? '#0A0A0C' : '#F4F4F5',
+      famList, famOut: () => this.setState({ famHover: -1 }), allFams: () => this.setState({ fam: -1 }), allFamLabel: fam >= 0 ? 'all families' : ' ', allFamColor: fam >= 0 ? '#8B5CFF' : 'transparent',
+      overlays: [['labels', 'Family labels'], ['famOnly', 'Hide genes without a family']].map(([id, label]) => ({ label, trackBg: ov[id] ? '#8B5CFF' : '#3A3A44', knobLeft: ov[id] ? '14px' : '2px', toggle: () => this.setState({ ov: { ...ov, [id]: !ov[id] } }) })),
+      readout: `${visibleCount.toLocaleString()} / ${d ? d.total.toLocaleString() : '20,272'} genes · ≥ ${minDet} %` + (isFam ? (fam >= 0 && d ? ' · ' + d.families[fam].name : ' · 39 families') : ' · detection fraction'),
+      cv: this.cv, cursor: this.state.drag ? 'grabbing' : hover >= 0 ? 'pointer' : 'crosshair', zoomLabel: Math.abs(view.k - 1) > 0.01 ? `zoom ${view.k.toFixed(1)}×` : 'full view',
+      onMove: e => { const [mx, my] = this.pos(e); if (this.state.drag) { const dr = this.state.drag; this.setState({ view: { k: view.k, x: dr.x0 + mx - dr.mx, y: dr.y0 + my - dr.my } }); return; } const i = this.nearest(mx, my); this._tip = [mx, my]; if (i !== hover) this.setState({ hover: i }); else this.forceUpdate(); },
+      onLeave: () => this.setState({ hover: -1, drag: null }), onDown: e => { const [mx, my] = this.pos(e); this._down = [mx, my]; this.setState({ drag: { mx, my, x0: view.x, y0: view.y } }); }, onUp: () => this.setState({ drag: null }),
+      onPick: e => { const [mx, my] = this.pos(e); if (this._down && Math.hypot(mx - this._down[0], my - this._down[1]) > 4) return; const i = this.nearest(mx, my); this.setState({ sel: i, hoverNb: -1 }); },
+      onWheel: e => { e.preventDefault(); const [mx, my] = this.pos(e); const g = this.geom(); if (!g) return; const f = Math.exp(-e.deltaY * 0.0015), k2 = Math.max(0.4, Math.min(14, view.k * f)), cx = g.w / 2, cy = g.h / 2, r = k2 / view.k; this.setState({ view: { k: k2, x: mx - cx - (mx - cx - view.x) * r, y: my - cy - (my - cy - view.y) * r } }); },
+      resetView: () => this.setState({ view: { k: 1, x: 0, y: 0 } }),
+      showTip: !!showTip, tipX: showTip ? this._tip[0] + 'px' : '0px', tipY: showTip ? this._tip[1] + 'px' : '0px', tipColor: showTip ? this.colorOf(hover) : '#5C5C68', tipGene: showTip ? d.gene[hover] : '', tipAcc: showTip ? d.acc[hover] : '', tipDesc: showTip ? d.desc[hover] : '', tipMeta: showTip ? `${famName(hover)} · ${d.det[hover]} % of profiles` : '',
+      hasSel: !!(d && sel >= 0), noSel: !(d && sel >= 0) && !this.state.infoClosed, infoClosed: !(d && sel >= 0) && !!this.state.infoClosed, openInfo: () => this.setState({ infoClosed: false }), closeInfo: () => this.setState({ infoClosed: true }),
+      selGene: d && sel >= 0 ? d.gene[sel] : '', selAcc: d && sel >= 0 ? d.acc[sel] : '', selDesc: d && sel >= 0 ? d.desc[sel] : '', selFam: d && sel >= 0 ? famName(sel) : '', selFamColor: d && sel >= 0 ? this.famColor(d.fam[sel]) : '#3A3A44',
+      selDet: d && sel >= 0 ? det(sel) : '', selChr: d && sel >= 0 ? chr(sel) : '', selUniprot: d && sel >= 0 ? 'https://www.uniprot.org/uniprotkb/' + d.acc[sel] : '#',
+      clearSel: () => this.setState({ sel: -1, hoverNb: -1 }), neighbours, nbOut: () => this.setState({ hoverNb: -1 }), neighbourSummary,
+      tryChips: [['RPL3', 'RPL3'], ['KRT5', 'KRT5'], ['PSMB5', 'PSMB5'], ['Ribosome', 'Ribosome'], ['Oxidative phosphorylation', 'Oxidative phosphorylation']].map(([label, q]) => ({ label, go: () => { const i = d && d.geneIndex[q.toUpperCase()]; if (i != null) this.setState({ sel: i, query: '', path: -1 }); else this.setState({ query: q, path: -1 }); } })),
+    };
+  }
+}
+</script>
+</body>
+</html>

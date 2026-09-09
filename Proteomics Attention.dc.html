@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmicsFM | Proteomics Attention</title>
+<script src="assets/vendor/react.production.min.js"></script>
+<script src="assets/vendor/react-dom.production.min.js"></script>
+<script src="assets/vendor/vis-network.min.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+html,body{margin:0;padding:0;background:#0A0A0C;color:#F4F4F5;font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#F4F4F5;text-decoration:none}a:hover{color:#C0FE04}
+*{box-sizing:border-box}
+input::placeholder{color:#5C5C68}
+select{appearance:none;-webkit-appearance:none;color-scheme:dark}
+select option{background:#000;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:8px 12px}
+select option:checked{background:#000;color:#C0FE04}
+@supports (appearance:base-select){
+  select,select::picker(select){appearance:base-select}
+  select{display:inline-flex;align-items:center}
+  select::picker(select){background:#000;border:1px solid #2A2A31;border-radius:0;padding:6px;max-height:360px;overflow-y:auto;margin-top:6px;box-shadow:0 12px 32px #0008}
+  select::picker-icon{display:none}
+  select option{min-height:34px;border:0;background:#000;color:#9A9AA6;transition:color 120ms ease-out}
+  select option:hover,select option:focus,select option:checked{background:#000;color:#C0FE04;outline:0}
+  select option::checkmark{color:#C0FE04}
+}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#2A2A31}::-webkit-scrollbar-track{background:transparent}
+.vis-tooltip{position:absolute;pointer-events:none;padding:10px 12px;background:#000;color:#F4F4F5;font:12px 'Space Grotesk',system-ui,sans-serif;line-height:1.4;z-index:5;white-space:pre-line;max-width:300px}
+.vis-network:focus{outline:none}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:#2A2A31;outline:0;margin:14px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:#C0FE04;border:0;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#C0FE04;border:0;cursor:pointer;border-radius:0}
+</style>
+</helmet>
+<div style="height:100vh;background:#0A0A0C;color:#F4F4F5;display:flex;flex-direction:column;overflow:hidden">
+
+<header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:#000;flex:none">
+  <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/small_logo_proteomics_black.svg" alt="OmicsFM proteomics" style="height:44px;width:auto;display:block"></a>
+  <nav style="display:flex;align-items:center;gap:{{ navGap }};margin-left:{{ edgePad }};min-width:0;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
+    <a href="Home.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#9A9AA6;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Home</a>
+    <span style="color:#5C5C68">/</span>
+    <a href="Home.dc.html#modalities" style="display:inline-flex;align-items:center;padding:7px 12px;background:#C0FE04;color:#0A0A0C;white-space:nowrap">Proteomics</a>
+    <span style="color:#5C5C68">/</span>
+    <a href="Proteomics Samples.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Samples</a>
+    <span style="display:inline-flex;align-items:center;padding:7px 12px;color:#F4F4F5;white-space:nowrap">Attention</span>
+    <a href="Proteomics Proteins.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Proteins</a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
+    <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:#1B1B20;color:#9A9AA6;position:relative" style-focus="background:#2A2A31">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
+      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Find a protein: RPL3, PSMB5, P39023…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:13px;min-width:0">
+      <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;cursor:pointer">✕</button></sc-if>
+      <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:44px;left:0;right:0;background:#000;display:flex;flex-direction:column;z-index:50;max-height:320px;overflow-y:auto">
+          <sc-for list="{{ results }}" as="r" hint-placeholder-count="0">
+            <button onClick="{{ r.pick }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border:0;cursor:pointer;font:inherit;text-align:left;background:transparent;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#1B1B20"><span style="display:flex;align-items:baseline;gap:8px"><span style="font-weight:600">{{ r.gene }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68">{{ r.acc }}</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:{{ r.tagColor }}">{{ r.tag }}</span></button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </label></sc-if>
+    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C">Read the paper</a>
+  </div>
+</header>
+
+<div data-screen-label="Title bar" style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:52px;padding:0 32px;background:#000;border-top:4px solid #0A0A0C;flex:none;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">
+  <div style="display:flex;align-items:center;gap:16px;min-width:0"><span style="color:#C0FE04;white-space:nowrap;flex:none">01 · Proteomics · Attention</span><span style="color:#5C5C68;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Tissue attention networks · learned-identity checkpoint · symmetrised · 30 tissues</span></div>
+  <div style="display:flex;align-items:center;gap:16px;color:#9A9AA6;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden">
+    <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearSel }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#C0FE04;color:#0A0A0C;flex:none;transition:background 120ms ease-out" style-hover="background:#F4F4F5"><span>{{ selGene }}</span><span>✕ overview</span></button></sc-if>
+    <sc-if value="{{ showStat }}" hint-placeholder-val="{{ true }}"><span style="overflow:hidden;text-overflow:ellipsis">{{ statLine }}</span></sc-if>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:{{ leftW }} 6px minmax(0,1fr) {{ rightW }};gap:0;flex:1;min-height:0;background:#000">
+
+  <!-- Controls -->
+  <aside data-screen-label="Controls" style="background:#0A0A0C;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
+    <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:10px;flex:none">
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Tissue network</span><span>{{ tissueMeta }}</span></div>
+      <div style="position:relative;display:flex;align-items:center;background:#1B1B20;height:44px" style-hover="outline:1px solid #C0FE04">
+        <select aria-label="Tissue network" value="{{ tissue }}" onChange="{{ onTissue }}" style="flex:1;min-width:0;width:100%;height:44px;padding:0 36px 0 14px;border:0;outline:0;background:#1B1B20;color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">
+          <sc-for list="{{ tissues }}" as="t" hint-placeholder-count="1"><option value="{{ t.id }}">{{ t.label }}</option></sc-for>
+        </select>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9A9AA6" stroke-width="1.4" style="position:absolute;right:14px;pointer-events:none"><path d="M2 4.5 6 8.5l4-4"></path></svg>
+      </div>
+    </div>
+
+    <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:10px;flex:none">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">View</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <button onClick="{{ viewNetwork }}" style="padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ vNetBg }};color:{{ vNetFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">Network</button>
+        <button onClick="{{ viewClusters }}" style="padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ vClBg }};color:{{ vClFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">Clusters</button>
+      </div>
+      <div style="font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty">{{ viewHelp }}</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span style="white-space:nowrap">Min. size</span><span style="color:#C0FE04;white-space:nowrap">{{ minCompLabel }}</span></div>
+      <div style="display:flex;gap:4px">
+        <sc-for list="{{ compStops }}" as="s" hint-placeholder-count="4">
+          <button onClick="{{ s.pick }}" style="flex:1;padding:6px 0;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.06em;background:{{ s.bg }};color:{{ s.fg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">{{ s.label }}</button>
+        </sc-for>
+      </div>
+      <div style="font-size:12px;line-height:1.5;color:#5C5C68;text-wrap:pretty">Connected groups smaller than this are hidden.</div>
+    </div>
+
+    <sc-if value="{{ isNetwork }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:6px;flex:none">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:4px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Strongest edges</span><span style="color:#C0FE04">{{ edgeLimit }}</span></div>
+        <div style="display:flex;gap:4px">
+          <sc-for list="{{ edgeStops }}" as="s" hint-placeholder-count="4">
+            <button onClick="{{ s.pick }}" style="flex:1;padding:6px 0;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.06em;background:{{ s.bg }};color:{{ s.fg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">{{ s.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="padding:24px 24px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;flex:none"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ legendTitle }}</span><button onClick="{{ clearIso }}" style="border:0;background:transparent;color:{{ isoColor }};font:inherit;cursor:pointer;padding:0;flex:none">{{ isoLabel }}</button></div>
+    <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;overflow-x:hidden;min-height:160px;flex:1">
+      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="12">
+        <button onClick="{{ l.pick }}" onMouseEnter="{{ l.over }}" onMouseLeave="{{ legendOut }}" title="{{ l.title }}" style="display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:10px;padding:7px 8px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ l.bg }};color:#F4F4F5;opacity:{{ l.opacity }};transition:background 120ms ease-out,opacity 120ms ease-out" style-hover="background:#1B1B20">
+          <span style="width:9px;height:9px;background:{{ l.color }}"></span>
+          <span style="display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.sub }}</span></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68">{{ l.n }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="padding:20px 24px 20px;margin-top:auto;background:#000;display:flex;align-items:stretch;flex:none">
+      <div style="width:8px;flex:none;background:repeating-linear-gradient(135deg,#2A2A31 0 2px,#000 2px 6px)"></div>
+      <div style="padding:0 0 0 12px;font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto"><span style="color:#FFB020;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Read this</span>Attention is symmetrised and has no direction. A strong edge is a hypothesis about a relationship, not proof of a physical interaction. Cluster names are KEGG enrichments added after training; the model never saw them.</div>
+    </div>
+  </aside>
+
+  <div onMouseDown="{{ startResize }}" title="Drag to resize the panel" style="cursor:col-resize;background:#000;display:flex;align-items:center;justify-content:center" style-hover="background:#1B1B20"><span style="width:2px;height:28px;background:{{ handleColor }}"></span></div>
+
+  <!-- Plot -->
+  <main data-screen-label="Network" style="position:relative;background:#0A0A0C;min-width:0;min-height:0;overflow:hidden;margin-right:4px">
+    <div ref="{{ cv }}" style="position:absolute;inset:54px 12px 86px;outline:none;visibility:{{ graphVis }}"></div>
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;pointer-events:none">
+      <span style="position:absolute;top:12px;left:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
+      <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
+      <span style="position:absolute;bottom:12px;left:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
+      <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
+      <div style="position:absolute;top:22px;left:32px;right:32px;display:flex;justify-content:space-between;gap:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;white-space:nowrap;overflow:hidden"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0"><span style="color:#C0FE04">Proteomics</span> · attention · {{ readout }}</span><span style="display:flex;gap:16px;pointer-events:auto"><button onClick="{{ togglePhysics }}" style="border:0;cursor:pointer;font:inherit;padding:4px 8px;background:{{ physBg }};color:{{ physFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">{{ physLabel }}</button><button onClick="{{ fitView }}" style="border:0;cursor:pointer;font:inherit;padding:4px 8px;background:#1B1B20;color:#F4F4F5" style-hover="background:#2A2A31">fit</button></span></div>
+      <div style="position:absolute;bottom:22px;left:32px;right:32px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6"><span style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:2px;background:#F4F4F5"></span>curated pair</span><span style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:2px;background:#5C5C68"></span>unannotated</span></div>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;color:#9A9AA6">Drag nodes · scroll to zoom · click a node or edge · double-click to fit</div></sc-if>
+      </div>
+    </div>
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:0;right:0;bottom:64px;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;white-space:nowrap">{{ loadingLabel }}</div></div></sc-if>
+  </main>
+
+  <!-- Inspector -->
+  <aside data-screen-label="Inspector" style="background:#000;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
+    <sc-if value="{{ infoClosed }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:12px">
+        <button onClick="{{ openInfo }}" title="What am I looking at?" style="width:36px;height:36px;border:0;cursor:pointer;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C">i</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Selected protein · {{ tissueName }}</span><button onClick="{{ clearSel }}" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer" style-hover="background:#2A2A31">Clear ✕</button></div>
+          <div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:26px;font-weight:600;line-height:1.1">{{ selGene }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9A9AA6">{{ selAcc }}</div></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9A9AA6"><span style="width:9px;height:9px;flex:none;background:{{ selClColor }}"></span><span>{{ selCluster }}</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Curated partners</div><div style="font-size:18px;font-weight:600;line-height:1.2">{{ selCurated }}<span style="font-size:12px;color:#5C5C68;font-weight:400"> / {{ selK }}</span></div></div>
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Unannotated</div><div style="font-size:18px;font-weight:600;line-height:1.2;color:#C0FE04">{{ selUnannotated }}<span style="font-size:12px;color:#5C5C68;font-weight:400"> hypotheses</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Top {{ selK }} attention partners</span><span>attention</span></div>
+          <div style="display:flex;flex-direction:column;gap:1px">
+            <sc-for list="{{ partners }}" as="p" hint-placeholder-count="10">
+              <button onClick="{{ p.pick }}" onMouseEnter="{{ p.over }}" onMouseLeave="{{ pOut }}" style="display:grid;grid-template-columns:minmax(0,1fr) 56px auto;grid-template-rows:auto auto;align-items:center;gap:4px 10px;padding:7px 10px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ p.bg }};color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#1B1B20">
+                <span style="display:flex;align-items:baseline;gap:8px;min-width:0"><span style="font-size:12.5px;font-weight:500">{{ p.gene }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5C5C68">{{ p.rank }}</span></span>
+                <span style="height:4px;background:#1B1B20;position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ p.barW }};background:{{ p.barColor }}"></span></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9A9AA6">{{ p.att }}</span>
+                <span style="grid-column:1 / -1;display:flex;gap:3px;flex-wrap:wrap"><sc-for list="{{ p.dbs }}" as="db" hint-placeholder-count="0"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:1px 4px;background:{{ db.bg }};color:{{ db.fg }}">{{ db.label }}</span></sc-for></span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty;padding-top:4px">{{ partnerSummary }}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <a href="{{ selUniprot }}" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span>UniProt</span><span>↗</span></a>
+          <a href="{{ selProteinsUrl }}" style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#1B1B20;color:#9A9AA6;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5"><span>Open in Proteins (identity map)</span><span>→</span></a>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ hasEdge }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:16px;padding:24px;background:#000">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Selected edge · {{ tissueName }}</span><button onClick="{{ clearEdge }}" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer" style-hover="background:#2A2A31">Clear ✕</button></div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><button onClick="{{ edgeA.pick }}" style="border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#1B1B20;color:#F4F4F5;font-size:16px;font-weight:600" style-hover="background:#C0FE04;color:#0A0A0C">{{ edgeA.gene }}</button><span style="width:28px;height:2px;background:#C0FE04"></span><button onClick="{{ edgeB.pick }}" style="border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#1B1B20;color:#F4F4F5;font-size:16px;font-weight:600" style-hover="background:#C0FE04;color:#0A0A0C">{{ edgeB.gene }}</button></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Attention</div><div style="font-size:18px;font-weight:600;font-family:'JetBrains Mono',monospace">{{ edgeAtt }}</div></div>
+          <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Rank in tissue</div><div style="font-size:18px;font-weight:600;font-family:'JetBrains Mono',monospace">#{{ edgeRank }}</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <sc-for list="{{ edgeEvidence }}" as="ev" hint-placeholder-count="9">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 12px;background:#131316;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase"><span style="color:#F4F4F5">{{ ev.name }}</span><span style="color:{{ ev.color }}">{{ ev.status }}</span></div>
+          </sc-for>
+        </div>
+        <div style="font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty">{{ edgeSummary }}</div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>What am I looking at?</span><button onClick="{{ closeInfo }}" title="Hide panel" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer;flex:none" style-hover="background:#2A2A31">Hide ✕</button></div>
+        <p style="margin:0;font-size:14px;line-height:1.55;color:#F4F4F5;text-wrap:pretty;text-align:justify;hyphens:auto">When the model predicts a protein’s abundance in a tissue, it looks at other proteins. Attention is how much it looks. Each edge here is one of the strongest of those look-ups across all {{ tissueName }} proteomes; each node is a protein.</p>
+        <p style="margin:0;font-size:13px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">Cluster the strongest edges and the islands that appear are complexes and pathways: the ribosome, the proteasome, oxidative phosphorylation, complement. The model was never told any of that. White edges have pair annotations in the reference databases. Grey edges are unannotated relationships: model hypotheses that need validation. Edge details distinguish missing pair annotations from missing database coverage. Partners change between tissues: compare the same protein in brain and liver.</p>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Clusters</span>the community map: top 3,000 edges, coloured by Leiden community, named by its best KEGG enrichment.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Network</span>the raw graph; choose a preset of 500, 1,500, 3,000 or 5,000 strongest edges.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>a node, or search any of the {{ nProteins }} proteins in this tissue, to see its 25 strongest partners and which databases already know them.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Try</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <sc-for list="{{ tryChips }}" as="t" hint-placeholder-count="4">
+              <button onClick="{{ t.go }}" style="padding:7px 10px;border:0;cursor:pointer;font:inherit;font-size:12px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { manifest: null, d: null, tissue: 'brain', view: 'network', edgeLimit: 1500, iso: -1, legendHover: -1, sel: -1, hover: -1, hoverP: -1, query: '', partners: null, vw: { k: 1, x: 0, y: 0 }, drag: null, infoClosed: false, loading: true, minComp: 10, selEdge: -1, physics: false, stabPct: 100 };
+  cv = React.createRef(); hdrRef = React.createRef();
+  PAL = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9a6324', '#aaffc3', '#808000', '#ffd8b1', '#ff6fb5', '#1f9e89', '#4E9AF1', '#c354c3'];
+  DBS = [['corum', 1], ['bioplex', 2], ['huri', 4], ['string', 8], ['reactome', 16], ['kegg', 32], ['gocc', 64], ['gobp', 128], ['omnipath', 256]];
+  TRY = ['RPL3', 'PSMB5', 'C3', 'NDUFA9', 'SNAP25'];
+
+  componentDidMount() {
+    window.__attn = this;
+    const q = new URLSearchParams(location.search), t = q.get('tissue'), p = q.get('protein');
+    this._pendingProtein = p;
+    // Load preset positions before showing a tissue, so first visits never start physics.
+    Promise.all([q.has('nocache') ? Promise.resolve({}) : this.readJSON('data/attention_explorer/layouts.json'), this.readJSON('data/attention_explorer/manifest.json')])
+      .then(([layouts, manifest]) => { if (this._disposed) return; this._shipped = layouts; this.setState({ manifest }); this.loadTissue(t && manifest.tissues.some(x => x.id === t) ? t : 'brain'); })
+      .catch(error => { if (!this._disposed) this.setState({ error: 'Could not load network presets. Reload to try again.', loading: false }); console.error(error); });
+    this._ro = new ResizeObserver(() => { if (this.net) this.net.redraw(); }); this.cv.current && this._ro.observe(this.cv.current);
+    this._hro = new ResizeObserver(([en]) => { const w = Math.round(en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); }); this.hdrRef.current && this._hro.observe(this.hdrRef.current);
+    this._keys = e => { if (e.key === 'Escape') this.setState({ sel: -1, partners: null, query: '', iso: -1 }); }; window.addEventListener('keydown', this._keys);
+    this._mm = e => { if (!this._rs) return; const w = Math.max(220, Math.min(560, this._rs.w0 + e.clientX - this._rs.x0)); if (w !== this.state.leftWpx) this.setState({ leftWpx: w }); };
+    this._mu = () => { if (this._rs) { this._rs = null; this.setState({ resizing: false }); } };
+    window.addEventListener('mousemove', this._mm); window.addEventListener('mouseup', this._mu);
+  }
+  componentWillUnmount() { this._disposed = true; clearTimeout(this._stabTimer); clearTimeout(this._startTimer); this.net && this.net.destroy(); this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); window.removeEventListener('keydown', this._keys); window.removeEventListener('mousemove', this._mm); window.removeEventListener('mouseup', this._mu); }
+  componentDidUpdate() { this.draw(); }
+  async readJSON(url) { const response = await fetch(url); if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`); return response.json(); }
+
+  loadTissue(id) {
+    const request = this._tissueRequest = (this._tissueRequest || 0) + 1;
+    clearTimeout(this._stabTimer); clearTimeout(this._startTimer); this._stabilising = false;
+    this.net && this.net.setOptions({ physics: { enabled: false } });
+    this._esKey = null; this._topo = null; this._visual = null;
+    this.setState({ loading: true, error: '', tissue: id, d: null, sel: -1, partners: null, iso: -1, hover: -1, selEdge: -1, physics: false, stabPct: 100 });
+    return this.readJSON(`data/attention_explorer/${id}.json`).then(d => {
+      if (this._disposed || request !== this._tissueRequest) return;
+      // derive: degree per node in top-N edges (for sizing), community colours, bounds per view, index by gene/acc
+      d.byKey = {}; d.nodes.forEach((n, i) => { d.byKey[n[1].toUpperCase()] = i; d.byKey[n[0].toUpperCase()] = i; });
+      d.deg = new Int32Array(d.nodes.length); for (const e of d.edges) { d.deg[e[0]]++; d.deg[e[1]]++; }
+      d.comColor = {}; d.communities.forEach((c, i) => d.comColor[c.community] = i < 20 ? this.PAL[i] : `oklch(${[0.78, 0.62, 0.7][(i - 20) % 3]} 0.17 ${((i - 20) * 137.508 + 20) % 360})`);
+
+      this.setState({ d, loading: false }, () => { if (this._pendingProtein) { const i = d.byKey[this._pendingProtein.toUpperCase()]; this._pendingProtein = null; if (i != null) this.select(i); } });
+    }).catch(error => { if (!this._disposed && request === this._tissueRequest) this.setState({ error: 'Could not load this tissue. Choose it again to retry.', loading: false }); console.error(error); });
+  }
+  select(i) {
+    const d = this.state.d; if (!d || i < 0) return;
+    this.setState({ sel: i, partners: null, query: '', hoverP: -1, infoClosed: false, selEdge: -1, hoverEdge: -1 });
+    const shard = Math.floor(i / d.shardSize);
+    const request = this._partnerRequest = (this._partnerRequest || 0) + 1;
+    this.readJSON(`data/attention_explorer/${d.tissue}/partners-${shard}.json`).then(sh => { const list = sh[String(i % d.shardSize)] || sh[String(i)] || []; if (!this._disposed && request === this._partnerRequest && this.state.d === d && this.state.sel === i) this.setState({ partners: list }); }).catch(() => { if (!this._disposed && request === this._partnerRequest && this.state.d === d && this.state.sel === i) this.setState({ partners: [] }); });
+  }
+
+  // ---- vis-network renderer (live physics, pyvis-style parameters)
+  edgesShown() {
+    const d = this.state.d, n0 = this.state.view === 'clusters' ? d.clusterEdges : this.state.edgeLimit, key = d.tissue + ':' + n0 + ':' + this.state.minComp;
+    if (this._esKey === key && this._es) return this._es;
+    const raw = d.edges.slice(0, n0), N = d.nodes.length, par = new Int32Array(N); for (let i = 0; i < N; i++) par[i] = i;
+    const find = i => { while (par[i] !== i) { par[i] = par[par[i]]; i = par[i]; } return i; };
+    for (const e of raw) { const a = find(e[0]), b = find(e[1]); if (a !== b) par[a] = b; }
+    const size = {}; const seen = new Uint8Array(N); for (const e of raw) for (const v of [e[0], e[1]]) if (!seen[v]) { seen[v] = 1; const r = find(v); size[r] = (size[r] || 0) + 1; }
+    this._es = raw.filter(e => size[find(e[0])] >= this.state.minComp); this._esKey = key; return this._es;
+  }
+  isCurated(mask) { return mask > 0; }
+  nodeColor(i) { const d = this.state.d, c = d.nodes[i][2]; return c >= 0 ? d.comColor[c] : '#8A8A96'; }
+  physicsFor(mode) {
+    // the tutorial's pyvis settings; clusters view drops central gravity so islands can spread
+    return { enabled: true, solver: 'barnesHut', barnesHut: { gravitationalConstant: mode === 'clusters' ? -9000 : -6000, centralGravity: mode === 'clusters' ? 0.02 : 0.15, springLength: mode === 'clusters' ? 90 : 140, springConstant: mode === 'clusters' ? 0.004 : 0.0015, damping: 0.12, avoidOverlap: 0.2 },
+      stabilization: { enabled: false }, maxVelocity: 30, minVelocity: 0.75, timestep: 0.5, adaptiveTimestep: true };
+  }
+  ensureNetwork() {
+    if (this.net || !this.cv.current || !window.vis) return;
+    this.nodesDS = new vis.DataSet([]); this.edgesDS = new vis.DataSet([]);
+    this.net = new vis.Network(this.cv.current, { nodes: this.nodesDS, edges: this.edgesDS }, {
+      layout: { improvedLayout: false, randomSeed: 7 }, physics: { ...this.physicsFor(this.state.view), enabled: false },
+      nodes: { shape: 'dot', borderWidth: 1, font: { face: 'JetBrains Mono', color: '#F4F4F5', size: 11, strokeWidth: 3, strokeColor: '#0A0A0C' } },
+      edges: { smooth: false, selectionWidth: 2, hoverWidth: 0.5 },
+      interaction: { hover: true, tooltipDelay: 150, dragNodes: true, dragView: true, zoomView: true, multiselect: false, keyboard: false, hideEdgesOnDrag: false, hideEdgesOnZoom: false },
+    });
+    this.net.on('click', p => { if (p.nodes.length) this.select(p.nodes[0]); else if (p.edges.length) { const id = p.edges[0]; if (typeof id === 'number' || /^\d+$/.test(id)) this.setState({ selEdge: +id }); } else this.setState({ selEdge: -1 }); });
+    this.net.on('doubleClick', () => this.net.fit({ animation: { duration: 300 } }));
+    this.net.on('stabilizationProgress', p => { const pct = Math.round(100 * p.iterations / p.total); if (pct !== this.state.stabPct) this.setState({ stabPct: pct }); });
+    this.net.on('stabilizationIterationsDone', () => this.settled());
+    this.net.on('hoverNode', () => { this.cv.current.style.cursor = 'grab'; }); this.net.on('blurNode', () => { this.cv.current.style.cursor = 'default'; });
+  }
+  layoutKey() { const s = this.state; return 'omicsfm.attn.v2.' + [s.d.tissue, s.view, s.view === 'clusters' ? 'c' : s.edgeLimit, s.minComp].join('.'); }
+  shortKey() { const s = this.state; if (!s.d) return ''; return [s.d.tissue, s.view, s.view === 'clusters' ? 'c' : s.edgeLimit, s.minComp].join('.'); }
+  cachedLayout() { const shipped = this._shipped && this._shipped[this.shortKey()]; if (shipped) return shipped; try { const raw = localStorage.getItem(this.layoutKey()); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+  exportLayout() { const P = this.net.getPositions(), out = {}; for (const id in P) out[id] = [Math.round(P[id].x), Math.round(P[id].y)]; return { key: this.shortKey(), pos: out }; }
+  saveLayout() { try { const P = this.net.getPositions(), out = {}; for (const id in P) out[id] = [Math.round(P[id].x), Math.round(P[id].y)]; localStorage.setItem(this.layoutKey(), JSON.stringify(out)); } catch (e) {} }
+  settled() {
+    if (!this._stabilising) return; this._stabilising = false; clearTimeout(this._stabTimer);
+    this.net.setOptions({ physics: { enabled: false } }); this.net.fit({ animation: false }); this.cv.current.style.visibility = 'visible';
+    if (this.state.sel < 0) this.saveLayout();
+    this.setState({ stabPct: 100, physics: false });
+  }
+  topoKey() { const s = this.state, d = s.d, ps = s.partners || [], ego = s.sel >= 0; return d ? [d.tissue, s.view, s.edgeLimit, s.minComp, ego ? 'ego:' + s.sel + ':' + ps.length : 'all'].join('|') : ''; }
+  draw() {
+    const d = this.state.d; if (this._disposed) return; this.ensureNetwork(); if (!this.net || !d) return;
+    const s = this.state, ps = s.partners || [], ego = s.sel >= 0;
+    const topo = this.topoKey();
+    const visual = topo + '|' + s.iso + '|' + s.legendHover + '|' + s.selEdge + '|' + s.hoverP + '|' + s.physics;
+    if (visual === this._visual) return;
+    const changed = topo !== this._topo; this._visual = visual; this._topo = topo;
+    const dbName = { corum: 'CORUM', bioplex: 'BioPlex', huri: 'HuRI', string: 'STRING', reactome: 'Reactome', kegg: 'KEGG', gocc: 'GO CC', gobp: 'GO BP', omnipath: 'OmniPath' };
+    const comName = c => { const com = d.communities.find(x => x.community === c); return com ? (com.kegg_name || 'cluster ' + c) : 'no community'; };
+    let nodes = [], edges = [];
+    if (ego) {
+      const maxA = ps.length ? ps[0][1] : 1;
+      nodes.push({ id: s.sel, label: d.nodes[s.sel][1], size: 16, color: { background: '#C0FE04', border: '#C0FE04' }, font: { size: 14, color: '#F4F4F5' }, title: d.nodes[s.sel][1] + ' · ' + d.nodes[s.sel][0], fixed: true, x: 0, y: 0 });
+      ps.forEach((p, r) => { const cur = this.isCurated(p[2]); const hl = s.hoverP === p[0]; nodes.push({ id: p[0], label: d.nodes[p[0]][1], size: 6 + 8 * (p[1] / maxA), color: { background: this.nodeColor(p[0]), border: hl ? '#F4F4F5' : this.nodeColor(p[0]) }, borderWidth: hl ? 3 : 1, title: d.nodes[p[0]][1] + ' · ' + d.nodes[p[0]][0] + '\n#' + (r + 1) + ' · attention ' + p[1].toFixed(4) + '\n' + comName(d.nodes[p[0]][2]) });
+        edges.push({ id: 'p' + r, from: s.sel, to: p[0], width: 0.8 + 4 * (p[1] / maxA), length: 120 + 260 * (1 - p[1] / maxA), color: { color: cur ? '#F4F4F5' : '#6C6C78', opacity: hl ? 1 : 0.35 + 0.55 * (p[1] / maxA), highlight: '#C0FE04', hover: '#C0FE04' }, title: (cur ? 'curated: ' + this.DBS.filter(([n, b]) => p[2] & b).map(([n]) => dbName[n]).join(', ') : (p[3] ? 'unannotated: model hypothesis; no pair annotation in the reference databases' : 'not covered by the reference databases')) }); });
+    } else {
+      const es = this.edgesShown(), deg = {}; for (const e of es) { deg[e[0]] = (deg[e[0]] || 0) + 1; deg[e[1]] = (deg[e[1]] || 0) + 1; }
+      const focus = s.iso >= 0 ? s.iso : s.legendHover, inF = i => focus < 0 || d.nodes[i][2] === focus, many = Object.keys(deg).length > 150;
+      const centres = {}; if (s.view === 'clusters') { const coms = d.communities.map(c => c.community), R0 = 700 + coms.length * 60; coms.forEach((c, q) => { const a = q / coms.length * Math.PI * 2; centres[c] = [Math.cos(a) * R0, Math.sin(a) * R0]; }); }
+      const cached = changed ? this.cachedLayout() : null; this._useCached = !!cached;
+      const seed = i => { if (cached && cached[i]) return { x: cached[i][0], y: cached[i][1] }; const n = d.nodes[i]; if (s.view === 'clusters' && n[2] >= 0 && centres[n[2]]) return { x: centres[n[2]][0] + (n[5] || 0) * 0.25, y: centres[n[2]][1] + (n[6] || 0) * 0.25 }; return (n[3] || n[4]) ? { x: n[3] * 1.5, y: n[4] * 1.5 } : {}; };
+      for (const k in deg) { const i = +k, col = this.nodeColor(i), dim = !inF(i); nodes.push({ id: i, ...(changed ? seed(i) : {}), label: !dim && (!many || deg[i] >= 3) ? d.nodes[i][1] : undefined, size: 5 + Math.sqrt(deg[i]) * 3, color: dim ? { background: '#1F1F25', border: '#1F1F25' } : { background: col, border: col, highlight: { background: '#C0FE04', border: '#F4F4F5' }, hover: { background: '#F4F4F5', border: col } }, title: d.nodes[i][1] + ' (' + d.nodes[i][0] + ')\n' + deg[i] + ' strong partner' + (deg[i] === 1 ? '' : 's') + ' · ' + comName(d.nodes[i][2]) }); }
+      es.forEach((e, k) => { const cur = this.isCurated(e[3]), dim = !(inF(e[0]) && inF(e[1])), selE = s.selEdge === k; edges.push({ id: k, from: e[0], to: e[1], value: e[2], width: selE ? 4 : 0.6 + 2.4 * Math.sqrt(e[2] / (es[0][2] || 1)), physics: s.view !== 'clusters' || d.nodes[e[0]][2] === d.nodes[e[1]][2], color: { color: selE ? '#C0FE04' : cur ? '#F4F4F5' : '#6C6C78', opacity: dim ? 0.06 : selE ? 1 : cur ? 0.6 : 0.4, highlight: '#C0FE04', hover: '#C0FE04' }, title: d.nodes[e[0]][1] + ' — ' + d.nodes[e[1]][1] + '\nattention ' + e[2].toFixed(4) + '\n' + (cur ? 'curated: ' + this.DBS.filter(([n, b]) => e[3] & b).map(([n]) => dbName[n]).join(', ') : (e[4] ? 'unannotated: model hypothesis; no pair annotation in the reference databases' : 'not covered by the reference databases')) }); });
+    }
+    if (changed) {
+      clearTimeout(this._stabTimer);
+      clearTimeout(this._startTimer);
+      this.net.setOptions({ physics: { enabled: false } });
+      if (!ego && !this._useCached) this.cv.current.style.visibility = 'hidden';
+      this.nodesDS.clear(); this.edgesDS.clear(); this.nodesDS.add(nodes); this.edgesDS.add(edges);
+      if (!ego && this._useCached) { // settled positions already known: show them directly, no physics
+        this._stabilising = false; this.net.setOptions({ physics: { enabled: false } }); this.net.fit({ animation: false }); this.setState({ stabPct: 100, physics: false });
+        this.cv.current.style.visibility = 'visible';
+      } else {
+        this._stabilising = true; this.cv.current.style.visibility = 'hidden'; this.net.setOptions({ physics: this.physicsFor(s.view) }); this.setState({ stabPct: 0, physics: true });
+        this._startTimer = setTimeout(() => { if (!this._disposed && this._stabilising) this.net.stabilize(ego ? 150 : 400); }, 0);
+        this._stabTimer = setTimeout(() => this.settled(), 12000);
+      }
+    } else if (!this._stabilising) { this.nodesDS.update(nodes); this.edgesDS.update(edges); this.net.setOptions({ physics: { enabled: !!s.physics } }); }
+    if (!ego && s.selEdge >= 0) this.net.selectEdges([s.selEdge]); else if (ego) this.net.selectNodes([s.sel]); else this.net.unselectAll();
+  }
+  renderVals() {
+    const { manifest, d, tissue, view, edgeLimit, iso, sel, query, partners } = this.state;
+    const W = this.state.headerW || 1440, k = Math.max(0.6, Math.min(1, W / 1440));
+    const tInfo = manifest && manifest.tissues.find(t => t.id === tissue), tissueName = tInfo ? tInfo.name : tissue;
+    const comName = c => { const com = d && d.communities.find(x => x.community === c); return com ? (com.kegg_name || 'cluster ' + c) : 'no community'; };
+    // legend: communities by size
+    let legend = [];
+    if (d) legend = d.communities.map(c => ({ label: c.kegg_name || `Cluster ${c.community}`, sub: `${c.overlap} of ${c.size} in pathway · p ${c.p_value < 1e-300 ? '< 1e-300' : c.p_value.toExponential(0)}`, n: c.size, color: d.comColor[c.community], title: c.kegg_pathway || '', bg: iso === c.community ? '#1B1B20' : 'transparent', opacity: iso >= 0 && iso !== c.community ? 0.45 : 1, pick: () => this.setState({ iso: iso === c.community ? -1 : c.community, sel: -1, partners: null }), over: () => this.setState({ legendHover: c.community }) }));
+    // search results
+    let results = []; const q = query.trim().toUpperCase();
+    if (d && q.length >= 2) { const seen = new Set(); for (let i = 0; i < d.nodes.length && results.length < 12; i++) { const n = d.nodes[i]; if (n[1].toUpperCase().startsWith(q) || n[0].toUpperCase().startsWith(q)) { if (seen.has(i)) continue; seen.add(i); const placed = d.nodes[i][3] || d.nodes[i][4]; results.push({ gene: n[1], acc: n[0], tag: placed ? 'in top network' : 'partners only', tagColor: placed ? '#C0FE04' : '#5C5C68', pick: () => this.select(i) }); } } }
+    // partners list
+    const ps = partners || []; let curated = 0; const plist = ps.map((p, r) => { const cur = this.isCurated(p[2]); if (cur) curated++; let dbs = this.DBS.filter(([n, bit]) => p[2] & bit).map(([n]) => ({ label: n, bg: '#2A2A31', fg: '#F4F4F5' })); if (dbs.length > 4) dbs = dbs.slice(0, 3).concat([{ label: '+' + (dbs.length - 3), bg: '#1B1B20', fg: '#9A9AA6' }]); if (!dbs.length) dbs.push({ label: p[3] ? 'unannotated' : 'not covered', bg: p[3] ? '#C0FE04' : '#1B1B20', fg: p[3] ? '#0A0A0C' : '#5C5C68' });
+      return { gene: d.nodes[p[0]][1], rank: '#' + (r + 1), att: p[1].toFixed(4), barW: Math.round(100 * p[1] / (ps[0][1] || 1)) + '%', barColor: cur ? '#F4F4F5' : '#C0FE04', dbs, bg: this.state.hoverP === p[0] ? '#1B1B20' : 'transparent', pick: () => this.select(p[0]), over: () => this.setState({ hoverP: p[0] }) }; });
+    const unannotated = ps.filter(p => !this.isCurated(p[2]) && p[3]).length;
+    const edges = d ? (view === 'clusters' ? d.clusterEdges : edgeLimit) : 0;
+    return {
+      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: Math.round(Math.max(240, 340 * k)) + 'px', navFont: (W >= 1200 ? 13 : W >= 1000 ? 12 : 11) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
+      showSearch: W >= 1180, searchW: Math.round(Math.max(200, 320 * k)) + 'px', wide: W >= 1100,
+      leftW: (this.state.leftWpx || Math.round(Math.max(240, 340 * k))) + 'px', rightW: (sel < 0 && this.state.selEdge < 0 && this.state.infoClosed ? 56 : Math.round(Math.max(240, 340 * k))) + 'px',
+      startResize: e => { e.preventDefault(); this._rs = { x0: e.clientX, w0: this.state.leftWpx || Math.round(Math.max(240, 340 * k)) }; this.setState({ resizing: true }); }, handleColor: this.state.resizing ? '#C0FE04' : '#2A2A31',
+      query, hasQuery: !!query.trim(), onQuery: e => this.setState({ query: e.target.value }), clearQuery: () => this.setState({ query: '' }), onQueryKey: e => { if (e.key === 'Enter' && results.length) results[0].pick(); },
+      hasResults: results.length > 0, results,
+      tissue, tissueName, tissues: manifest ? manifest.tissues.map(t => ({ id: t.id, label: t.name })) : [{ id: 'brain', label: 'Brain' }],
+      onTissue: e => this.loadTissue(e.target.value), tissueMeta: tInfo ? `${tInfo.proteins.toLocaleString()} proteins · ${tInfo.clusters} clusters` : '30 tissues',
+      viewClusters: () => this.setState({ view: 'clusters', sel: -1, partners: null, selEdge: -1 }), viewNetwork: () => this.setState({ view: 'network', sel: -1, partners: null, selEdge: -1 }),
+      vClBg: view === 'clusters' ? '#F4F4F5' : '#1B1B20', vClFg: view === 'clusters' ? '#0A0A0C' : '#F4F4F5', vNetBg: view === 'network' ? '#F4F4F5' : '#1B1B20', vNetFg: view === 'network' ? '#0A0A0C' : '#F4F4F5', isNetwork: view === 'network',
+      viewHelp: view === 'clusters' ? 'Top 3,000 edges in precomputed community islands. Cross-cluster edges are drawn but exert no pull.' : 'The strongest edges in a precomputed layout. Node size follows the number of strong partners; drag nodes or enable physics to adjust it.',
+      minCompLabel: this.state.minComp <= 2 ? 'all' : '≥ ' + this.state.minComp, compStops: [2, 10, 20].map(v => ({ label: v <= 2 ? 'all' : '≥ ' + v, bg: this.state.minComp === v ? '#F4F4F5' : '#1B1B20', fg: this.state.minComp === v ? '#0A0A0C' : '#F4F4F5', pick: () => this.setState({ minComp: v }) })),
+      edgeLimit, onEdges: e => this.setState({ edgeLimit: +e.target.value }), edgeStops: [500, 1500, 3000, 5000].map(v => ({ label: v.toLocaleString(), bg: edgeLimit === v ? '#F4F4F5' : '#1B1B20', fg: edgeLimit === v ? '#0A0A0C' : '#F4F4F5', pick: () => this.setState({ edgeLimit: v }) })),
+      legendTitle: d ? `${d.communities.length} communities · KEGG label` : 'Communities', legend, legendOut: () => this.setState({ legendHover: -1 }),
+      isoLabel: iso >= 0 ? 'show all' : ' ', isoColor: iso >= 0 ? '#C0FE04' : 'transparent', clearIso: () => this.setState({ iso: -1 }),
+      cv: this.cv, graphVis: (this.state.loading || this.state.error || this._stabilising || (d && this.topoKey() !== this._topo && !this.cachedLayout())) && sel < 0 ? 'hidden' : 'visible', togglePhysics: () => { if (this._stabilising) return; if (this.state.physics && sel < 0) this.saveLayout(); this.setState({ physics: !this.state.physics }); }, physLabel: this.state.stabPct < 100 ? 'settling…' : this.state.physics ? 'physics on' : 'frozen', physBg: this.state.physics ? '#C0FE04' : '#1B1B20', physFg: this.state.physics ? '#0A0A0C' : '#F4F4F5', fitView: () => this.net && this.net.fit({ animation: { duration: 300 } }),
+      readout: sel >= 0 ? `${tissueName} · ${d.nodes[sel][1]} · top ${ps.length || 25} partners` : `${tissueName} · ${view === 'clusters' ? 'community map · 3,000 edges' : edgeLimit.toLocaleString() + ' strongest edges'}`,
+      statLine: d ? `${(() => { const s = new Set(); for (const e of this.edgesShown()) { s.add(e[0]); s.add(e[1]); } return s.size.toLocaleString(); })()} proteins · ${this.edgesShown().length.toLocaleString()} edges shown · ${d.nodes.length.toLocaleString()} in tissue` : '',
+      showStat: W >= 1300 || sel < 0, nProteins: d ? d.nodes.length.toLocaleString() : '…', loading: !!this.state.error || this.state.loading || (this.state.stabPct < 100 && sel < 0), loadingLabel: this.state.error || (this.state.loading ? `Loading ${tissueName} network…` : `Stabilising layout · ${this.state.stabPct} %`),
+      ...(() => { const ek = this.state.selEdge, E = d && sel < 0 && ek >= 0 ? this.edgesShown()[ek] : null; if (!E) return { hasEdge: false, edgeA: {}, edgeB: {}, edgeEvidence: [] };
+        const cur = E[3], ev = E[4], names = { corum: 'CORUM', bioplex: 'BioPlex', huri: 'HuRI', string: 'STRING', reactome: 'Reactome', kegg: 'KEGG', gocc: 'GO CC', gobp: 'GO BP', omnipath: 'OmniPath' };
+        const rows = this.DBS.map(([n, bit]) => ({ name: names[n], status: cur & bit ? 'curated' : ev & bit ? 'not curated' : 'not covered', color: cur & bit ? '#C0FE04' : ev & bit ? '#9A9AA6' : '#5C5C68' }));
+        const nc = rows.filter(r => r.status === 'curated').length, ne = rows.filter(r => r.status !== 'not covered').length;
+        return { hasEdge: true, edgeA: { gene: d.nodes[E[0]][1], pick: () => this.select(E[0]) }, edgeB: { gene: d.nodes[E[1]][1], pick: () => this.select(E[1]) }, edgeAtt: E[2].toFixed(4), edgeRank: (d.edges.indexOf(E) + 1).toLocaleString(), edgeEvidence: rows,
+          edgeSummary: nc ? `Curated in ${nc} of ${ne} databases that cover both proteins.` : ne ? `Both proteins are covered by ${ne} database${ne > 1 ? 's' : ''}, none lists this pair: a hypothesis from the model.` : 'None of the reference databases covers both proteins; this pair cannot be evaluated.' }; })(),
+      clearEdge: () => this.setState({ selEdge: -1 }),
+      hasSel: !!(d && sel >= 0), noSel: !(d && sel >= 0) && this.state.selEdge < 0 && !this.state.infoClosed, infoClosed: !(d && sel >= 0) && this.state.selEdge < 0 && !!this.state.infoClosed, openInfo: () => this.setState({ infoClosed: false }), closeInfo: () => this.setState({ infoClosed: true }),
+      clearSel: () => this.setState({ sel: -1, partners: null, hoverP: -1, selEdge: -1 }),
+      selGene: d && sel >= 0 ? d.nodes[sel][1] : '', selAcc: d && sel >= 0 ? d.nodes[sel][0] : '', selCluster: d && sel >= 0 ? comName(d.nodes[sel][2]) : '', selClColor: d && sel >= 0 ? this.nodeColor(sel) : '#5C5C68',
+      selCurated: curated, selUnannotated: unannotated, selK: ps.length || 25, partners: plist, pOut: () => this.setState({ hoverP: -1 }),
+      partnerSummary: ps.length ? `${curated} of ${ps.length} partners have pair annotations; ${unannotated} are unannotated despite database coverage and remain model hypotheses. ${ps.length - curated - unannotated} are not covered by the reference databases.` : (partners ? 'No partner list is available for this protein.' : 'Loading partners…'),
+      selUniprot: d && sel >= 0 ? 'https://www.uniprot.org/uniprotkb/' + d.nodes[sel][0] : '#', selProteinsUrl: d && sel >= 0 ? 'Proteomics Proteins.dc.html?protein=' + d.nodes[sel][0] : 'Proteomics Proteins.dc.html',
+      tryChips: this.TRY.map(g => ({ label: g, go: () => { const i = d && d.byKey[g]; if (i != null) this.select(i); } })),
+    };
+  }
+}
+</script>
+</body>
+</html>
