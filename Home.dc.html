@@ -602,8 +602,8 @@ class Component extends DCLogic {
     const stat = (k, t) => d ? `${fam} · ${n[k] ?? 0} of ${t.toLocaleString()} · UMAP` : 'loading…';
     const si = this.state.scene, sc = this.SCENES[si], col = this.MOD[sc.mod], atlas = this.state.carousel?.samples[sc.mod], network = this.state.carousel?.network;
     const readout = window.OmicsFMDisplay.isMobile() ? `${this.MODNAME[sc.mod]} · ${sc.kind==='family'?'identity':sc.kind==='samples'?'SST':'attention · brain'}`
-      : sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · UMAP · ${sc.family}`
-      : sc.kind === 'samples' ? `${this.MODNAME[sc.mod]} · SST · UMAP · ${atlas?.n.toLocaleString() ?? '…'} ${sc.mod === 'single_cell' ? 'cells' : 'profiles'}`
+      : sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · ${sc.family}`
+      : sc.kind === 'samples' ? `${this.MODNAME[sc.mod]} · SST · ${atlas?.n.toLocaleString() ?? '…'} ${sc.mod === 'single_cell' ? 'cells' : 'profiles'}`
       : `${this.MODNAME[sc.mod]} · attention · brain · ${network?.edges.length.toLocaleString() ?? '…'} edges · communities`;
     const tag = `${this.MODNAME[sc.mod]} · ${sc.kind === 'family' ? (sc.mod === 'proteomics' ? 'Proteins' : 'Genes') : sc.kind === 'samples' ? 'Samples' : 'Attention'}`;
     return {
