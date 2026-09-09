@@ -418,7 +418,7 @@ class Component extends DCLogic {
     const f = d.features[mod], fi = f.families.indexOf(family); let n = 0;
     const fam = f.pts.filter(p => p[2] === fi);
     if (big) {
-      const g = this.heroFrame(c, f.pts, fam, true, {offsetX:['zinc fingers','histones','immunoglobulins'].includes(family)?150:0}); if (!g) return fam.length;
+      const g = this.heroFrame(c, f.pts, fam, true, {offsetX:family==='immunoglobulins'?100:['zinc fingers','histones'].includes(family)?150:0}); if (!g) return fam.length;
       const {ctx,X,Y} = g;
       ctx.fillStyle = '#36363F'; ctx.globalAlpha = .72;
       for (const p of f.pts) { if (p[2] !== fi) ctx.fillRect(X(p),Y(p),1.5,1.5); }
