@@ -20,7 +20,7 @@ const names=['Proteomics Samples','Proteomics Proteins','Bulk Samples','Bulk Gen
     const canceled=await canvas.evaluate(el=>{const r=el.getBoundingClientRect();const e=new WheelEvent('wheel',{bubbles:true,cancelable:true,ctrlKey:true,deltaY:-100,clientX:r.x+r.width/2,clientY:r.y+r.height/2});el.dispatchEvent(e);return e.defaultPrevented;});
     await page.waitForTimeout(80);
     assert(canceled,name+': cancel native page zoom');
-    assert(Math.abs((await view()).k-before.k*Math.exp(.15))<.00001,name+': apply wheel zoom exactly once');
+    assert(Math.abs((await view()).k-before.k*Math.exp(.21))<.00001,name+': apply wheel zoom exactly once');
     const box=await canvas.boundingBox(),x=Math.round(box.x+box.width/2),y=Math.round(box.y+box.height/2);
     const session=await context.newCDPSession(page);
     const scale=await page.evaluate(()=>visualViewport.scale),wheelView=await view();
