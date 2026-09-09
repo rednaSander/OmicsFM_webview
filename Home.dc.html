@@ -90,9 +90,9 @@ input::placeholder{color:#5C5C68}
 </section>
 <!-- Modality bar -->
 <div data-screen-label="Modality bar" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;height:52px;font-family:'JetBrains Mono',monospace;font-size:{{ barFont }};letter-spacing:{{ barSpacing }};text-transform:uppercase;font-weight:500">
-  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_proteomics }};color:{{ barFg_proteomics }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span>01 · Proteomics</span><span style="flex:none">48,837 profiles</span></span>
-  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_bulk }};color:{{ barFg_bulk }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>02 · Bulk transcriptomics</span><span style="flex:none">680,216 profiles</span></span>
-  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_sc }};color:{{ barFg_sc }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span>03 · Single-cell transcriptomics</span><span style="flex:none">4,550,106 cells</span></span>
+  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_proteomics }};color:{{ barFg_proteomics }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span style="flex:none">Proteomics</span><span style="flex:none">48,837 profiles</span></span>
+  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_bulk }};color:{{ barFg_bulk }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span style="flex:none">Bulk transcriptomics</span><span style="flex:none">680,216 profiles</span></span>
+  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_sc }};color:{{ barFg_sc }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span style="flex:none">Single-cell transcriptomics</span><span style="flex:none">4,550,106 cells</span></span>
 </div>
 <!-- Modality cards -->
 <section id="modalities" data-screen-label="Modalities" style="scroll-margin-top:72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:0 0 4px;background:#000">
@@ -613,13 +613,12 @@ class Component extends DCLogic {
           cardTitleFont: (W <= 1600 ? 24 : 26) + 'px',
         };
       })(),
-      // bar: longest cell is "03 · Single-cell transcriptomics" + "4,550,106 cells" ≈ 50 mono chars; fit into one third of the width
+      // Fit every modality label and count on one line, including laptop widths.
       ...(() => {
-        const W = this.state.headerW || 1440, stacked = W < 2000;
-        const pad = W < 1200 ? 12 : 24, sp = .04;
-        const font = Math.max(10, Math.min(stacked ? 15 : 17, Math.floor((W / 3 - 2 * pad - 8) / ((stacked ? 31 : 47) * .64))));
-        return { barFont: font + 'px', barPad: pad + 'px', barGap: stacked ? '2px' : '16px', barSpacing: sp + 'em',
-          barDirection: stacked ? 'column' : 'row', barAlign: stacked ? 'flex-start' : 'center', barJustify: stacked ? 'center' : 'space-between' };
+        const W = this.state.headerW || 1440, pad = W < 1200 ? 12 : 24, gap = W < 1200 ? 8 : 12, sp = .04;
+        const font = Math.max(1, Math.min(17, Math.floor((W / 3 - 2 * pad - gap - 4) / (40 * .66))));
+        return { barFont: font + 'px', barPad: pad + 'px', barGap: gap + 'px', barSpacing: sp + 'em',
+          barDirection: 'row', barAlign: 'center', barJustify: 'space-between' };
       })(),
       opA: this.state.front === 0 ? 1 : 0, opB: this.state.front === 1 ? 1 : 0,
       brandWordmark: 'assets/brand/fold/wordmark-' + sc.mod + '.svg',
