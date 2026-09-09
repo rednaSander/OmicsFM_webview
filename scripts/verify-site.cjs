@@ -38,6 +38,7 @@ async function loadComponent(name, search = '') {
     forceUpdate() {}
   }
   const sandbox = {
+    document: {documentElement:{style:{setProperty(){}}}},
     URLSearchParams, location: {search},
     DCLogic: Logic, React: { createRef: () => ({ current: canvas() }) }, console,
     OmicsFM: { loadJSON: async file => json(file) },
@@ -48,6 +49,7 @@ async function loadComponent(name, search = '') {
     clearInterval: callback => intervals.delete(callback),
     setTimeout: callback => timers.push(callback), clearTimeout() {},
   };
+  vm.runInNewContext(read('display.js'), sandbox, {filename:'display.js'});
   const Component = vm.runInNewContext(`${source.script}\nComponent`, sandbox, { filename: name });
   const instance = new Component();
   instance.renderVals();

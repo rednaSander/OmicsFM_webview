@@ -46,7 +46,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#8B5CFF;bo
 
 <header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:#000;flex:none">
   <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/brand/fold/stacked-bulk.svg" alt="OmicsFM bulk transcriptomics" style="height:48px;width:60px;display:block"></a>
-  <nav style="display:flex;align-items:center;gap:{{ navGap }};margin-left:{{ edgePad }};min-width:0;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
+  <nav style="display:flex;align-items:center;gap:{{ navGap }};margin-left:32px;min-width:0;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
     <a href="Home.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#9A9AA6;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Home</a>
     <span style="color:#5C5C68">/</span>
     <span style="display:inline-flex;align-items:center;padding:7px 12px;background:#5100FD;color:#F4F4F5;white-space:nowrap">Bulk transcriptomics</span>
@@ -68,7 +68,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#8B5CFF;bo
         </div>
       </sc-if>
     </label></sc-if>
-    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">Read the paper</a>
+    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;border:2px solid transparent;color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
   </div>
 </header>
 
@@ -401,8 +401,7 @@ class Component extends DCLogic {
     const unannotated = ps.filter(p => !this.isCurated(p[2]) && p[3]).length;
     const edges = d ? (view === 'clusters' ? d.clusterEdges : edgeLimit) : 0;
     return {
-      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: (W >= 1800 ? 280 : 200) + 'px', navFont: (W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
-      showSearch: W >= 1500, panelSearch: W < 1500, searchW: Math.round(Math.max(180, Math.min(320, W - 1100))) + 'px', wide: W >= 1100,
+      hdrRef: this.hdrRef, ...window.OmicsFMDisplay.explorerHeaderLayout(W, 'Bulk transcriptomics'), wide: W >= 1100,
       leftW: (this.state.leftWpx || Math.round(Math.max(240, 340 * k))) + 'px', rightW: (sel < 0 && this.state.selEdge < 0 && this.state.infoClosed ? 56 : Math.round(Math.max(240, 340 * k))) + 'px',
       startResize: e => { e.preventDefault(); this._rs = { x0: e.clientX, w0: this.state.leftWpx || Math.round(Math.max(240, 340 * k)) }; this.setState({ resizing: true }); }, handleColor: this.state.resizing ? '#8B5CFF' : '#2A2A31',
       query, hasQuery: !!query.trim(), onQuery: e => this.setState({ query: e.target.value }), clearQuery: () => this.setState({ query: '' }), onQueryKey: e => { if (e.key === 'Enter' && results.length) results[0].pick(); },

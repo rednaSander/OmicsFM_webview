@@ -87,9 +87,7 @@ input::placeholder{color:#5C5C68}
       <a href="{{ sceneUrl }}" style="display:inline-flex;align-items:center;height:{{ cardButtonH }};padding:0 {{ cardPad }};background:#0A0A0C;color:{{ sceneLinkColor }};font-family:'JetBrains Mono',monospace;font-size:{{ cardButtonFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color 400ms ease-out;outline:2px solid transparent;outline-offset:-2px" style-hover="outline-color:currentColor">Start exploring</a>
     </div>
   </div>
-  <a href="#modalities" onClick="{{ revealModalities }}" aria-label="Scroll to explore the modalities" style="position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:36px;padding:0 12px;color:#9A9AA6;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:color 150ms ease-out" style-hover="color:#F4F4F5">
-    <span>Scroll</span><svg aria-hidden="true" width="16" height="18" viewBox="0 0 16 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v13M3 10l5 5 5-5"></path></svg>
-  </a>
+
 </section>
 <!-- Modality bar -->
 <div data-screen-label="Modality bar" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;height:52px;font-family:'JetBrains Mono',monospace;font-size:{{ barFont }};letter-spacing:{{ barSpacing }};text-transform:uppercase;font-weight:500">
@@ -314,21 +312,7 @@ class Component extends DCLogic {
   PAL = ['#4E9AF1','#F28E2B','#59A14F','#E15759','#76B7B2','#EDC948','#B07AA1','#AEC7E8','#9C755F','#BAB0AC','#1F77B4','#FFBB78','#2CA02C','#98DF8A','#D62728','#FF9896','#8C564B','#C49C94','#17BECF','#9EDAE5'];
   MOD = { proteomics: '#C0FE04', bulk: '#8B5CFF', single_cell: '#FC2D76' };
   MODNAME = { proteomics: 'Proteomics', bulk: 'Bulk transcriptomics', single_cell: 'Single-cell transcriptomics' };
-  homeHeaderLayout(width) {
-    const W = Math.max(320, width), k = Math.max(.6, Math.min(1, W / 1440));
-    const edge = 12, colW = Math.round((W <= 1600 ? 202 : 270) * k);
-    const pad = W >= 1200 ? 12 : 8, gap = W >= 1800 ? 32 : W >= 1400 ? 18 : W >= 1200 ? 12 : 4;
-    const searchW = Math.round(Math.max(180, 300 * k)), showCode = W >= 1280;
-    const targetFont = W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12;
-    const textUnits = [...Object.values(this.MODNAME), 'About', 'Compare'].reduce((n, label) => n + label.length * .74, 0);
-    const chrome = edge + 60 + 48 + colW + 12 + (showCode ? 52 : 0);
-    const showSearch = W >= 1180 && W - chrome - searchW - 12 >= textUnits * 11 + 10 * pad + 4 * gap;
-    const available = W - chrome - (showSearch ? searchW + 12 : 0);
-    const font = Math.floor(Math.min(targetFont, (available - 10 * pad - 4 * gap - 4) / textUnits) * 10) / 10;
-    return {navFont: Math.max(1, font) + 'px', navGap: gap + 'px', navPad: pad + 'px',
-      searchW: searchW + 'px', showSearch, showCode,
-      navAvailableWidth: available, navRequiredWidth: textUnits * Math.max(1, font) + 10 * pad + 4 * gap};
-  }
+  homeHeaderLayout(width) { return window.OmicsFMDisplay.homeHeaderLayout(width); }
   SCENES = [
     { kind: 'family', mod: 'proteomics', family: 'histones', url: 'Proteomics Proteins.dc.html', title: 'Histones form their own island.', text: 'Protein abundance becomes a map of relationships. Histones are highlighted here; the model learned their identities without being given their family labels.' },
     { kind: 'family', mod: 'bulk', family: 'protocadherins', url: 'Bulk Genes.dc.html', title: 'Protocadherins share a neighbourhood.', text: 'A family of cell-adhesion genes stands out in the bulk RNA identity map. Protocadherins are highlighted against the other genes; their family labels were added after training.' },
