@@ -21,6 +21,8 @@ html[data-theme=light] .theme-toggle .theme-moon{display:block}
 .representation-controls{display:none}
 html[data-mobile=false] .representation-cards{grid-auto-rows:max-content!important;align-content:space-between;gap:28px!important}
 html[data-mobile=false] .representation-cards>div>div:last-child{margin-top:0!important}
+html[data-mobile=false][data-theme=light] .representation-cards>div{background:#E7E7ED!important}
+html[data-mobile=false][data-theme=light] .modality-content>div:first-child{padding-bottom:18px!important}
 .mobile-footer-logo{display:none}
 .modality-content{display:contents}
 /* DC serializes inline accent colours to RGB. Only match the text colour itself. */

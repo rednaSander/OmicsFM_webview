@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.d864125b4e2d.js"></script>
+<script src="./assets/runtime/display.daffec2b8e09.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -86,6 +86,9 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ ui.FG['transparent']['#5C5C68'] }};flex:none">{{ l.n }}</span>
         </button>
       </sc-for>
+    </div>
+    <div style="padding:0 24px 20px;flex:none">
+      <button type="button" role="switch" aria-checked="{{ annotationsOn }}" onClick="{{ toggleAnnotations }}" style="display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;cursor:pointer;font:inherit;font-size:12.5px;text-align:left;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }}" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)"><span>Map annotations</span><span aria-hidden="true" style="width:26px;height:14px;background:{{ ui.BG[annotationTrack] }};position:relative;flex:none;transition:background 120ms ease-out"><span style="position:absolute;top:2px;left:{{ annotationKnob }};width:10px;height:10px;background:{{ ui.BG['#0A0A0C'] }};transition:left 120ms ease-out"></span></span></button>
     </div>
     <div style="padding:16px 24px 20px;background:{{ ui.BG['#000'] }};font-size:12px;line-height:1.5;color:{{ ui.FG['#000']['#9A9AA6'] }};flex:none;margin-top:auto;text-wrap:pretty"><span style="color:{{ ui.FG['transparent']['#FFB020'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Overlay</span>Colours are metadata drawn on top of the layout afterwards. The model never saw any of them.</div>
   </aside>
@@ -174,7 +177,7 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { d: null, field: 'class', iso: -1, projMode: false, projHover: -1, legendHover: -1, sel: -1, hover: -1, query: '', view: { k: 1, x: 0, y: 0 }, drag: null, hoverNb: -1 };
+  state = { d: null, showAnnotations: true, field: 'class', iso: -1, projMode: false, projHover: -1, legendHover: -1, sel: -1, hover: -1, query: '', view: { k: 1, x: 0, y: 0 }, drag: null, hoverNb: -1 };
   cv = React.createRef(); hdrRef = React.createRef();
   FIELDS = [["class", "Tissue"], ["disease", "Disease"], ["project", "Study group"], ["split", "Split"]];
   PAL = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9a6324', '#aaffc3', '#808000', '#ffd8b1', '#ff6fb5', '#1f9e89', '#4E9AF1', '#c354c3'];
@@ -233,7 +236,7 @@ class Component extends DCLogic {
   }
   tissueMapLabels(g, measureText) {
     const { d, field, iso, query, view } = this.state;
-    if (!d || !g || field !== 'class' || query.trim() || this.inProj()) return [];
+    if (!this.state.showAnnotations || !d || !g || field !== 'class' || query.trim() || this.inProj()) return [];
     const hierarchy = d.tissueHierarchy;
     const detailed = !hierarchy || this.tissueLabelLevel() === 'tissues';
     const anchors = detailed
@@ -312,7 +315,7 @@ class Component extends DCLogic {
     ctx.globalAlpha = 1;
     this.drawTissueLabels(ctx, g);
     // study labels at each project's densest spot, in project mode
-    if (this.inProj()) {
+    if (this.state.showAnnotations && this.inProj()) {
       ctx.font = `500 ${Math.max(8,13*ls)}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const { iso, projHover } = this.state, field = this.state.field;
       const placed = labels;
@@ -391,6 +394,7 @@ class Component extends DCLogic {
       leftW: (this.state.leftWpx || Math.round(Math.max(240, 340 * k))) + 'px', rightW: (!(this.state.d && this.state.sel >= 0) && this.state.infoClosed ? 56 : Math.round(Math.max(240, 340 * k))) + 'px',
       projectCount: d ? d.projectCount.toLocaleString() : '…', query, hasQuery: !!query.trim(), queryHits: queryHits.toLocaleString(), onQuery: e => this.setState({ query: e.target.value, iso: e.target.value.trim() ? -1 : iso, projMode: e.target.value.trim() ? false : this.state.projMode }), clearQuery: () => this.setState({ query: '' }),
       visibleCount, totalCount: d ? d.n.toLocaleString() : '', fieldLabel: fieldLabel.toLowerCase(), projSuffix: this.inProj() ? ' · projects within ' + this.labelOfCat(iso) : '',
+      annotationsOn: this.state.showAnnotations, annotationTrack: this.state.showAnnotations ? '#F4F4F5' : '#3A3A44', annotationKnob: this.state.showAnnotations ? '14px' : '2px', toggleAnnotations: () => this.setState({ showAnnotations: !this.state.showAnnotations }),
       fieldTabs: this.FIELDS.map(([id, label]) => ({ label, bg: field === id ? '#F4F4F5' : '#1B1B20', fg: field === id ? '#0A0A0C' : '#F4F4F5', pick: () => this.setState({ field: id, iso: -1, legendHover: -1 }) })),
       legendTitle: this.inProj() ? `${this.labelOfCat(iso)} · ${this._projN} projects` : field === 'class' ? `${d ? d.classes.length : 20} tissues` : `${fieldLabel} · ${legend.length}`, legend, legendOut: () => this.setState({ legendHover: -1, projHover: -1 }),
       isoOn: iso >= 0, isoLabel: d && iso >= 0 ? this.labelOfCat(iso) : '', setModeClass: () => this.setState({ projMode: false, projHover: -1 }), setModeProj: () => this.setState({ projMode: true }),

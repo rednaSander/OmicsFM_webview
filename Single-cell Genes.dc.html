@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.d864125b4e2d.js"></script>
+<script src="./assets/runtime/display.daffec2b8e09.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -67,8 +67,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ui-b
   <!-- Controls -->
   <aside data-screen-label="Controls" style="background:{{ ui.BG['#0A0A0C'] }};display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
     <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:6px;flex:none">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span>Detected in at least</span><span style="color:{{ ui.FG['transparent']['#FC2D76'] }}">{{ minDet }} % · {{ visibleCount }}</span></div>
-      <input type="range" min="0" max="100" step="1" value="{{ minDet }}" onChange="{{ onDet }}" onInput="{{ onDet }}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span>Detected in at least</span><span class="detection-value" style="color:{{ ui.FG['transparent']['#FC2D76'] }}">{{ minDet }} % · {{ visibleCount }}</span></div>
+      <input class="detection-slider" type="range" min="0" max="100" step="1" value="{{ minDet }}" onChange="{{ onDet }}" onInput="{{ onDet }}">
       <div style="display:flex;gap:4px">
         <sc-for list="{{ detStops }}" as="s" hint-placeholder-count="4">
           <button onClick="{{ s.pick }}" style="flex:1;padding:6px 0;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.06em;background:{{ ui.BG[s.bg] }};color:{{ ui.FG[s.bg][s.fg] }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-on-2a2a31-f4f4f5,#F4F4F5)">{{ s.label }}</button>
