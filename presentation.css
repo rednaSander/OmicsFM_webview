@@ -37,6 +37,7 @@ html[data-theme=light] input.detection-slider::-moz-range-thumb{background:#1818
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child{background:transparent!important}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child>span:last-child{background:#C0FE04;color:#0A0A0C;padding:4px 8px}
 html[data-theme=light] .family-chip[aria-pressed=false]{background:#E7E7ED!important;color:#555562!important}
+html[data-theme=light] .compare-grid>div>div:first-of-type>span:first-child{align-self:flex-start}
 html[data-mobile=true]{scroll-padding-top:72px}
 html[data-mobile=true] body{overflow-x:hidden}
 html[data-mobile=true] [data-screen-label=Header]{height:64px!important;padding:0 16px!important;position:sticky!important;top:0;z-index:65!important;flex:none}
