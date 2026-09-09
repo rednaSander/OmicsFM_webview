@@ -34,6 +34,7 @@ html[data-theme=light] .detection-value{background-color:transparent!important;c
 html[data-theme=light] input.detection-slider{background:#18181F}
 html[data-theme=light] input.detection-slider::-webkit-slider-thumb{background:#18181F}
 html[data-theme=light] input.detection-slider::-moz-range-thumb{background:#18181F}
+html[data-theme=light] select[aria-label="Tissue network"]{border-radius:0}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child{background:transparent!important}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child>span:last-child{background:#C0FE04;color:#0A0A0C;padding:4px 8px}
 html[data-theme=light] .family-chip[aria-pressed=false]{background:#E7E7ED!important;color:#555562!important}
