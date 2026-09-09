@@ -14,6 +14,8 @@
 .mobile-menu a{display:inline-flex;align-items:center;min-height:44px;padding:10px 12px;font:13px 'JetBrains Mono',monospace;color:inherit;text-decoration:none}
 .mobile-menu a[aria-current=page]{background:var(--ui-bg-1b1b20,#1B1B20);box-shadow:inset 0 -2px #8B5CFF}
 .mobile-menu>a{display:flex}
+.mobile-modality-toggle{display:none}
+.modality-content{display:contents}
 html[data-mobile=true]{scroll-padding-top:72px}
 html[data-mobile=true] body{overflow-x:hidden}
 html[data-mobile=true] [data-screen-label=Header]{height:64px!important;padding:0 16px!important;position:sticky!important;top:0;z-index:65!important;flex:none}
@@ -36,19 +38,27 @@ html[data-mobile=true] .hero-axes>div{display:none!important}
 html[data-mobile=true] .hero-dots{left:50%!important;right:auto!important;top:calc(var(--mobile-plot-height) - 44px)!important;transform:translateX(-50%)!important;flex-direction:row!important;gap:2px!important}
 html[data-mobile=true] .hero-dots button{height:44px!important;width:26px!important;align-items:center}
 html[data-mobile=true] .hero-dots button span{height:15px!important;width:4px!important}
-html[data-mobile=true] [data-screen-label="Carousel card"]{position:relative!important;width:100%!important;bottom:auto!important;left:auto!important;gap:10px!important;padding:18px 20px 0!important;min-height:218px}
+html[data-mobile=true] [data-screen-label="Carousel card"]{position:relative!important;width:100%!important;bottom:auto!important;left:auto!important;gap:8px!important;padding:14px 20px 16px!important;min-height:0}
 html[data-mobile=true] [data-screen-label="Carousel card"]>div:first-child{font-size:10px!important;letter-spacing:.06em!important}
 html[data-mobile=true] [data-screen-label="Carousel card"]>div:first-child>span:first-child{white-space:nowrap;flex:none}
-html[data-mobile=true] [data-screen-label="Carousel card"]>div:nth-child(2){font-size:24px!important}
-html[data-mobile=true] [data-screen-label="Carousel card"]>p{font-size:15px!important;line-height:1.55!important}
-html[data-mobile=true] [data-screen-label="Carousel card"]>div:last-child{margin:4px -20px 0 0!important}
+html[data-mobile=true] [data-screen-label="Carousel card"]>div:nth-child(2){font-size:22px!important}
+html[data-mobile=true] [data-screen-label="Carousel card"]>p{font-size:14px!important;line-height:1.45!important}
+html[data-mobile=true] [data-screen-label="Carousel card"]>div:last-child{display:none!important}
 html[data-mobile=true] [data-screen-label="Carousel card"] a{height:46px!important;font-size:12px!important;padding:0 20px!important}
-html[data-mobile=true] [data-screen-label="Modality bar"]{grid-template-columns:1fr!important;height:auto!important;gap:1px!important;font-size:12px!important}
+html[data-mobile=true] [data-screen-label="Modality bar"]{display:none!important}
 html[data-mobile=true] [data-screen-label="Modality bar"]>a{min-height:58px;padding:12px 20px!important;gap:10px!important}
 html[data-mobile=true] [data-screen-label="Modality bar"]>a>span:last-child{font-size:10px!important}
-html[data-mobile=true] #modalities{grid-template-columns:1fr!important;gap:16px!important;padding:16px 0!important}
-html[data-mobile=true] #modalities>div>div{padding-left:20px!important;padding-right:20px!important}
-html[data-mobile=true] #modalities>div>div:last-child{padding-bottom:20px!important}
+html[data-mobile=true] #modalities{grid-template-columns:1fr!important;gap:1px!important;padding:0!important}
+html[data-mobile=true] .mobile-modality-toggle{display:flex;align-items:center;gap:10px;min-height:58px;width:100%;padding:12px 20px;border:0;background:transparent;text-align:left;font:500 12px 'JetBrains Mono',monospace;letter-spacing:.03em;text-transform:uppercase;cursor:pointer}
+html[data-mobile=true] .mobile-modality-toggle>span:first-child{flex:1;min-width:0}
+html[data-mobile=true] .mobile-modality-toggle .modality-count{font-size:9px;white-space:nowrap}
+html[data-mobile=true] .mobile-modality-toggle::after{content:'+';font-size:20px;width:14px;flex:none;text-align:center}
+html[data-mobile=true] .mobile-modality-toggle[aria-expanded=true]::after{content:'\2212'}
+html[data-mobile=true] .mobile-modality-toggle:focus-visible{outline:2px solid currentColor;outline-offset:-4px}
+html[data-mobile=true] .modality-content{display:none}
+html[data-mobile=true] .modality-content[data-open=true]{display:flex;flex-direction:column}
+html[data-mobile=true] .modality-content>div{padding-left:20px!important;padding-right:20px!important}
+html[data-mobile=true] .modality-content>div:last-child{padding-bottom:20px!important}
 html[data-mobile=true] #modalities a{min-height:46px}
 html[data-mobile=true] #what{grid-template-columns:1fr!important;gap:32px!important}
 html[data-mobile=true] #what p{font-size:16px!important;line-height:1.65!important;text-align:left!important}

@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.17f1f65ea898.js"></script>
+<script src="./assets/runtime/display.65ce5c89812d.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -98,14 +98,19 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
 <!-- Modality cards -->
 <section id="modalities" data-screen-label="Modalities" style="scroll-margin-top:72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:0 0 4px;background:{{ ui.BG['#000'] }}">
     <div id="modality-proteomics" onMouseEnter="{{ hover_proteomics }}" onMouseLeave="{{ hoverNone }}" style="display:flex;flex-direction:column;background:{{ ui.BG['#000'] }};color:{{ ui.FG['#000']['#F4F4F5'] }}">
+      <button type="button" class="mobile-modality-toggle" onClick="{{ toggle_proteomics }}" aria-expanded="{{ open_proteomics }}" aria-controls="modality-proteomics-content" style="color:{{ ui.FG['transparent']['#C0FE04'] }}"><span>Proteomics</span><span class="modality-count">48,837 profiles</span></button>
+      <div id="modality-proteomics-content" class="modality-content" data-open="{{ open_proteomics }}" role="region" aria-label="Proteomics">
       <div style="padding:4px 32px 0;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:{{ ui.FG['transparent']['#C0FE04'] }}"><span>1,143 PRIDE projects · DDA &amp; DIA</span></div>
       <div style="padding:24px 32px 24px;display:flex;flex-direction:column;gap:18px;flex:1">
         
         <p style="margin:0;font-size:16px;line-height:1.5;color:{{ ui.FG['transparent']['#9A9AA6'] }};text-wrap:pretty">Public PRIDE proteomes, reprocessed and quality-filtered, with tissue, disease and instrument metadata recovered from the manuscripts.</p>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 32px 32px"><a href="Proteomics Samples.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-c0fe04,#C0FE04);color:var(--ui-on-c0fe04-0a0a0c,#0A0A0C)"><span>Samples</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">SST</span></a><a href="Proteomics Attention.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-c0fe04,#C0FE04);color:var(--ui-on-c0fe04-0a0a0c,#0A0A0C)"><span>Attention</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">NET</span></a><a href="Proteomics Proteins.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-c0fe04,#C0FE04);color:var(--ui-on-c0fe04-0a0a0c,#0A0A0C)"><span>Proteins</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">ID</span></a></div>
+      </div>
     </div>
     <div id="modality-bulk" onMouseEnter="{{ hover_bulk }}" onMouseLeave="{{ hoverNone }}" style="display:flex;flex-direction:column;background:{{ ui.BG['#000'] }};color:{{ ui.FG['#000']['#F4F4F5'] }}" style-hover="color:var(--ui-fg-f4f4f5,#F4F4F5)">
+      <button type="button" class="mobile-modality-toggle" onClick="{{ toggle_bulk }}" aria-expanded="{{ open_bulk }}" aria-controls="modality-bulk-content" style="color:{{ ui.FG['transparent']['#8B5CFF'] }}"><span>Bulk transcriptomics</span><span class="modality-count">680,216 profiles</span></button>
+      <div id="modality-bulk-content" class="modality-content" data-open="{{ open_bulk }}" role="region" aria-label="Bulk transcriptomics">
       <div style="padding:4px 32px 0;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:{{ ui.FG['transparent']['#8B5CFF'] }}"><span>ARCHS4 · 7,684 GEO series</span></div>
       <div style="padding:24px 32px 24px;display:flex;flex-direction:column;gap:18px;flex:1">
         <div style="display:flex;align-items:center;gap:16px">
@@ -115,14 +120,18 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
         <p style="margin:0;font-size:16px;line-height:1.5;color:{{ ui.FG['transparent']['#9A9AA6'] }};text-wrap:pretty">ARCHS4 bulk RNA-seq profiles projected onto the shared protein vocabulary, so every gene can be compared to its protein.</p>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 32px 32px"><a href="Bulk Samples.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-5100fd,#5100FD);color:var(--ui-on-5100fd-f4f4f5,#F4F4F5)"><span>Samples</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">SST</span></a><a href="Bulk Attention.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-5100fd,#5100FD);color:var(--ui-on-5100fd-f4f4f5,#F4F4F5)"><span>Attention</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">NET</span></a><a href="Bulk Genes.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-5100fd,#5100FD);color:var(--ui-on-5100fd-f4f4f5,#F4F4F5)"><span>Genes</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">ID</span></a></div>
+      </div>
     </div>
     <div id="modality-single_cell" onMouseEnter="{{ hover_sc }}" onMouseLeave="{{ hoverNone }}" style="display:flex;flex-direction:column;background:{{ ui.BG['#000'] }};color:{{ ui.FG['#000']['#F4F4F5'] }}" style-hover="color:var(--ui-fg-f4f4f5,#F4F4F5)">
+      <button type="button" class="mobile-modality-toggle" onClick="{{ toggle_single_cell }}" aria-expanded="{{ open_single_cell }}" aria-controls="modality-single_cell-content" style="color:{{ ui.FG['transparent']['#FC2D76'] }}"><span>Single-cell transcriptomics</span><span class="modality-count">4,550,106 cells</span></button>
+      <div id="modality-single_cell-content" class="modality-content" data-open="{{ open_single_cell }}" role="region" aria-label="Single-cell transcriptomics">
       <div style="padding:4px 32px 0;display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:{{ ui.FG['transparent']['#FC2D76'] }}"><span>CELLxGENE Census · 722 cell types</span></div>
       <div style="padding:24px 32px 24px;display:flex;flex-direction:column;gap:18px;flex:1">
         
         <p style="margin:0;font-size:16px;line-height:1.5;color:{{ ui.FG['transparent']['#9A9AA6'] }};text-wrap:pretty">CELLxGENE Census cells across 722 cell types, sampled inversely to cell-type frequency so rare types are seen as often as common ones.</p>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;padding:0 32px 32px"><a href="Single-cell Samples.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-fc2d76,#FC2D76);color:var(--ui-on-fc2d76-0a0a0c,#0A0A0C)"><span>Cells</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">SST</span></a><a href="Single-cell Genes.dc.html" style="flex:1 1 136px;min-width:0;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-fc2d76,#FC2D76);color:var(--ui-on-fc2d76-0a0a0c,#0A0A0C)"><span>Genes</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:10px;opacity:.7">ID</span></a></div>
+      </div>
     </div>
 </section>
 
@@ -301,13 +310,14 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;accents&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;minimal&quot;,&quot;balanced&quot;,&quot;full&quot;],&quot;default&quot;:&quot;balanced&quot;,&quot;tsType&quot;:&quot;'minimal'|'balanced'|'full'&quot;,&quot;section&quot;:&quot;Marathon layer&quot;}}">
 class Component extends DCLogic {
-  state = { family: 'cytosolic ribosome', data: null, scene: 0, front: 0, hoverMod: null, tHover: -1 };
+  state = { family: 'cytosolic ribosome', data: null, scene: 0, front: 0, hoverMod: null, openModality: null, tHover: -1 };
   cEgo = React.createRef(); cSamples = React.createRef(); cFamilies = React.createRef(); cAgree = React.createRef();
   cProt = React.createRef(); cBulk = React.createRef(); cSc = React.createRef();
   hA = React.createRef(); hB = React.createRef(); hCard = React.createRef(); hdrRef = React.createRef();
   CHIPS = ['cytosolic ribosome', 'histones', 'keratins', 'proteasome', 'immunoglobulins', 'tubulins', 'OXPHOS complexes', 'collagens'];
   PAL = ['#4E9AF1','#F28E2B','#59A14F','#E15759','#76B7B2','#EDC948','#B07AA1','#AEC7E8','#9C755F','#BAB0AC','#1F77B4','#FFBB78','#2CA02C','#98DF8A','#D62728','#FF9896','#8C564B','#C49C94','#17BECF','#9EDAE5'];
   MOD = { proteomics: '#C0FE04', bulk: '#8B5CFF', single_cell: '#FC2D76' };
+  heroColor(mod) { return mod === 'single_cell' ? '#FC2D76' : '#C0FE04'; }
   MODNAME = { proteomics: 'Proteomics', bulk: 'Bulk transcriptomics', single_cell: 'Single-cell transcriptomics' };
   homeHeaderLayout(width) { return window.OmicsFMDisplay.homeHeaderLayout(width); }
   SCENES = [
@@ -351,7 +361,7 @@ class Component extends DCLogic {
     const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
     if (!w || !h) return null;
     if (c.width !== w * dpr || c.height !== h * dpr) { c.width = w * dpr; c.height = h * dpr; }
-    const ctx = window.OmicsFMDisplay.canvasContext(c); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    const ctx = window.OmicsFMDisplay.canvasContext(c, {preservePointAccents:c===this.hA.current||c===this.hB.current}); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
     return { ctx, w, h };
   }
   bounds(pts) {
@@ -410,7 +420,7 @@ class Component extends DCLogic {
       ctx.globalAlpha = 1; ctx.fillStyle = color;
       for (const p of fam) {ctx.beginPath();ctx.arc(X(p),Y(p),3.5,0,Math.PI*2);ctx.fill();}
       const annotations=f.familyAnnotations?.[family];
-      this.heroLabels(g,annotations?annotations.map(label=>({...label,color,offsetX:(label.offsetX||0)+(family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?175:150):0),text:family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?'Variable chain\nimmunoglobulins':'Constant chain\nimmunoglobulins'):label.text})): [{text:family,color,textColor:mod==='bulk'?'#BCA4FF':color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0,offsetY:family==='histones'?-25:0}]);
+      this.heroLabels(g,annotations?annotations.map(label=>({...label,color,offsetX:(label.offsetX||0)+(family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?175:150):0),text:family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?'Variable chain\nimmunoglobulins':'Constant chain\nimmunoglobulins'):label.text})): [{text:family,color,textColor:color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0,offsetY:family==='histones'?-25:0}]);
       return fam.length;
     }
     this.scatter(c, f.pts, p => { if (p[2] === fi) { n++; return { top: true, color }; } return '#3A3A44'; },
@@ -505,9 +515,9 @@ class Component extends DCLogic {
     const {ctx,X,Y}=g;
     if(keep){ctx.fillStyle='#36363F';ctx.globalAlpha=.65;for(const p of s.pts)if(!keep.has(p[2]))ctx.fillRect(X(p),Y(p),1.3,1.3);}
     ctx.globalAlpha=.92;
-    for(const p of highlighted){ctx.fillStyle=keep?this.MOD[mod]:s.classes[p[2]].color;ctx.beginPath();ctx.arc(X(p),Y(p),keep?1.7:2,0,Math.PI*2);ctx.fill();}
+    for(const p of highlighted){ctx.fillStyle=keep?this.heroColor(mod):s.classes[p[2]].color;ctx.beginPath();ctx.arc(X(p),Y(p),keep?1.7:2,0,Math.PI*2);ctx.fill();}
     ctx.globalAlpha=1;
-    this.heroLabels(g,keep?[{text:sc.label,color:this.MOD[mod],pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?300:sc.tissue==='frontal cortex'?-100:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
+    this.heroLabels(g,keep?[{text:sc.label,color:this.heroColor(mod),pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?300:sc.tissue==='frontal cortex'?-100:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
   }
   drawNetwork(c, scene) {
     const source = this.state.carousel?.network;if(!source)return;
@@ -522,12 +532,12 @@ class Component extends DCLogic {
       ctx.strokeStyle = focus ? 'rgba(244,244,245,.48)' : 'rgba(108,108,120,.1)'; ctx.lineWidth = focus?.9:.6;
       ctx.beginPath(); ctx.moveTo(X(n.pts[a]),Y(n.pts[a])); ctx.lineTo(X(n.pts[b]),Y(n.pts[b])); ctx.stroke();
     }
-    n.pts.forEach((p,i) => {const focus=p[3]===community;ctx.fillStyle=focus?'#AA83FF':'#36363F';ctx.beginPath();ctx.arc(X(p),Y(p),(focus?2:1)+Math.min(3.5,Math.sqrt(degrees[i])*.32),0,Math.PI*2);ctx.fill();});
-    this.heroLabels(g,[{text:sc.community,color:'#AA83FF',pts:highlighted,offsetX:sc.community==='Ribosome'?100:-290}]);
+    n.pts.forEach((p,i) => {const focus=p[3]===community;ctx.fillStyle=focus?this.heroColor(sc.mod):'#36363F';ctx.beginPath();ctx.arc(X(p),Y(p),(focus?2:1)+Math.min(3.5,Math.sqrt(degrees[i])*.32),0,Math.PI*2);ctx.fill();});
+    this.heroLabels(g,[{text:sc.community,color:this.heroColor(sc.mod),pts:highlighted,offsetX:sc.community==='Ribosome'?100:-290}]);
   }
   drawScene(which, i) {
     const c = (which === 0 ? this.hA : this.hB).current, sc = this.SCENES[i]; if (!c || !this.state.data) return;
-    if (sc.kind === 'family') this.drawFamily(c, sc.mod, sc.family, this.MOD[sc.mod], true);
+    if (sc.kind === 'family') this.drawFamily(c, sc.mod, sc.family, this.heroColor(sc.mod), true);
     else if (sc.kind === 'samples') this.drawAtlas(c, sc.mod, sc);
     else this.drawNetwork(c, sc);
   }
@@ -625,10 +635,14 @@ class Component extends DCLogic {
       opA: this.state.front === 0 ? 1 : 0, opB: this.state.front === 1 ? 1 : 0,
       brandWordmark: 'assets/brand/fold/wordmark-' + sc.mod + '.svg',
       sceneIndex: String(si + 1).padStart(2, '0') + ' / ' + String(this.SCENES.length).padStart(2, '0'),
+      ...Object.fromEntries(['proteomics','bulk','single_cell'].flatMap(mod => [
+        ['open_'+mod, this.state.openModality === mod],
+        ['toggle_'+mod, () => this.setState({openModality:this.state.openModality===mod?null:mod})],
+      ])),
       revealModalities: e => { e.preventDefault(); window.OmicsFMDisplay.scrollToEnd(document.getElementById('modalities')); },
       sceneReadout: readout, sceneModality: this.MODNAME[sc.mod], sceneReadoutRest: readout.slice(this.MODNAME[sc.mod].length),
       sceneHasAxes: sc.kind !== 'network', sceneAxisX: 'UMAP 1', sceneAxisY: 'UMAP 2', sceneTitle: sc.title, sceneText: sc.text, sceneColor: col === '#8B5CFF' ? '#5100FD' : col, sceneFg: col === '#8B5CFF' ? '#F4F4F5' : '#0A0A0C', sceneTag: tag, sceneUrl: sc.url, sceneLinkColor: col,
-      sceneDots: this.SCENES.map((s, i) => ({ title: s.title, bg: i === si ? col : '#3A3A44', go: () => { this.goScene(i); this.startTimer(); } })),
+      sceneDots: this.SCENES.map((s, i) => ({ title: s.title, bg: i === si ? this.heroColor(sc.mod) : '#3A3A44', go: () => { this.goScene(i); this.startTimer(); } })),
       cEgo: this.cEgo, cSamples: this.cSamples, cFamilies: this.cFamilies, cAgree: this.cAgree, cProt: this.cProt, cBulk: this.cBulk, cSc: this.cSc,
       statProt: stat('p', tot.p || 11475), statBulk: stat('b', tot.b || 18403), statSc: stat('s', tot.s || 9794),
       familyChips: this.CHIPS.map(name => ({ name, bg: name === fam ? '#F4F4F5' : '#131316', fg: name === fam ? '#0A0A0C' : '#F4F4F5', select: () => this.setState({ family: name }) })),
