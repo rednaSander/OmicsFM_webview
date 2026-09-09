@@ -27,6 +27,7 @@ html[data-mobile=false] .representation-cards>div>div:last-child{margin-top:0!im
 html[data-theme=light] :is([style^="color: rgb(192, 254, 4)"],[style*="; color: rgb(192, 254, 4)"]){background-color:#C0FE04!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 html[data-theme=light] :is([style^="color: rgb(139, 92, 255)"],[style*="; color: rgb(139, 92, 255)"],[style^="color: rgb(81, 0, 253)"],[style*="; color: rgb(81, 0, 253)"]){background-color:#5100FD!important;color:#F4F4F5!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 html[data-theme=light] :is([style^="color: rgb(252, 45, 118)"],[style*="; color: rgb(252, 45, 118)"]){background-color:#FC2D76!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+html[data-theme=light][data-page=explorer] :is(.viewer-modality-label,.viewer-paper-link,[data-screen-label="Title bar"]>div:first-child>span:first-child){background-color:transparent!important;color:#18181F!important}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child{background:transparent!important}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child>span:last-child{background:#C0FE04;color:#0A0A0C;padding:4px 8px}
 html[data-theme=light] .family-chip[aria-pressed=false]{background:#E7E7ED!important;color:#555562!important}
