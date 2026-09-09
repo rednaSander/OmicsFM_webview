@@ -33,6 +33,7 @@ With Node.js installed:
 ```sh
 node scripts/verify-site.cjs
 node scripts/verify-home-carousel.cjs
+node scripts/verify-responsive.cjs
 ```
 
 ## Project and paper

@@ -8,6 +8,7 @@
 <script src="assets/vendor/react-dom.production.min.js"></script>
 <script src="assets/vendor/vis-network.min.js"></script>
 <script src="./support.js"></script>
+<link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon.svg">
 </head>
 <body>
 <x-dc>
@@ -43,11 +44,11 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#C0FE04;bo
 <div style="height:100vh;background:#0A0A0C;color:#F4F4F5;display:flex;flex-direction:column;overflow:hidden">
 
 <header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:#000;flex:none">
-  <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/small_logo_proteomics_black.svg" alt="OmicsFM proteomics" style="height:44px;width:auto;display:block"></a>
+  <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/brand/fold/stacked-proteomics.svg" alt="OmicsFM proteomics" style="height:48px;width:60px;display:block"></a>
   <nav style="display:flex;align-items:center;gap:{{ navGap }};margin-left:{{ edgePad }};min-width:0;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
     <a href="Home.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#9A9AA6;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Home</a>
     <span style="color:#5C5C68">/</span>
-    <a href="Home.dc.html#modalities" style="display:inline-flex;align-items:center;padding:7px 12px;background:#C0FE04;color:#0A0A0C;white-space:nowrap">Proteomics</a>
+    <span style="display:inline-flex;align-items:center;padding:7px 12px;background:#C0FE04;color:#0A0A0C;white-space:nowrap">Proteomics</span>
     <span style="color:#5C5C68">/</span>
     <a href="Proteomics Samples.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Samples</a>
     <span style="display:inline-flex;align-items:center;padding:7px 12px;color:#F4F4F5;white-space:nowrap">Attention</span>

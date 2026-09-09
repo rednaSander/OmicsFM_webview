@@ -1,0 +1,32 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {loadComponent} = require('./verify-site.cjs');
+const root = path.resolve(__dirname, '..');
+
+(async () => {
+  for (const name of ['Proteomics Samples','Bulk Samples','Single-cell Samples','Proteomics Proteins','Bulk Genes','Single-cell Genes']) {
+    const {instance:p} = await loadComponent(name + '.dc.html');
+    for (const [w,h] of [[650,596],[1000,650],[2600,1080],[3400,720]]) {
+      p.cv.current.clientWidth=w; p.cv.current.clientHeight=h;
+      for (const view of [{k:1,x:0,y:0},{k:2.5,x:73,y:-42}]) {
+        p.state.view=view;
+        const g=p.geom(), a=g.P(0,0), x=g.P(1,0), y=g.P(0,1);
+        assert(Math.abs((x[0]-a[0])+(y[1]-a[1]))<1e-8, `${name}: unequal axis scales at ${w}`);
+        assert.equal(a[1],x[1]); assert.equal(a[0],y[0]);
+        const point=g.P(p.state.d.xy[0],p.state.d.xy[1]);
+        assert(Math.abs(point[0]-g.X(0))<1e-8 && Math.abs(point[1]-g.Y(0))<1e-8);
+        if(p.toScreen) assert.deepEqual(p.toScreen(g,p.state.d.xy[0],p.state.d.xy[1]),point);
+      }
+    }
+    p.componentWillUnmount();
+  }
+  for(const name of fs.readdirSync(root).filter(n=>n.endsWith('.dc.html'))) {
+    const html=fs.readFileSync(path.join(root,name),'utf8');
+    for(const [,body] of html.matchAll(/<a\s[^>]*>(.*?)<\/a>/gs)) {
+      assert(!['Proteomics','Bulk transcriptomics','Single-cell transcriptomics'].includes(body.trim()), `${name}: modality is still clickable`);
+    }
+    assert(html.includes('assets/brand/fold/stacked-'), `${name}: missing stacked logo`);
+  }
+  console.log('PASS six UMAPs preserve aspect ratio at laptop and ultrawide sizes, including zoom, pan, dots and annotations; all page headers use stacked logos and non-clickable modality labels.');
+})().catch(error=>{console.error(error);process.exitCode=1;});
