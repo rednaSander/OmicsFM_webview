@@ -514,7 +514,7 @@ class Component extends DCLogic {
     ctx.globalAlpha=.92;
     for(const p of highlighted){ctx.fillStyle=keep?this.MOD[mod]:s.classes[p[2]].color;ctx.beginPath();ctx.arc(X(p),Y(p),keep?1.7:2,0,Math.PI*2);ctx.fill();}
     ctx.globalAlpha=1;
-    this.heroLabels(g,keep?[{text:sc.label,color:this.MOD[mod],pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?360:sc.tissue==='frontal cortex'?-100:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
+    this.heroLabels(g,keep?[{text:sc.label,color:this.MOD[mod],pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?310:sc.tissue==='frontal cortex'?-100:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
   }
   drawNetwork(c, scene) {
     const source = this.state.carousel?.network;if(!source)return;
