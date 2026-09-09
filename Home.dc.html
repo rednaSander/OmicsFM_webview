@@ -418,7 +418,7 @@ class Component extends DCLogic {
     const f = d.features[mod], fi = f.families.indexOf(family); let n = 0;
     const fam = f.pts.filter(p => p[2] === fi);
     if (big) {
-      const g = this.heroFrame(c, f.pts, fam, true, {offsetX:family==='immunoglobulins'?100:['zinc fingers','histones'].includes(family)?150:0}); if (!g) return fam.length;
+      const g = this.heroFrame(c, f.pts, fam, true, {zoom:family==='protocadherins'?.9:1,offsetX:family==='immunoglobulins'?100:['zinc fingers','histones'].includes(family)?150:0}); if (!g) return fam.length;
       const {ctx,X,Y} = g;
       ctx.fillStyle = '#36363F'; ctx.globalAlpha = .72;
       for (const p of f.pts) { if (p[2] !== fi) ctx.fillRect(X(p),Y(p),1.5,1.5); }
@@ -458,7 +458,7 @@ class Component extends DCLogic {
     const {w,h} = g, b = this.bounds(pts), card = this.hCard.current;
     const blocked = {right:Math.min((card?.clientWidth || w*.42)+20,w-28),top:h-(card?.offsetHeight || 220)-48-20};
     const stretch=options.stretchX||1,left=28,right=w-34,top=80,bottom=h-46,dx=(b.x1-b.x0||1)*stretch,dy=b.y1-b.y0||1;
-    const base=Math.min((right-left)/dx,(bottom-top)/dy), yy=p=>invert?b.y1-p[1]:p[1]-b.y0;
+    const base=Math.min((right-left)/dx,(bottom-top)/dy)*(options.zoom??1), yy=p=>invert?b.y1-p[1]:p[1]-b.y0;
     const totals={}; if(options.allowOverlap)for(const p of highlighted)totals[p[2]]=(totals[p[2]]||0)+1;
     let chosen=null;
     // Search the largest uniform fit whose highlighted points avoid the card.
