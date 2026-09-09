@@ -41,18 +41,25 @@ const base=process.env.OMICSFM_TEST_URL||'http://localhost:8000/';
      const annotations=await page.evaluate(()=>({labels:testHome._heroLabels,points:testHome._heroFit.highlighted.map(p=>[testHome._heroFit.X(p),testHome._heroFit.Y(p)]),expected:testHome.SCENES[testHome.state.scene].family==='immunoglobulins'?2:1}));
      assert.equal(annotations.labels.length,annotations.expected,'Every carousel annotation is visible');
      for(const label of annotations.labels)assert(!annotations.points.some(p=>Math.abs(p[0]-label.x)<label.width/2+6&&Math.abs(p[1]-label.y)<label.height/2+6),'Labels clear highlighted dots');
-     assert.equal(await page.locator('[data-screen-label="Carousel card"]').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(231, 231, 237)');
+     assert.equal(await page.locator('[data-screen-label="Carousel card"]').evaluate(el=>getComputedStyle(el).backgroundColor),theme==='light'?'rgb(231, 231, 237)':'rgb(19, 19, 22)');
      const height=(await page.locator('[data-screen-label="Carousel card"]').boundingBox()).height;assert(height<270,`${width}: compact card ${height}`);
     }
     const cards=page.locator('.representation-cards');
-    await cards.scrollIntoViewIfNeeded();await cards.evaluate(el=>el.scrollTo({left:0,behavior:'instant'}));await page.waitForTimeout(100);
+    await cards.scrollIntoViewIfNeeded();
     assert.equal(await cards.locator(':scope>div').first().evaluate(el=>getComputedStyle(el).backgroundColor),theme==='light'?'rgb(231, 231, 237)':'rgb(19, 19, 22)');
-    const box=await cards.boundingBox(),x=Math.round(box.x+box.width-30),y=Math.round(box.y+Math.min(box.height/2,220));
-    const session=await context.newCDPSession(page);
-    await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
-    for(let step=1;step<=5;step++)await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:Math.round(x-(box.width-60)*step/5),y,id:1}]});
-    await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(450);
-    assert(await cards.evaluate(el=>el.scrollLeft>el.clientWidth*.5),'Swipe reveals the next representation card');await session.detach();
+    const previous=page.getByRole('button',{name:'Previous representation',exact:true}),next=page.getByRole('button',{name:'Next representation',exact:true});
+    assert(await previous.isDisabled());
+    for(let i=1;i<=2;i++){await next.click();assert(await cards.locator(':scope>div').nth(i).isVisible());assert.equal(await cards.locator(':scope>div').nth(i-1).isVisible(),false);assert.equal(await page.locator('.representation-controls>span').textContent(),String(i+1).padStart(2,'0')+' / 03');}
+    assert(await next.isDisabled());await previous.click();await previous.focus();await page.keyboard.press('Enter');assert(await previous.isDisabled());
+    if(theme==='light'){
+     for(let i=0;i<3;i++){
+      const footer=page.locator('.task-grid>a').nth(i).locator(':scope>div:last-child>div:last-child');
+      assert.equal(await footer.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
+      assert.equal(await footer.locator('span').last().evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(192, 254, 4)');
+     }
+     for(const chip of await page.locator('.family-chip[aria-pressed=false]').all())assert.equal(await chip.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(231, 231, 237)');
+     await page.locator('.family-chip').nth(1).click();assert.equal(await page.locator('.family-chip[aria-pressed=true]').textContent(),'histones');
+    }
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     console.log('PASS',width,theme,'accordion placement, collapse, keyboard, links, compact cards and ten highlight palettes');
    }
@@ -62,6 +69,8 @@ const base=process.env.OMICSFM_TEST_URL||'http://localhost:8000/';
    assert.equal(await toggles.first().isVisible(),false);
    for(let i=0;i<3;i++)assert(await page.locator('.modality-content').nth(i).locator('a').first().isVisible());
    assert(await page.getByRole('link',{name:'Start exploring',exact:true}).isVisible());
+   for(const card of await page.locator('.representation-cards>div').all())assert(await card.isVisible());
+   assert.equal(await page.locator('.representation-controls').isVisible(),false);
    await context.close();
   }
  }finally{await browser.close();}

@@ -23,7 +23,7 @@
     const searchW = Math.round(Math.max(180, 300 * k)), showCode = W >= 1280;
     const targetFont = W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12;
     const textUnits = [...['Proteomics', 'Bulk transcriptomics', 'Single-cell transcriptomics'], 'About', 'Compare'].reduce((n, label) => n + label.length * .74, 0);
-    const chrome = edge + 60 + 48 + colW + 12 + (showCode ? 52 : 0);
+    const chrome = edge + 156 + 48 + colW + 12 + (showCode ? 52 : 0);
     const showSearch = W >= 1180 && W - chrome - searchW - 12 >= textUnits * 11 + 10 * pad + 4 * gap;
     const available = W - chrome - (showSearch ? searchW + 12 : 0);
     const font = Math.floor(Math.min(targetFont, (available - 10 * pad - 4 * gap - 4) / textUnits) * 10) / 10;
@@ -38,7 +38,7 @@
       const gap = W >= 1200 ? 8 : 2;
       const labels = ['Home', '/', modality, '/', 'Samples', ...(modality === 'Single-cell transcriptomics' ? [] : ['Attention']), modality === 'Proteomics' ? 'Proteins' : 'Genes'];
       const navWidth = labels.reduce((sum, label) => sum + label.length * .74 * parseFloat(navFont) + (label === '/' ? 0 : 24), 0) + (labels.length - 1) * gap;
-      const available = W - 12 - 60 - 32 - navWidth - colW - 24;
+      const available = W - 12 - 156 - 32 - navWidth - colW - 24;
       const searchW = Math.max(180, Math.min(320, available));
       return {navFont, navGap:gap + 'px', edgePad:'12px', colW:colW + 'px',
         showSearch:W >= 1180 && available >= 180, searchW:searchW + 'px'};

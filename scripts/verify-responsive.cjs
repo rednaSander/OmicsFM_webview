@@ -31,7 +31,7 @@ const root = path.resolve(__dirname, '..');
         assert(links.some(([,href,attrs,text])=>href===target&&text===label&&attrs.includes('style-hover=')),`${label}: missing sample-map link or hover style`);
       }
     }
-    assert(html.includes('assets/brand/fold/stacked-'), `${name}: missing stacked logo`);
+    assert(html.includes('assets/brand/fold/wordmark-'), `${name}: missing horizontal logo`);
   }
   console.log('PASS six UMAPs keep consistent proportions at laptop and ultrawide sizes (proteomics 1.4x horizontal), including zoom, pan, dots and annotations; home modality links open their sample maps and retain hover styles.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
