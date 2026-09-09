@@ -96,9 +96,10 @@ async function main() {
     if (h.SCENES[i].kind === 'family') assert(!h.sceneCount(h.SCENES[i]).startsWith('0 '));
   }
   [...home.intervals][0](); assert.equal(h.state.scene, 0, 'Carousel must wrap');
-  h.renderVals().pauseCarousel(); assert.equal(home.intervals.size,0);
+  h.renderVals().focusCarousel({target:{matches:()=>true}}); assert.equal(home.intervals.size,0);
   h.renderVals().sceneDots[4].go(); assert.equal(home.intervals.size,0);
-  h.renderVals().resumeCarousel(); assert.equal(home.intervals.size,1);
+  h.renderVals().blurCarousel({currentTarget:{contains:()=>false}}); assert.equal(home.intervals.size,1);
+  h.renderVals().focusCarousel({target:{matches:()=>false}}); assert.equal(home.intervals.size,1,'Touch/click focus must not stop rotation');
   for (const chip of h.renderVals().familyChips) {
     chip.select(); h.componentDidUpdate();
     assert(h._n.p > 0 && h._n.b > 0 && h._n.s > 0, `${chip.name}: empty comparison plot`);

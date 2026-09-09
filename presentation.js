@@ -11,6 +11,8 @@
   const ui = display.ui = {
     get theme() { return theme; },
     get mobile() { return display.isMobile(); },
+    get themeAction() { return theme==='dark'?'Switch to light mode':'Switch to dark mode'; },
+    toggleTheme: () => ui.setTheme(theme==='dark'?'light':'dark'),
     bg(value) { return theme === 'light' ? surfaces[key(value)] || value : value; },
     fg(value, background) {
       if (theme !== 'light') return value;
@@ -98,14 +100,8 @@
     }
     updateChrome();
   }
-  const sun='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>';
-  const moon='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 15.2A9 9 0 0 1 8.8 4a9 9 0 1 0 11.2 11.2Z"/></svg>';
   function updateChrome() {
     if (!chrome) return;
-    const button=chrome.querySelector('.theme-toggle');
-    button.innerHTML=theme==='dark'?sun:moon;
-    button.setAttribute('aria-label',theme==='dark'?'Switch to light mode':'Switch to dark mode');
-    button.title=button.getAttribute('aria-label');
     for (const tab of chrome.querySelectorAll('[data-panel]')) tab.setAttribute('aria-pressed',String(panel===tab.dataset.panel));
     const input=document.querySelector('.mobile-search input');
     if (input && document.activeElement!==input) input.value=component?.state.query || '';
@@ -116,8 +112,7 @@
     document.documentElement.dataset.page=home?'home':'explorer';
     document.documentElement.dataset.panel=panel;
     chrome=document.createElement('div'); chrome.className='omics-chrome';
-    chrome.innerHTML=`<button class="theme-toggle" type="button"></button><button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>`;
-    chrome.querySelector('.theme-toggle').onclick=()=>ui.setTheme(theme==='dark'?'light':'dark');
+    chrome.innerHTML=`<button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>`;
     menu=document.createElement('dialog');menu.className='mobile-menu';menu.setAttribute('aria-label','Site navigation');
     menu.innerHTML='<div class="menu-heading"><strong>Explore OmicsFM</strong><button type="button" aria-label="Close navigation">×</button></div><a href="Home.dc.html">Home</a>';
     const current=decodeURIComponent(location.pathname).split('/').pop();
@@ -149,9 +144,29 @@
     }
     document.body.append(chrome,menu);updateChrome();
   }
+  function resetMap() {
+    const c=component,patch={query:'',sel:-1,hover:-1,hoverNb:-1,drag:null};
+    c._tip=null;
+    if(c.ensureNetwork) {
+      Object.assign(patch,{iso:-1,legendHover:-1,hoverP:-1,selEdge:-1,hoverEdge:-1,partners:null});
+      c._partnerRequest=(c._partnerRequest||0)+1;c._pendingProtein=null;
+    } else {
+      patch.view={k:1,x:0,y:0};
+      if('field' in c.state)Object.assign(patch,{field:'class',iso:-1,projMode:false,projHover:-1,legendHover:-1});
+      else {
+        Object.assign(patch,{mode:'fam',fam:-1,famHover:-1,path:-1,ov:{...c.state.ov,famOnly:false,mito:false}});
+        c._pathSet=null;
+      }
+    }
+    const search=document.querySelector('.mobile-search input');if(search)search.value='';
+    c.setState(patch,()=>{
+      ui.openPanel('map');
+      if(c.net){c.net.unselectAll();c.net.fit({animation:{duration:180}});}
+    });
+  }
   function zoom(factor) {
-    if(component.net) {factor?component.net.moveTo({scale:component.net.getScale()*factor,animation:{duration:180}}):component.net.fit({animation:{duration:180}});return;}
-    if(!factor){component.pageValues().resetView();return;}
+    if(!factor){resetMap();return;}
+    if(component.net) {component.net.moveTo({scale:component.net.getScale()*factor,animation:{duration:180}});return;}
     const view=component.state.view, k=Math.max(.4,Math.min(14,view.k*factor)),r=k/view.k;
     component.setState({view:{k,x:view.x*r,y:view.y*r}});
   }

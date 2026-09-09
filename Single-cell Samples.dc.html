@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.2832d28b876b.js"></script>
+<script src="./assets/runtime/display.6c30c1d37598.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -38,12 +38,16 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
     <span style="display:inline-flex;align-items:center;padding:7px 12px;color:{{ ui.FG['transparent']['#F4F4F5'] }};white-space:nowrap">Cells</span>
     <a href="Single-cell Genes.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:{{ ui.FG['transparent']['#5C5C68'] }};white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20);color:var(--ui-on-1b1b20-f4f4f5,#F4F4F5)">Genes</a>
   </nav>
-  <div style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
+  <div class="header-actions" style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
     <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#9A9AA6'] }}" style-focus="background:var(--ui-bg-2a2a31,#2A2A31)">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
       <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Highlight cells: cell type, tissue, donor, assay…" style="flex:1;background:transparent;border:0;outline:0;color:{{ ui.FG['transparent']['#F4F4F5'] }};font:inherit;font-size:15px;min-width:0">
       <sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:{{ ui.BG['#2A2A31'] }};color:{{ ui.FG['#2A2A31']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;cursor:pointer">{{ queryHits }} ✕</button></sc-if>
     </label></sc-if>
+    <button class="theme-toggle" type="button" onClick="{{ ui.toggleTheme }}" aria-label="{{ ui.themeAction }}" title="{{ ui.themeAction }}">
+      <svg class="theme-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
+      <svg class="theme-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 15.2A9 9 0 0 1 8.8 4a9 9 0 1 0 11.2 11.2Z"></path></svg>
+    </button>
     <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:{{ ui.BG['#000'] }};border:2px solid transparent;color:{{ ui.FG['#000']['#FC2D76'] }};font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
   </div>
 </header>
