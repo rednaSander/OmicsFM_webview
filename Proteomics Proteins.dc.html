@@ -7,6 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
+<script src="./display.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-upright.svg">
 </head>
@@ -26,7 +27,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#C0FE04;border:0;cursor:pointer;border-radius:0}
 </style>
 </helmet>
-<div style="height:100vh;background:#0A0A0C;color:#F4F4F5;display:flex;flex-direction:column;overflow:hidden">
+<div style="height:var(--omics-viewport-height,100vh);background:#0A0A0C;color:#F4F4F5;display:flex;flex-direction:column;overflow:hidden">
 
 <header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:#000;flex:none">
   <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/brand/fold/stacked-proteomics.svg" alt="OmicsFM proteomics" style="height:48px;width:60px;display:block"></a>
@@ -219,7 +220,7 @@ class Component extends DCLogic {
     this._ro = new ResizeObserver(() => this.draw()); this.cv.current && this._ro.observe(this.cv.current);
     this._hro = new ResizeObserver(([en]) => { const w = Math.round(en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); }); this.hdrRef.current && this._hro.observe(this.hdrRef.current);
     this._keys = e => { if (e.key === 'Escape') this.setState({ sel: -1, query: '', path: -1 }); }; window.addEventListener('keydown', this._keys);
-    this._mm = e => { if (!this._rs) return; const w = Math.max(220, Math.min(560, this._rs.w0 + e.clientX - this._rs.x0)); if (w !== this.state.leftWpx) this.setState({ leftWpx: w }); };
+    this._mm = e => { if (!this._rs) return; const w = Math.max(220, Math.min(560, this._rs.w0 + (e.clientX - this._rs.x0) / (window.OmicsFMDisplay?.scale || 1))); if (w !== this.state.leftWpx) this.setState({ leftWpx: w }); };
     this._mu = () => { if (this._rs) { this._rs = null; this.setState({ resizing: false }); } };
     window.addEventListener('mousemove', this._mm); window.addEventListener('mouseup', this._mu);
   }
@@ -311,7 +312,7 @@ class Component extends DCLogic {
     if (best < 0) for (let i = 0; i < d.n; i++) { if (!this.visible(i)) continue; const dx = g.X(i) - mx, dy = g.Y(i) - my, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } }
     return best;
   }
-  pos(e) { const r = this.cv.current.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  pos(e) { const c = this.cv.current, r = c.getBoundingClientRect(); return [(e.clientX - r.left) * c.clientWidth / r.width, (e.clientY - r.top) * c.clientHeight / r.height]; }
   setPath(p) { const d = this.state.d; this._pathSet = p >= 0 ? new Set(d.pathways[p].idx) : null; this.setState({ path: p, query: '' }); }
 
   renderVals() {

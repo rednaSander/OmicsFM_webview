@@ -1,0 +1,48 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const {loadComponent} = require('./verify-site.cjs');
+const root = path.resolve(__dirname, '..');
+const style = {setProperty(name, value) { this[name] = value; }};
+const window = {innerHeight: 768, addEventListener() {}};
+let nextFrame;
+vm.runInNewContext(fs.readFileSync(path.join(root, 'display.js'), 'utf8'), {
+  window, document: {documentElement: {style}},
+  performance:{now:()=>0}, cancelAnimationFrame(){},
+  requestAnimationFrame(callback){nextFrame=callback;return 1;},
+});
+assert.equal(style.zoom, '0.8');
+assert.equal(style['--omics-viewport-height'], '960px');
+const canvas = {clientWidth:1000, clientHeight:600,
+  getBoundingClientRect: () => ({left:80,top:40,width:800,height:480})};
+assert.deepEqual([...window.OmicsFMDisplay.pointer(canvas, 480, 280)], [500,300]);
+const network = {canvas:{frame:{canvas}}, interactionHandler:{}};
+window.OmicsFMDisplay.adaptNetwork(network);
+assert.equal(network.interactionHandler.getPointer({x:480,y:280}).x, 500);
+assert.equal(network.interactionHandler.getPointer({x:480,y:280}).y, 300);
+window.scrollY=0;
+window.scrollTo=({top})=>{window.scrollY=top;};
+window.OmicsFMDisplay.scrollToEnd({getBoundingClientRect:()=>({bottom:968})});
+nextFrame(325);
+assert.equal(window.scrollY,100, 'Scroll visibly passes through its midpoint');
+nextFrame(650);
+assert.equal(window.scrollY,200, 'Scroll ends at the bottom of the cards');
+(async () => {
+  for (const name of ['Proteomics Samples','Proteomics Proteins','Bulk Samples','Bulk Genes','Single-cell Samples','Single-cell Genes']) {
+    const {instance} = await loadComponent(`${name}.dc.html`);
+    instance.cv.current = canvas;
+    assert.deepEqual([...instance.pos({clientX:480,clientY:280})], [500,300], name);
+  }
+  for (const name of fs.readdirSync(root).filter(name=>name.endsWith('.dc.html'))) {
+    const html=fs.readFileSync(path.join(root,name),'utf8');
+    assert(html.includes('src="./display.js"'),name);
+    assert(html.includes('height:var(--omics-viewport-height,100vh)'),name);
+  }
+  const {instance} = await loadComponent('Home.dc.html');
+  for (let scene=0; scene<instance.SCENES.length; scene++) {
+    instance.state.scene=scene;
+    assert(!/\d[\d,]* of \d/i.test(instance.renderVals().sceneReadout));
+  }
+  console.log('PASS default 80% scale, full viewport height, six UMAP and network pointer mappings, and carousel readouts');
+})().catch(error=>{console.error(error);process.exitCode=1;});

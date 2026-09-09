@@ -7,6 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
+<script src="./display.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-upright.svg">
 </head>
@@ -25,7 +26,7 @@ input::placeholder{color:#5C5C68}
 @keyframes trisweep{0%{background-position:0% 0}100%{background-position:56.25% 0}}
 </style>
 </helmet>
-<div style="min-height:100vh;background:#0A0A0C;color:#F4F4F5">
+<div style="min-height:var(--omics-viewport-height,100vh);background:#0A0A0C;color:#F4F4F5">
 
 <!-- Header -->
 <header ref="{{ hdrRef }}" data-screen-label="Header" style="position:sticky;top:0;z-index:40;height:72px;display:flex;align-items:stretch;gap:0;padding:0 0 0 12px;background:#000">
@@ -90,9 +91,9 @@ input::placeholder{color:#5C5C68}
 </section>
 <!-- Modality bar -->
 <div data-screen-label="Modality bar" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;height:52px;font-family:'JetBrains Mono',monospace;font-size:{{ barFont }};letter-spacing:{{ barSpacing }};text-transform:uppercase;font-weight:500">
-  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_proteomics }};color:{{ barFg_proteomics }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span style="flex:none">Proteomics</span><span style="flex:none">48,837 profiles</span></span>
-  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_bulk }};color:{{ barFg_bulk }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span style="flex:none">Bulk transcriptomics</span><span style="flex:none">680,216 profiles</span></span>
-  <span style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_sc }};color:{{ barFg_sc }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span style="flex:none">Single-cell transcriptomics</span><span style="flex:none">4,550,106 cells</span></span>
+  <a href="#modalities" onClick="{{ revealModalities }}" style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_proteomics }};color:{{ barFg_proteomics }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C"><span style="flex:none">Proteomics</span><span style="flex:none">48,837 profiles</span></a>
+  <a href="#modalities" onClick="{{ revealModalities }}" style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_bulk }};color:{{ barFg_bulk }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span style="flex:none">Bulk transcriptomics</span><span style="flex:none">680,216 profiles</span></a>
+  <a href="#modalities" onClick="{{ revealModalities }}" style="display:flex;flex-direction:{{ barDirection }};align-items:{{ barAlign }};justify-content:{{ barJustify }};padding:0 {{ barPad }};background:{{ barBg_sc }};color:{{ barFg_sc }};white-space:nowrap;overflow:hidden;gap:{{ barGap }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#FC2D76;color:#0A0A0C"><span style="flex:none">Single-cell transcriptomics</span><span style="flex:none">4,550,106 cells</span></a>
 </div>
 <!-- Modality cards -->
 <section id="modalities" data-screen-label="Modalities" style="scroll-margin-top:72px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:0 0 4px;background:#000">
@@ -343,10 +344,10 @@ class Component extends DCLogic {
     OmicsFM.loadJSON('data/home_carousel.json')
       .then(data => { for (const f of Object.values(data.features)) { const excluded = f.families.indexOf('Integrator complex'); if (excluded >= 0) for (const p of f.pts) if (p[2] === excluded) p[2] = -1; } this.setState({ data, carousel: data }); requestAnimationFrame(() => this.drawAll()); }).catch(e => console.error('home data', e));
     this.startTimer();
-    this._windowResize = () => this.setState({ viewportH: window.innerHeight });
+    this._windowResize = () => this.setState({ viewportH: window.OmicsFMDisplay?.viewportHeight() || window.innerHeight });
     window.addEventListener('resize', this._windowResize);
     this._ro = new ResizeObserver(() => this.drawAll());
-    this._hro = new ResizeObserver(([en]) => { const w = Math.round(this.hdrRef.current?.getBoundingClientRect().width || en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); });
+    this._hro = new ResizeObserver(([en]) => { const w = Math.round(en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); });
     this.hdrRef.current && this._hro.observe(this.hdrRef.current);
     [this.cEgo, this.cSamples, this.cFamilies, this.cAgree, this.cProt, this.cBulk, this.cSc, this.hA, this.hB, this.hCard].forEach(r => r.current && this._ro.observe(r.current));
   }
@@ -425,7 +426,7 @@ class Component extends DCLogic {
       ctx.globalAlpha = 1; ctx.fillStyle = color;
       for (const p of fam) {ctx.beginPath();ctx.arc(X(p),Y(p),3.5,0,Math.PI*2);ctx.fill();}
       const annotations=f.familyAnnotations?.[family];
-      this.heroLabels(g,annotations?annotations.map(label=>({...label,color,offsetX:(label.offsetX||0)+(family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?175:150):0),text:family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?'Variable chain\nimmunoglobulins':'Constant chain\nimmunoglobulins'):label.text})): [{text:family,color,textColor:mod==='bulk'?'#BCA4FF':color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0}]);
+      this.heroLabels(g,annotations?annotations.map(label=>({...label,color,offsetX:(label.offsetX||0)+(family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?175:150):0),text:family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?'Variable chain\nimmunoglobulins':'Constant chain\nimmunoglobulins'):label.text})): [{text:family,color,textColor:mod==='bulk'?'#BCA4FF':color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0,offsetY:family==='histones'?-25:0}]);
       return fam.length;
     }
     this.scatter(c, f.pts, p => { if (p[2] === fi) { n++; return { top: true, color }; } return '#3A3A44'; },
@@ -522,7 +523,7 @@ class Component extends DCLogic {
     ctx.globalAlpha=.92;
     for(const p of highlighted){ctx.fillStyle=keep?this.MOD[mod]:s.classes[p[2]].color;ctx.beginPath();ctx.arc(X(p),Y(p),keep?1.7:2,0,Math.PI*2);ctx.fill();}
     ctx.globalAlpha=1;
-    this.heroLabels(g,keep?[{text:sc.label,color:this.MOD[mod],pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?310:sc.tissue==='frontal cortex'?-100:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
+    this.heroLabels(g,keep?[{text:sc.label,color:this.MOD[mod],pts:highlighted,offsetX:sc.label==='Neurons'?75:sc.label==='T cells'?160:sc.tissue==='blood'?285:sc.tissue==='frontal cortex'?-100:0,offsetY:sc.tissue==='blood'?-200:0}]:s.classes.map((cl,i)=>({text:cl.name,color:cl.color,textColor:'#E3E3E8',pts:s.pts.filter(p=>p[2]===i&&!(X(p)<g.blocked.right&&Y(p)>g.blocked.top))})));
   }
   drawNetwork(c, scene) {
     const source = this.state.carousel?.network;if(!source)return;
@@ -584,7 +585,7 @@ class Component extends DCLogic {
     const tot = d ? { p: d.features.proteomics.n, b: d.features.bulk.n, s: d.features.single_cell.n } : {};
     const stat = (k, t) => d ? `${fam} · ${n[k] ?? 0} of ${t.toLocaleString()} · UMAP` : 'loading…';
     const si = this.state.scene, sc = this.SCENES[si], col = this.MOD[sc.mod], atlas = this.state.carousel?.samples[sc.mod], network = this.state.carousel?.network;
-    const readout = sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · UMAP · ${sc.family} · ${this.sceneCount(sc) ?? '…'}`
+    const readout = sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · UMAP · ${sc.family}`
       : sc.kind === 'samples' ? `${this.MODNAME[sc.mod]} · SST · UMAP · ${atlas?.n.toLocaleString() ?? '…'} ${sc.mod === 'single_cell' ? 'cells' : 'profiles'}`
       : `${this.MODNAME[sc.mod]} · attention · brain · ${network?.edges.length.toLocaleString() ?? '…'} edges · communities`;
     const tag = `${this.MODNAME[sc.mod]} · ${sc.kind === 'family' ? (sc.mod === 'proteomics' ? 'Proteins' : 'Genes') : sc.kind === 'samples' ? 'Samples' : 'Attention'}`;
@@ -611,7 +612,7 @@ class Component extends DCLogic {
       ...(() => {
         const W = this.state.headerW || 1440, k = Math.max(0.6, Math.min(1, W / 1440));
         const colW = Math.round((W <= 1600 ? 202 : 270) * k), edge = Math.round(64 * k);
-        const heroH = Math.max(480, (this.state.viewportH || (typeof window !== 'undefined' ? window.innerHeight : 900)) - 124);
+        const heroH = Math.max(480, (this.state.viewportH || (typeof window !== 'undefined' ? (window.OmicsFMDisplay?.viewportHeight() || window.innerHeight) : 900)) - 124);
         const cardScale = Math.max(.45, Math.min(1, W / 1920, heroH / 850)), textScale = Math.sqrt(cardScale);
         return {
           heroH: heroH + 'px', colW: colW + 'px', edgePad: Math.round(32 * k) + 'px',
@@ -639,6 +640,7 @@ class Component extends DCLogic {
       opA: this.state.front === 0 ? 1 : 0, opB: this.state.front === 1 ? 1 : 0,
       brandWordmark: 'assets/brand/fold/wordmark-' + sc.mod + '.svg',
       sceneIndex: String(si + 1).padStart(2, '0') + ' / ' + String(this.SCENES.length).padStart(2, '0'),
+      revealModalities: e => { e.preventDefault(); window.OmicsFMDisplay.scrollToEnd(document.getElementById('modalities')); },
       sceneReadout: readout, sceneModality: this.MODNAME[sc.mod], sceneReadoutRest: readout.slice(this.MODNAME[sc.mod].length),
       sceneHasAxes: sc.kind !== 'network', sceneAxisX: 'UMAP 1', sceneAxisY: 'UMAP 2', sceneTitle: sc.title, sceneText: sc.text, sceneColor: col === '#8B5CFF' ? '#5100FD' : col, sceneFg: col === '#8B5CFF' ? '#F4F4F5' : '#0A0A0C', sceneTag: tag, sceneUrl: sc.url, sceneLinkColor: col,
       sceneDots: this.SCENES.map((s, i) => ({ title: s.title, bg: i === si ? col : '#3A3A44', go: () => { this.goScene(i); this.startTimer(); } })),
