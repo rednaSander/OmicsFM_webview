@@ -516,7 +516,7 @@ class Component extends DCLogic {
   drawAtlas(c, mod, scene) {
     const s = this.state.carousel?.samples[mod]; if (!s) return;
     const sc=scene||this.SCENES.find(sc=>sc.kind==='samples'&&sc.mod===mod),group=sc.group?s.groups.find(g=>g.name===sc.group):null;
-    const keep=sc.tissue?new Set([s.classes.findIndex(cl=>cl.name===sc.tissue)]):group?new Set(group.classes):null,highlighted=keep?s.pts.filter(p=>keep.has(p[2])):s.pts,g=this.heroFrame(c,s.pts,highlighted,true,mod==='proteomics'?{stretchX:1.4,allowOverlap:true,offsetY:sc.tissue==='blood'?-100:0}:sc.tissue==='frontal cortex'||sc.label==='T cells'||sc.label==='Neurons'?{offsetX:150}:{});if(!g)return;
+    const keep=sc.tissue?new Set([s.classes.findIndex(cl=>cl.name===sc.tissue)]):group?new Set(group.classes):null,highlighted=keep?s.pts.filter(p=>keep.has(p[2])):s.pts,g=this.heroFrame(c,s.pts,highlighted,true,mod==='proteomics'?{stretchX:1.4,allowOverlap:true,offsetY:sc.tissue==='blood'?-100:0}:sc.label==='Neurons'?{offsetX:100}:sc.tissue==='frontal cortex'||sc.label==='T cells'?{offsetX:150}:{});if(!g)return;
     const {ctx,X,Y}=g;
     if(keep){ctx.fillStyle='#36363F';ctx.globalAlpha=.65;for(const p of s.pts)if(!keep.has(p[2]))ctx.fillRect(X(p),Y(p),1.3,1.3);}
     ctx.globalAlpha=.92;
