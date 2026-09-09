@@ -34,7 +34,12 @@ html[data-theme=light] .detection-value{background-color:transparent!important;c
 html[data-theme=light] input.detection-slider{background:#18181F}
 html[data-theme=light] input.detection-slider::-webkit-slider-thumb{background:#18181F}
 html[data-theme=light] input.detection-slider::-moz-range-thumb{background:#18181F}
-html[data-theme=light] select[aria-label="Tissue network"]{border-radius:0}
+html[data-theme=light] select[aria-label="Tissue network"]{border-radius:0;background:#E7E7ED!important;color:#18181F!important;color-scheme:light}
+html[data-theme=light] div:has(>select[aria-label="Tissue network"]){background:#E7E7ED!important;outline-color:#676775!important}
+html[data-theme=light] select[aria-label="Tissue network"]::picker(select){background:#E7E7ED;border-color:#D2D2DB}
+html[data-theme=light] select[aria-label="Tissue network"] option{background:#E7E7ED!important;color:#555562!important}
+html[data-theme=light] select[aria-label="Tissue network"] option:is(:hover,:focus,:checked){color:#18181F!important;outline:1px solid #676775;outline-offset:-1px}
+html[data-theme=light] select[aria-label="Tissue network"] option::checkmark{color:#18181F}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child{background:transparent!important}
 html[data-theme=light] .task-grid>a:nth-child(-n+3)>div:last-child>div:last-child>span:last-child{background:#C0FE04;color:#0A0A0C;padding:4px 8px}
 html[data-theme=light] .family-chip[aria-pressed=false]{background:#E7E7ED!important;color:#555562!important}
