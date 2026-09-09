@@ -8,6 +8,9 @@ Explore proteomics, bulk transcriptomics and single-cell transcriptomics through
 sample/cell maps and protein/gene identity maps. Proteomics and bulk transcriptomics
 also provide tissue-specific attention networks with saved layouts and partner search.
 
+Phone and tablet layouts provide touch-friendly maps, navigation, filters and details.
+The sun/moon control switches between the default dark theme and a saved light theme.
+
 ## Run locally
 
 Download or clone this repository. On Windows, double-click `start-local.cmd`.
@@ -34,6 +37,7 @@ With Node.js installed:
 node scripts/verify-site.cjs
 node scripts/verify-home-carousel.cjs
 node scripts/verify-responsive.cjs
+node scripts/verify-display.cjs
 ```
 
 ## Project and paper

@@ -1,9 +1,11 @@
 // Match an 80% browser view without changing the visitor's browser settings.
 (() => {
-  const scale = 0.8;
-  const viewportHeight = () => window.innerHeight / scale;
+  const isMobile = () => window.innerWidth <= 900 || (window.innerWidth <= 1100 && !!window.matchMedia?.('(pointer: coarse)').matches);
+  const activeScale = () => isMobile() ? 1 : 0.8;
+  const viewportHeight = () => window.innerHeight / activeScale();
   const updateViewport = () => {
-    document.documentElement.style.zoom = String(scale);
+    document.documentElement.style.zoom = String(activeScale());
+    if (document.documentElement.dataset) document.documentElement.dataset.mobile = String(isMobile());
     document.documentElement.style.setProperty('--omics-viewport-height', `${viewportHeight()}px`);
   };
   const pointer = (element, x, y) => {
@@ -13,7 +15,7 @@
   };
   let scrollFrame;
   window.OmicsFMDisplay = {
-    scale, viewportHeight, pointer,
+    get scale() { return activeScale(); }, isMobile, viewportHeight, pointer,
   homeHeaderLayout(width) {
     const W = Math.max(320, width), k = Math.max(.6, Math.min(1, W / 1440));
     const edge = 12, colW = Math.round((W <= 1600 ? 202 : 270) * k);
@@ -45,7 +47,8 @@
       if (!element) return;
       cancelAnimationFrame(scrollFrame);
       const from = window.scrollY;
-      const to = Math.max(0, from + element.getBoundingClientRect().bottom - window.innerHeight + 160);
+      const rect = element.getBoundingClientRect();
+      const to = Math.max(0, isMobile() ? from + rect.top - 72 : from + rect.bottom - window.innerHeight + 160);
       const started = performance.now();
       const step = now => {
         const progress = Math.min(1, (now - started) / 650);

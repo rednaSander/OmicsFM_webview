@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.602a0fe1ac04.js"></script>
+<script src="./assets/runtime/display.2d4f4e4daa2f.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -17,148 +17,148 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Audiowide&amp;family=Space+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#0A0A0C;color:#F4F4F5;font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:#F4F4F5;text-decoration:none}a:hover{color:#8B5CFF}
+html,body{margin:0;padding:0;background:var(--ui-bg-0a0a0c,#0A0A0C);color:var(--ui-fg-f4f4f5,#F4F4F5);font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ui-fg-f4f4f5,#F4F4F5);text-decoration:none}a:hover{color:var(--ui-fg-8b5cff,#8B5CFF)}
 *{box-sizing:border-box}
-input::placeholder{color:#5C5C68}
-::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#2A2A31}::-webkit-scrollbar-track{background:transparent}
+input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--ui-bg-2a2a31,#2A2A31)}::-webkit-scrollbar-track{background:transparent}
 
-.tissue-group-heading{padding:16px 8px 6px;font:500 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6}
+.tissue-group-heading{padding:16px 8px 6px;font:500 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ui-fg-9a9aa6,#9A9AA6)}
 </style>
 </helmet>
-<div style="height:var(--omics-viewport-height,100vh);background:#0A0A0C;color:#F4F4F5;display:flex;flex-direction:column;overflow:hidden">
+<div style="height:var(--omics-viewport-height,100vh);background:{{ ui.BG['#0A0A0C'] }};color:{{ ui.FG['#0A0A0C']['#F4F4F5'] }};display:flex;flex-direction:column;overflow:hidden">
 
-<header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:#000;flex:none">
-  <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="assets/brand/fold/stacked-bulk.svg" alt="OmicsFM bulk transcriptomics" style="height:48px;width:60px;display:block"></a>
+<header ref="{{ hdrRef }}" data-screen-label="Header" style="height:72px;display:flex;align-items:stretch;padding:0 0 0 {{ edgePad }};background:{{ ui.BG['#000'] }};flex:none">
+  <a href="Home.dc.html" style="display:flex;align-items:center;align-self:center;height:48px;flex:none"><img src="{{ ui.LOGO['assets/brand/fold/stacked-bulk.svg'] }}" alt="OmicsFM bulk transcriptomics" style="height:48px;width:60px;display:block"></a>
   <nav style="display:flex;align-items:center;gap:{{ navGap }};margin-left:32px;min-width:0;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase">
-    <a href="Home.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#9A9AA6;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Home</a>
-    <span style="color:#5C5C68">/</span>
-    <span style="display:inline-flex;align-items:center;padding:7px 12px;background:#5100FD;color:#F4F4F5;white-space:nowrap">Bulk transcriptomics</span>
-    <span style="color:#5C5C68">/</span>
-    <span style="display:inline-flex;align-items:center;padding:7px 12px;color:#F4F4F5;white-space:nowrap">Samples</span>
-    <a href="Bulk Attention.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Attention</a>
-    <a href="Bulk Genes.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:#5C5C68;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#1B1B20;color:#F4F4F5">Genes</a>
+    <a href="Home.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:{{ ui.FG['transparent']['#9A9AA6'] }};white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20);color:var(--ui-on-1b1b20-f4f4f5,#F4F4F5)">Home</a>
+    <span style="color:{{ ui.FG['transparent']['#5C5C68'] }}">/</span>
+    <span style="display:inline-flex;align-items:center;padding:7px 12px;background:{{ ui.BG['#5100FD'] }};color:{{ ui.FG['#5100FD']['#F4F4F5'] }};white-space:nowrap">Bulk transcriptomics</span>
+    <span style="color:{{ ui.FG['transparent']['#5C5C68'] }}">/</span>
+    <span style="display:inline-flex;align-items:center;padding:7px 12px;color:{{ ui.FG['transparent']['#F4F4F5'] }};white-space:nowrap">Samples</span>
+    <a href="Bulk Attention.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:{{ ui.FG['transparent']['#5C5C68'] }};white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20);color:var(--ui-on-1b1b20-f4f4f5,#F4F4F5)">Attention</a>
+    <a href="Bulk Genes.dc.html" style="display:inline-flex;align-items:center;padding:7px 12px;color:{{ ui.FG['transparent']['#5C5C68'] }};white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20);color:var(--ui-on-1b1b20-f4f4f5,#F4F4F5)">Genes</a>
   </nav>
   <div style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
-    <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:#1B1B20;color:#9A9AA6" style-focus="background:#2A2A31">
+    <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#9A9AA6'] }}" style-focus="background:var(--ui-bg-2a2a31,#2A2A31)">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
-      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Highlight samples: GSM, GSE, tissue, disease…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:15px;min-width:0">
-      <sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#2A2A31"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;cursor:pointer">{{ queryHits }} ✕</button></sc-if>
+      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Highlight samples: GSM, GSE, tissue, disease…" style="flex:1;background:transparent;border:0;outline:0;color:{{ ui.FG['transparent']['#F4F4F5'] }};font:inherit;font-size:15px;min-width:0">
+      <sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:{{ ui.BG['#2A2A31'] }};color:{{ ui.FG['#2A2A31']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;cursor:pointer">{{ queryHits }} ✕</button></sc-if>
     </label></sc-if>
-    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;border:2px solid transparent;color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
+    <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:{{ ui.BG['#000'] }};border:2px solid transparent;color:{{ ui.FG['#000']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
   </div>
 </header>
 
-<div data-screen-label="Title bar" style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:52px;padding:0 32px;background:#000;border-top:4px solid #0A0A0C;flex:none;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">
-  <div style="display:flex;align-items:center;gap:16px;min-width:0"><span style="color:#8B5CFF;white-space:nowrap;flex:none">02 · Bulk transcriptomics · Samples</span><span style="color:#5C5C68;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Sample summary token · learned-identity checkpoint</span></div>
-  <div style="display:flex;align-items:center;gap:16px;color:#9A9AA6;flex:none;white-space:nowrap"><sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#2A2A31"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#5100FD;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#F4F4F5"><span>highlighting “{{ query }}” · {{ queryHits }}</span><span>✕ reset</span></button></sc-if><span>{{ visibleCount }} of {{ totalCount }} samples</span><sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><span style="color:#5C5C68">{{ projectCount }} GEO study groups</span></sc-if></div>
+<div data-screen-label="Title bar" style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:52px;padding:0 32px;background:{{ ui.BG['#000'] }};border-top:4px solid {{ ui.BG['#0A0A0C'] }};flex:none;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">
+  <div style="display:flex;align-items:center;gap:16px;min-width:0"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};white-space:nowrap;flex:none">02 · Bulk transcriptomics · Samples</span><span style="color:{{ ui.FG['transparent']['#5C5C68'] }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Sample summary token · learned-identity checkpoint</span></div>
+  <div style="display:flex;align-items:center;gap:16px;color:{{ ui.FG['transparent']['#9A9AA6'] }};flex:none;white-space:nowrap"><sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:{{ ui.BG['#5100FD'] }};color:{{ ui.FG['#5100FD']['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-f4f4f5,#F4F4F5)"><span>highlighting “{{ query }}” · {{ queryHits }}</span><span>✕ reset</span></button></sc-if><span>{{ visibleCount }} of {{ totalCount }} samples</span><sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><span style="color:{{ ui.FG['transparent']['#5C5C68'] }}">{{ projectCount }} GEO study groups</span></sc-if></div>
 </div>
 
-<div style="display:grid;grid-template-columns:{{ leftW }} 6px minmax(0,1fr) {{ rightW }};gap:0;flex:1;min-height:0;background:#000">
+<div class="explorer-grid" style="display:grid;grid-template-columns:{{ leftW }} 6px minmax(0,1fr) {{ rightW }};gap:0;flex:1;min-height:0;background:{{ ui.BG['#000'] }}">
 
   <!-- Controls -->
-  <aside data-screen-label="Controls" style="background:#0A0A0C;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
+  <aside data-screen-label="Controls" style="background:{{ ui.BG['#0A0A0C'] }};display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
     <div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:10px;flex:none">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Colour by</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}">Colour by</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
         <sc-for list="{{ fieldTabs }}" as="f" hint-placeholder-count="6">
-          <button onClick="{{ f.pick }}" style="padding:7px 8px;border:0;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ f.bg }};color:{{ f.fg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">{{ f.label }}</button>
+          <button onClick="{{ f.pick }}" style="padding:7px 8px;border:0;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ ui.BG[f.bg] }};color:{{ ui.FG[f.bg][f.fg] }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-on-2a2a31-f4f4f5,#F4F4F5)">{{ f.label }}</button>
         </sc-for>
       </div>
     </div>
-    <div style="padding:24px 24px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;flex:none"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ legendTitle }}</span><button onClick="{{ resetLegend }}" style="border:0;background:transparent;color:{{ resetColor }};font:inherit;cursor:pointer;padding:0;flex:none">{{ resetLabel }}</button></div>
+    <div style="padding:24px 24px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }};flex:none"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ legendTitle }}</span><button onClick="{{ resetLegend }}" style="border:0;background:transparent;color:{{ ui.FG['transparent'][resetColor] }};font:inherit;cursor:pointer;padding:0;flex:none">{{ resetLabel }}</button></div>
     <sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}">
       <div style="padding:0 24px 12px;display:flex;gap:4px;flex:none">
-        <button onClick="{{ setModeClass }}" style="flex:1;padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ modeClassBg }};color:{{ modeClassFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">One colour</button>
-        <button onClick="{{ setModeProj }}" style="flex:1;padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ modeProjBg }};color:{{ modeProjFg }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#2A2A31;color:#F4F4F5">Show projects</button>
+        <button onClick="{{ setModeClass }}" style="flex:1;padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ ui.BG[modeClassBg] }};color:{{ ui.FG[modeClassBg][modeClassFg] }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-on-2a2a31-f4f4f5,#F4F4F5)">One colour</button>
+        <button onClick="{{ setModeProj }}" style="flex:1;padding:8px 10px;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:{{ ui.BG[modeProjBg] }};color:{{ ui.FG[modeProjBg][modeProjFg] }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-on-2a2a31-f4f4f5,#F4F4F5)">Show projects</button>
       </div>
     </sc-if>
-    <div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;overflow-x:hidden;min-height:180px;flex:1">
+    <div class="mobile-legend" style="padding:0 16px 24px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;overflow-x:hidden;min-height:180px;flex:1">
       <sc-for list="{{ legend }}" as="l" hint-placeholder-count="12">
         <sc-if value="{{ l.groupStart }}"><div class="tissue-group-heading">{{ l.groupTitle }}</div></sc-if>
-        <button onClick="{{ l.pick }}" onMouseEnter="{{ l.over }}" onMouseLeave="{{ legendOut }}" title="{{ l.title }}" style="display:flex;align-items:center;gap:10px;padding:6px 8px;border:0;cursor:pointer;font:inherit;font-size:12.5px;text-align:left;background:{{ l.bg }};color:{{ l.fg }};opacity:{{ l.opacity }};transition:background 120ms ease-out,opacity 120ms ease-out" style-hover="background:#1B1B20">
-          <span style="width:9px;height:9px;flex:none;background:{{ l.color }}"></span>
+        <button onClick="{{ l.pick }}" onMouseEnter="{{ l.over }}" onMouseLeave="{{ legendOut }}" title="{{ l.title }}" style="display:flex;align-items:center;gap:10px;padding:6px 8px;border:0;cursor:pointer;font:inherit;font-size:12.5px;text-align:left;background:{{ ui.BG[l.bg] }};color:{{ ui.FG[l.bg][l.fg] }};opacity:{{ l.opacity }};transition:background 120ms ease-out,opacity 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20)">
+          <span style="width:9px;height:9px;flex:none;background:{{ ui.BG[l.color] }}"></span>
           <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.label }}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68;flex:none">{{ l.n }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ ui.FG['transparent']['#5C5C68'] }};flex:none">{{ l.n }}</span>
         </button>
       </sc-for>
     </div>
-    <div style="padding:16px 24px 20px;background:#000;font-size:12px;line-height:1.5;color:#9A9AA6;flex:none;margin-top:auto;text-wrap:pretty"><span style="color:#FFB020;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Overlay</span>Colours are metadata drawn on top of the layout afterwards. The model never saw any of them.</div>
+    <div style="padding:16px 24px 20px;background:{{ ui.BG['#000'] }};font-size:12px;line-height:1.5;color:{{ ui.FG['#000']['#9A9AA6'] }};flex:none;margin-top:auto;text-wrap:pretty"><span style="color:{{ ui.FG['transparent']['#FFB020'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Overlay</span>Colours are metadata drawn on top of the layout afterwards. The model never saw any of them.</div>
   </aside>
 
-  <div onMouseDown="{{ startResize }}" title="Drag to resize the legend" style="cursor:col-resize;background:#000;display:flex;align-items:center;justify-content:center" style-hover="background:#1B1B20"><span style="width:2px;height:28px;background:{{ handleColor }}"></span></div>
+  <div onMouseDown="{{ startResize }}" title="Drag to resize the legend" style="cursor:col-resize;background:{{ ui.BG['#000'] }};display:flex;align-items:center;justify-content:center" style-hover="background:var(--ui-bg-1b1b20,#1B1B20)"><span style="width:2px;height:28px;background:{{ ui.BG[handleColor] }}"></span></div>
   <!-- Plot -->
-  <main data-screen-label="Plot" style="position:relative;background:#0A0A0C;min-width:0;min-height:0;overflow:hidden;margin-right:4px">
+  <main data-screen-label="Plot" style="position:relative;background:{{ ui.BG['#0A0A0C'] }};min-width:0;min-height:0;overflow:hidden;margin-right:4px">
     <canvas ref="{{ cv }}" onMouseMove="{{ onMove }}" onMouseLeave="{{ onLeave }}" onClick="{{ onPick }}" onWheel="{{ onWheel }}" onMouseDown="{{ onDown }}" onMouseUp="{{ onUp }}" onDoubleClick="{{ resetView }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:{{ cursor }}"></canvas>
     <div style="position:absolute;top:0;bottom:0;left:0;right:0;pointer-events:none">
-      <span style="position:absolute;top:12px;left:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
-      <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
-      <span style="position:absolute;bottom:12px;left:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span>
-      <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
-      <div style="position:absolute;top:22px;left:32px;right:32px;display:flex;justify-content:space-between;gap:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;white-space:nowrap;overflow:hidden"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0"><span style="color:#8B5CFF">Bulk transcriptomics</span> · SST · UMAP · coloured by {{ fieldLabel }}{{ projSuffix }}</span><span>{{ zoomLabel }}</span></div>
-      <div style="position:absolute;bottom:22px;left:32px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6">UMAP 1 → · UMAP 2 ↑</div>
-      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;bottom:22px;right:32px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;max-width:calc(100% - 280px);text-align:right;white-space:normal">Zoom for tissue subtypes · drag to pan · double-click to reset</div></sc-if>
+      <span style="position:absolute;top:12px;left:12px;width:14px;height:14px;border-top:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-left:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
+      <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-right:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
+      <span style="position:absolute;bottom:12px;left:12px;width:14px;height:14px;border-bottom:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-left:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
+      <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-right:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
+      <div style="position:absolute;top:22px;left:32px;right:32px;display:flex;justify-content:space-between;gap:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }};white-space:nowrap;overflow:hidden"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }}">Bulk transcriptomics</span> · SST · UMAP · coloured by {{ fieldLabel }}{{ projSuffix }}</span><span>{{ zoomLabel }}</span></div>
+      <div style="position:absolute;bottom:22px;left:32px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }}">UMAP 1 → · UMAP 2 ↑</div>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;bottom:22px;right:32px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }};max-width:calc(100% - 280px);text-align:right;white-space:normal">Zoom for tissue subtypes · drag to pan · double-click to reset</div></sc-if>
     </div>
     <sc-if value="{{ showTip }}" hint-placeholder-val="{{ false }}">
-      <div style="position:absolute;left:{{ tipX }};top:{{ tipY }};transform:translate(14px,14px);pointer-events:none;background:#000;color:#F4F4F5;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:200px;max-width:280px;font-size:12px;line-height:1.4">
-        <div style="display:flex;align-items:center;gap:8px;font-weight:600"><span style="width:9px;height:9px;flex:none;background:{{ tipColor }}"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tipTitle }}</span></div>
-        <div style="color:#9A9AA6">{{ tipSub }}</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68;letter-spacing:.06em">{{ tipId }}</div>
+      <div style="position:absolute;left:{{ tipX }};top:{{ tipY }};transform:translate(14px,14px);pointer-events:none;background:{{ ui.BG['#000'] }};color:{{ ui.FG['#000']['#F4F4F5'] }};padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:200px;max-width:280px;font-size:12px;line-height:1.4">
+        <div style="display:flex;align-items:center;gap:8px;font-weight:600"><span style="width:9px;height:9px;flex:none;background:{{ ui.BG[tipColor] }}"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tipTitle }}</span></div>
+        <div style="color:{{ ui.FG['transparent']['#9A9AA6'] }}">{{ tipSub }}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ ui.FG['transparent']['#5C5C68'] }};letter-spacing:.06em">{{ tipId }}</div>
       </div>
     </sc-if>
   </main>
 
   <!-- Inspector -->
-  <aside data-screen-label="Inspector" style="background:#000;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
+  <aside data-screen-label="Inspector" style="background:{{ ui.BG['#000'] }};display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden">
     <sc-if value="{{ infoClosed }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:12px">
-        <button onClick="{{ openInfo }}" title="What am I looking at?" style="width:36px;height:36px;border:0;cursor:pointer;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">i</button>
+        <button onClick="{{ openInfo }}" title="What am I looking at?" style="width:36px;height:36px;border:0;cursor:pointer;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-5100fd,#5100FD);color:var(--ui-on-5100fd-f4f4f5,#F4F4F5)">i</button>
       </div>
     </sc-if>
     <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
         <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>Selected sample</span><button onClick="{{ clearSel }}" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer" style-hover="background:#2A2A31">Clear ✕</button></div>
-          <div style="display:flex;align-items:flex-start;gap:10px"><span style="width:12px;height:12px;flex:none;background:{{ selColor }};margin-top:5px"></span><div style="font-size:20px;font-weight:600;line-height:1.2;text-wrap:balance">{{ selClass }}</div></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9A9AA6;word-break:break-all;line-height:1.5;margin-top:4px">{{ selId }}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span>Selected sample</span><button onClick="{{ clearSel }}" style="border:0;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font:inherit;font-size:10px;padding:3px 8px;cursor:pointer" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)">Clear ✕</button></div>
+          <div style="display:flex;align-items:flex-start;gap:10px"><span style="width:12px;height:12px;flex:none;background:{{ ui.BG[selColor] }};margin-top:5px"></span><div style="font-size:20px;font-weight:600;line-height:1.2;text-wrap:balance">{{ selClass }}</div></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ ui.FG['transparent']['#9A9AA6'] }};word-break:break-all;line-height:1.5;margin-top:4px">{{ selId }}</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
           <sc-for list="{{ selMeta }}" as="m" hint-placeholder-count="6">
-            <div style="background:#131316;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">{{ m.k }}</div><div style="font-size:12.5px;line-height:1.35;overflow-wrap:anywhere">{{ m.v }}</div></div>
+            <div style="background:{{ ui.BG['#131316'] }};padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}">{{ m.k }}</div><div style="font-size:12.5px;line-height:1.35;overflow-wrap:anywhere">{{ m.v }}</div></div>
           </sc-for>
         </div>
-        <a href="{{ selSourceUrl }}" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#1B1B20;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5"><span>Open sample on GEO</span><span>↗</span></a>
+        <a href="{{ selSourceUrl }}" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-5100fd,#5100FD);color:var(--ui-on-5100fd-f4f4f5,#F4F4F5)"><span>Open sample on GEO</span><span>↗</span></a>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>10 nearest neighbours</span><span>SST space · euclidean</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span>10 nearest neighbours</span><span>SST space · euclidean</span></div>
           <div style="display:flex;flex-direction:column;gap:1px">
             <sc-for list="{{ neighbours }}" as="nb" hint-placeholder-count="10">
-              <button onClick="{{ nb.pick }}" onMouseEnter="{{ nb.over }}" onMouseLeave="{{ nbOut }}" style="display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 10px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ nb.bg }};color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#1B1B20">
-                <span style="width:9px;height:9px;background:{{ nb.color }}"></span>
-                <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nb.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nb.project }}<span style="color:{{ nb.sameColor }}"> · {{ nb.sameLabel }}</span></span></span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9A9AA6">{{ nb.d }}</span>
+              <button onClick="{{ nb.pick }}" onMouseEnter="{{ nb.over }}" onMouseLeave="{{ nbOut }}" style="display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 10px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ ui.BG[nb.bg] }};color:{{ ui.FG[nb.bg]['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20)">
+                <span style="width:9px;height:9px;background:{{ ui.BG[nb.color] }}"></span>
+                <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nb.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ ui.FG['transparent']['#5C5C68'] }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nb.project }}<span style="color:{{ ui.FG['transparent'][nb.sameColor] }}"> · {{ nb.sameLabel }}</span></span></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ ui.FG['transparent']['#9A9AA6'] }}">{{ nb.d }}</span>
               </button>
             </sc-for>
           </div>
-          <div style="font-size:12px;line-height:1.5;color:#9A9AA6;text-wrap:pretty;padding-top:4px">{{ neighbourSummary }}</div>
+          <div style="font-size:12px;line-height:1.5;color:{{ ui.FG['transparent']['#9A9AA6'] }};text-wrap:pretty;padding-top:4px">{{ neighbourSummary }}</div>
         </div>
       </div>
     </sc-if>
     <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>What am I looking at?</span><button onClick="{{ closeInfo }}" title="Hide panel" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer;flex:none" style-hover="background:#2A2A31">Hide ✕</button></div>
-        <p style="margin:0;font-size:16px;line-height:1.55;color:#F4F4F5;text-wrap:pretty;text-align:left">Each point is one bulk RNA-seq profile from ARCHS4: its learned-identity sample summary token, reduced to two dimensions. Samples that the model represents similarly sit close together.</p>
-        <p style="margin:0;font-size:16px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:left">This map contains the exported exp8 samples, balanced across labels and studies; it is not the whole training corpus. Tissues and GEO study groups are annotations added after training. Nearby samples may share biology, technical effects, or both.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span>What am I looking at?</span><button onClick="{{ closeInfo }}" title="Hide panel" style="border:0;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};font:inherit;font-size:10px;padding:3px 8px;cursor:pointer;flex:none" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)">Hide ✕</button></div>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:{{ ui.FG['transparent']['#F4F4F5'] }};text-wrap:pretty;text-align:left">Each point is one bulk RNA-seq profile from ARCHS4: its learned-identity sample summary token, reduced to two dimensions. Samples that the model represents similarly sit close together.</p>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:{{ ui.FG['transparent']['#9A9AA6'] }};text-wrap:pretty;text-align:left">This map contains the exported exp8 samples, balanced across labels and studies; it is not the whole training corpus. Tissues and GEO study groups are annotations added after training. Nearby samples may share biology, technical effects, or both.</p>
         <div style="display:flex;flex-direction:column;gap:1px">
-          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Hover</span>a point to read its metadata.</div>
-          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>to pin it and see its ten nearest neighbours in the model’s space.</div>
-          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Legend</span>click a class to isolate it, then “Show projects” to colour its GEO study groups.</div>
-          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#8B5CFF;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Search</span>a GSM, GSE, tissue or disease to light up matching samples.</div>
+          <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:14px;line-height:1.5"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Hover</span>a point to read its metadata.</div>
+          <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:14px;line-height:1.5"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>to pin it and see its ten nearest neighbours in the model’s space.</div>
+          <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:14px;line-height:1.5"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Legend</span>click a class to isolate it, then “Show projects” to colour its GEO study groups.</div>
+          <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:14px;line-height:1.5"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Search</span>a GSM, GSE, tissue or disease to light up matching samples.</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Try</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}">Try</div>
           <div style="display:flex;flex-wrap:wrap;gap:4px">
             <sc-for list="{{ tryChips }}" as="t" hint-placeholder-count="4">
-              <button onClick="{{ t.go }}" style="padding:7px 10px;border:0;cursor:pointer;font:inherit;font-size:12px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#5100FD;color:#F4F4F5">{{ t.label }}</button>
+              <button onClick="{{ t.go }}" style="padding:7px 10px;border:0;cursor:pointer;font:inherit;font-size:12px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-5100fd,#5100FD);color:var(--ui-on-5100fd-f4f4f5,#F4F4F5)">{{ t.label }}</button>
             </sc-for>
           </div>
         </div>
@@ -177,6 +177,7 @@ class Component extends DCLogic {
   META_KEYS = ["geo_accession", "series_id", "title", "tissue", "disease", "split"];
 
   componentDidMount() {
+    this._displayDisconnect = window.OmicsFMDisplay.connect(this);
     OmicsFM.loadJSON('data/sst_bulk.json').then(d => {
       d.catOrder = {};
       for (const f in d.cats) { const cnt = {}; d.cats[f].idx.forEach(k => cnt[k] = (cnt[k] || 0) + 1); d.catOrder[f] = Object.keys(cnt).map(Number).sort((a, b) => cnt[b] - cnt[a]); d.cats[f].counts = cnt; }
@@ -189,7 +190,7 @@ class Component extends DCLogic {
     this._mu = () => { if (this._rs) { this._rs = null; this.setState({ resizing: false }); } };
     window.addEventListener('mousemove', this._mm); window.addEventListener('mouseup', this._mu);
   }
-  componentWillUnmount() { this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); window.removeEventListener('keydown', this._keys); window.removeEventListener('mousemove', this._mm); window.removeEventListener('mouseup', this._mu); }
+  componentWillUnmount() { this._displayDisconnect?.(); this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); window.removeEventListener('keydown', this._keys); window.removeEventListener('mousemove', this._mm); window.removeEventListener('mouseup', this._mu); }
   componentDidUpdate() { this.draw(); }
 
   // ---- colour model
@@ -277,7 +278,7 @@ class Component extends DCLogic {
   // ---- geometry
   geom() {
     const c = this.cv.current, d = this.state.d; if (!c || !d) return null;
-    const w = c.clientWidth, h = c.clientHeight, pad = 56, b = d.bounds;
+    const w = c.clientWidth, h = c.clientHeight, pad = window.OmicsFMDisplay.isMobile() ? 24 : 56, b = d.bounds;
     const bx = b.umap_x, by = b.umap_y, mx = (bx[0] + bx[1]) / 2, my = (by[0] + by[1]) / 2;
     // Equal scale on both axes preserves the embedding on every screen shape.
     const scale = Math.min(Math.max(1, w - 2 * pad) / (bx[1] - bx[0] || 1), Math.max(1, h - 2 * pad) / (by[1] - by[0] || 1));
@@ -291,7 +292,7 @@ class Component extends DCLogic {
     const c = this.cv.current, d = this.state.d, g = this.geom(); if (!c || !d || !g) return;
     const dpr = window.devicePixelRatio || 1;
     if (c.width !== g.w * dpr || c.height !== g.h * dpr) { c.width = g.w * dpr; c.height = g.h * dpr; }
-    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, g.w, g.h);
+    const ctx = window.OmicsFMDisplay.canvasContext(c); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, g.w, g.h);
     const r = Math.max(1.4, Math.min(4.2, 2.2 * Math.sqrt(this.state.view.k))), n = d.n, { sel, hover, hoverNb } = this.state;
     const q = this.state.query.trim();
     // pass 1: hidden/dimmed as faint grey; pass 2: visible coloured
@@ -328,14 +329,15 @@ class Component extends DCLogic {
     if (sel >= 0) ring(sel, '#8B5CFF');
   }
   nearest(mx, my) {
-    const g = this.geom(), d = this.state.d; if (!g) return -1; let best = -1, bd = 100;
+    const g = this.geom(), d = this.state.d; if (!g) return -1; let best = -1, bd = window.OmicsFMDisplay.isMobile() ? 400 : 100;
     for (let i = 0; i < d.n; i++) { if (!this.visible(i) || this.dimmed(i)) continue; const dx = g.X(i) - mx, dy = g.Y(i) - my, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } }
     if (best < 0) for (let i = 0; i < d.n; i++) { if (!this.visible(i)) continue; const dx = g.X(i) - mx, dy = g.Y(i) - my, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } }
     return best;
   }
   pos(e) { const c = this.cv.current, r = c.getBoundingClientRect(); return [(e.clientX - r.left) * c.clientWidth / r.width, (e.clientY - r.top) * c.clientHeight / r.height]; }
 
-  renderVals() {
+  renderVals() { return { ...this.pageValues(), ui: window.OmicsFMDisplay.ui }; }
+  pageValues() {
     const { d, field, iso, sel, hover, query, view, legendHover } = this.state;
     const fieldLabel = this.FIELDS.find(f => f[0] === field)[1];
     let legend = [], visibleCount = '', queryHits = 0;
