@@ -12,7 +12,8 @@ const root = path.resolve(__dirname, '..');
       for (const view of [{k:1,x:0,y:0},{k:2.5,x:73,y:-42}]) {
         p.state.view=view;
         const g=p.geom(), a=g.P(0,0), x=g.P(1,0), y=g.P(0,1);
-        assert(Math.abs((x[0]-a[0])+(y[1]-a[1]))<1e-8, `${name}: unequal axis scales at ${w}`);
+        const stretch = name.startsWith('Proteomics') ? 1.4 : 1;
+        assert(Math.abs((x[0]-a[0])+stretch*(y[1]-a[1]))<1e-8, `${name}: unexpected axis proportions at ${w}`);
         assert.equal(a[1],x[1]); assert.equal(a[0],y[0]);
         const point=g.P(p.state.d.xy[0],p.state.d.xy[1]);
         assert(Math.abs(point[0]-g.X(0))<1e-8 && Math.abs(point[1]-g.Y(0))<1e-8);
@@ -28,5 +29,5 @@ const root = path.resolve(__dirname, '..');
     }
     assert(html.includes('assets/brand/fold/stacked-'), `${name}: missing stacked logo`);
   }
-  console.log('PASS six UMAPs preserve aspect ratio at laptop and ultrawide sizes, including zoom, pan, dots and annotations; all page headers use stacked logos and non-clickable modality labels.');
+  console.log('PASS six UMAPs keep consistent proportions at laptop and ultrawide sizes (proteomics 1.4x horizontal), including zoom, pan, dots and annotations; all page headers use stacked logos and non-clickable modality labels.');
 })().catch(error=>{console.error(error);process.exitCode=1;});

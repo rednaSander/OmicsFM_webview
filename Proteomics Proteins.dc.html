@@ -8,7 +8,7 @@
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
 <script src="./support.js"></script>
-<link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-upright.svg">
 </head>
 <body>
 <x-dc>
@@ -245,11 +245,12 @@ class Component extends DCLogic {
     const c = this.cv.current, d = this.state.d; if (!c || !d) return null;
     const w = c.clientWidth, h = c.clientHeight, pad = 56, b = d.bounds;
     const bx = b.x, by = b.y, mx = (bx[0] + bx[1]) / 2, my = (by[0] + by[1]) / 2;
-    // Equal scale on both axes preserves the embedding on every screen shape.
-    const scale = Math.min(Math.max(1, w - 2 * pad) / (bx[1] - bx[0] || 1), Math.max(1, h - 2 * pad) / (by[1] - by[0] || 1));
+    // A fixed, gentle horizontal stretch stays consistent on laptop and ultrawide screens.
+    const horizontalStretch = 1.4;
+    const scale = Math.min(Math.max(1, w - 2 * pad) / ((bx[1] - bx[0] || 1) * horizontalStretch), Math.max(1, h - 2 * pad) / (by[1] - by[0] || 1));
     const { k, x, y } = this.state.view, s = scale * k;
-    const P = (px, py) => [w / 2 + x + (px - mx) * s, h / 2 + y - (py - my) * s];
-    const X = i => w / 2 + x + (d.xy[2 * i] - mx) * s;
+    const P = (px, py) => [w / 2 + x + (px - mx) * s * horizontalStretch, h / 2 + y - (py - my) * s];
+    const X = i => w / 2 + x + (d.xy[2 * i] - mx) * s * horizontalStretch;
     const Y = i => h / 2 + y - (d.xy[2 * i + 1] - my) * s;
     return { w, h, X, Y, P, s };
   }
