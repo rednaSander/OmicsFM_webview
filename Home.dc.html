@@ -78,12 +78,12 @@ input::placeholder{color:#5C5C68}
       <button onClick="{{ d.go }}" title="{{ d.title }}" style="width:16px;height:28px;padding:0;border:0;cursor:pointer;background:transparent;display:flex;justify-content:center"><span style="display:block;height:100%;width:2px;background:{{ d.bg }};transition:background 200ms"></span></button>
     </sc-for>
   </div>
-  <div ref="{{ hCard }}" data-screen-label="Carousel card" style="position:absolute;left:0;bottom:48px;width:{{ cardW }};display:flex;flex-direction:column;gap:9px;padding:18px 22px 0 22px;background:{{ sceneColor }};color:{{ sceneFg }};transition:background 400ms ease-out,color 400ms ease-out">
-    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.1em;text-transform:uppercase;opacity:.8"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
+  <div ref="{{ hCard }}" data-screen-label="Carousel card" style="position:absolute;left:0;bottom:48px;width:{{ cardW }};display:flex;flex-direction:column;gap:{{ cardGap }};padding:{{ cardPadTop }} {{ cardPad }} 0 {{ cardPad }};background:{{ sceneColor }};color:{{ sceneFg }};transition:background 400ms ease-out,color 400ms ease-out">
+    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:{{ cardMetaFont }};letter-spacing:.1em;text-transform:uppercase;opacity:.8"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
     <div style="font-size:{{ cardTitleFont }};font-weight:600;line-height:1.2;letter-spacing:-0.01em;text-wrap:balance">{{ sceneTitle }}</div>
-    <p style="margin:0;font-size:17px;line-height:1.5;text-wrap:pretty;text-align:left">{{ sceneText }}</p>
-    <div style="display:flex;justify-content:flex-end;margin:5px -22px 0 0">
-      <a href="{{ sceneUrl }}" style="display:inline-flex;align-items:center;height:44px;padding:0 22px;background:#0A0A0C;color:{{ sceneLinkColor }};font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color 400ms ease-out;outline:2px solid transparent;outline-offset:-2px" style-hover="outline-color:currentColor">Start exploring</a>
+    <p style="margin:0;font-size:{{ cardBodyFont }};line-height:1.45;text-wrap:pretty;text-align:left">{{ sceneText }}</p>
+    <div style="display:flex;justify-content:flex-end;margin:4px -{{ cardPad }} 0 0">
+      <a href="{{ sceneUrl }}" style="display:inline-flex;align-items:center;height:{{ cardButtonH }};padding:0 {{ cardPad }};background:#0A0A0C;color:{{ sceneLinkColor }};font-family:'JetBrains Mono',monospace;font-size:{{ cardButtonFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color 400ms ease-out;outline:2px solid transparent;outline-offset:-2px" style-hover="outline-color:currentColor">Start exploring</a>
     </div>
   </div>
   
@@ -343,12 +343,14 @@ class Component extends DCLogic {
     OmicsFM.loadJSON('data/home_carousel.json')
       .then(data => { for (const f of Object.values(data.features)) { const excluded = f.families.indexOf('Integrator complex'); if (excluded >= 0) for (const p of f.pts) if (p[2] === excluded) p[2] = -1; } this.setState({ data, carousel: data }); requestAnimationFrame(() => this.drawAll()); }).catch(e => console.error('home data', e));
     this.startTimer();
+    this._windowResize = () => this.setState({ viewportH: window.innerHeight });
+    window.addEventListener('resize', this._windowResize);
     this._ro = new ResizeObserver(() => this.drawAll());
     this._hro = new ResizeObserver(([en]) => { const w = Math.round(this.hdrRef.current?.getBoundingClientRect().width || en.contentRect.width); if (w !== this.state.headerW) this.setState({ headerW: w }); });
     this.hdrRef.current && this._hro.observe(this.hdrRef.current);
     [this.cEgo, this.cSamples, this.cFamilies, this.cAgree, this.cProt, this.cBulk, this.cSc, this.hA, this.hB, this.hCard].forEach(r => r.current && this._ro.observe(r.current));
   }
-  componentWillUnmount() { this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); this.stopTimer(); }
+  componentWillUnmount() { window.removeEventListener('resize', this._windowResize); this._ro && this._ro.disconnect(); this._hro && this._hro.disconnect(); this.stopTimer(); }
   componentDidUpdate() { if (this.state.data && this._drawnFamily !== this.state.family) { this._drawnFamily = this.state.family; this.drawAll(); } }
   startTimer() { this.stopTimer(); if (this._heroHovered || this._heroFocused) return; this._t = setInterval(() => { if (this.state.data) this.goScene((this.state.scene + 1) % this.SCENES.length); }, 6000); }
   stopTimer() { if (this._t) clearInterval(this._t); this._t = null; }
@@ -416,7 +418,7 @@ class Component extends DCLogic {
     const f = d.features[mod], fi = f.families.indexOf(family); let n = 0;
     const fam = f.pts.filter(p => p[2] === fi);
     if (big) {
-      const g = this.heroFrame(c, f.pts, fam, true, {offsetX:family==='zinc fingers'?150:0}); if (!g) return fam.length;
+      const g = this.heroFrame(c, f.pts, fam, true, {offsetX:family==='zinc fingers'||family==='histones'?150:0}); if (!g) return fam.length;
       const {ctx,X,Y} = g;
       ctx.fillStyle = '#36363F'; ctx.globalAlpha = .72;
       for (const p of f.pts) { if (p[2] !== fi) ctx.fillRect(X(p),Y(p),1.5,1.5); }
@@ -514,7 +516,7 @@ class Component extends DCLogic {
   drawAtlas(c, mod, scene) {
     const s = this.state.carousel?.samples[mod]; if (!s) return;
     const sc=scene||this.SCENES.find(sc=>sc.kind==='samples'&&sc.mod===mod),group=sc.group?s.groups.find(g=>g.name===sc.group):null;
-    const keep=sc.tissue?new Set([s.classes.findIndex(cl=>cl.name===sc.tissue)]):group?new Set(group.classes):null,highlighted=keep?s.pts.filter(p=>keep.has(p[2])):s.pts,g=this.heroFrame(c,s.pts,highlighted,true,mod==='proteomics'?{stretchX:1.4,allowOverlap:true,offsetY:sc.tissue==='blood'?-100:0}:{});if(!g)return;
+    const keep=sc.tissue?new Set([s.classes.findIndex(cl=>cl.name===sc.tissue)]):group?new Set(group.classes):null,highlighted=keep?s.pts.filter(p=>keep.has(p[2])):s.pts,g=this.heroFrame(c,s.pts,highlighted,true,mod==='proteomics'?{stretchX:1.4,allowOverlap:true,offsetY:sc.tissue==='blood'?-100:0}:sc.tissue==='frontal cortex'?{offsetX:150}:{});if(!g)return;
     const {ctx,X,Y}=g;
     if(keep){ctx.fillStyle='#36363F';ctx.globalAlpha=.65;for(const p of s.pts)if(!keep.has(p[2]))ctx.fillRect(X(p),Y(p),1.3,1.3);}
     ctx.globalAlpha=.92;
@@ -609,14 +611,22 @@ class Component extends DCLogic {
       ...(() => {
         const W = this.state.headerW || 1440, k = Math.max(0.6, Math.min(1, W / 1440));
         const colW = Math.round((W <= 1600 ? 202 : 270) * k), edge = Math.round(64 * k);
-        const heroH = Math.max(480, (typeof window !== 'undefined' ? window.innerHeight : 900) - 124);
+        const heroH = Math.max(480, (this.state.viewportH || (typeof window !== 'undefined' ? window.innerHeight : 900)) - 124);
+        const cardScale = Math.max(.45, Math.min(1, W / 1920, heroH / 850)), textScale = Math.sqrt(cardScale);
         return {
           heroH: heroH + 'px', colW: colW + 'px', edgePad: Math.round(32 * k) + 'px',
           ...this.homeHeaderLayout(W),
           readoutRight: (colW + 80) + 'px', dotsRight: (colW + 24) + 'px',
           wmW: Math.round(Math.min(heroH - 80, 5.39542 * (colW - 40))) + 'px',
-          cardW: 'clamp(280px,min(42%,calc(100% - ' + (colW + 2 * edge + 80) + 'px)),' + (W <= 1600 ? 440 : 560) + 'px)',
-          cardTitleFont: (W <= 1600 ? 24 : 26) + 'px',
+          cardW: Math.round(Math.max(250, Math.min(560 * cardScale, W - colW - 48))) + 'px',
+          cardTitleFont: Math.max(20, Math.round(26 * textScale)) + 'px',
+          cardBodyFont: Math.max(14, Math.round(17 * textScale)) + 'px',
+          cardMetaFont: Math.max(11, Math.round(14 * textScale)) + 'px',
+          cardButtonFont: Math.max(11, Math.round(13 * textScale)) + 'px',
+          cardPad: Math.max(14, Math.round(22 * cardScale)) + 'px',
+          cardPadTop: Math.max(12, Math.round(18 * cardScale)) + 'px',
+          cardGap: Math.max(6, Math.round(9 * cardScale)) + 'px',
+          cardButtonH: Math.max(36, Math.round(44 * textScale)) + 'px',
         };
       })(),
       // Fit every modality label and count on one line, including laptop widths.
