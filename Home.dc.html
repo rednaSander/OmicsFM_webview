@@ -423,7 +423,7 @@ class Component extends DCLogic {
       ctx.globalAlpha = 1; ctx.fillStyle = color;
       for (const p of fam) {ctx.beginPath();ctx.arc(X(p),Y(p),3.5,0,Math.PI*2);ctx.fill();}
       const annotations=f.familyAnnotations?.[family];
-      this.heroLabels(g,annotations?annotations.map(label=>({...label,color,offsetX:(label.offsetX||0)+(family==='immunoglobulins'?175:0),text:family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?'Variable chain\nimmunoglobulins':'Constant chain\nimmunoglobulins'):label.text})): [{text:family,color,textColor:mod==='bulk'?'#BCA4FF':color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0}]);
+      this.heroLabels(g,annotations?annotations.map(label=>({...label,color,offsetX:(label.offsetX||0)+(family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?175:150):0),text:family==='immunoglobulins'?(label.text.toLowerCase().startsWith('variable')?'Variable chain\nimmunoglobulins':'Constant chain\nimmunoglobulins'):label.text})): [{text:family,color,textColor:mod==='bulk'?'#BCA4FF':color,pts:fam,distance:family==='protocadherins'?50:22,offsetX:family==='zinc fingers'?-135:0}]);
       return fam.length;
     }
     this.scatter(c, f.pts, p => { if (p[2] === fi) { n++; return { top: true, color }; } return '#3A3A44'; },
