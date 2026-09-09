@@ -238,7 +238,10 @@ class Component extends DCLogic {
     const font = `${detailed?500:600} ${Math.max(8,(detailed?14:15)*ls)}px "JetBrains Mono", monospace`;
     const height = (detailed ? 25 : 28)*ls;
     const minimum = detailed ? Math.max(3, Math.floor(45 / view.k)) : 10;
-    const limit = detailed ? Math.min(d.classes.length, Math.round(24 * view.k)) : hierarchy.groups.length;
+    const mobile=window.OmicsFMDisplay.isMobile();
+    const limit = detailed
+      ? Math.min(d.classes.length, mobile?12:20, Math.round((mobile?6:10)*Math.sqrt(view.k)))
+      : Math.min(hierarchy.groups.length,mobile?8:12);
     const placed = [];
     for (const anchor of anchors) {
       if (placed.length >= limit || (iso >= 0 && anchor.g !== iso) || (anchor.n < minimum && iso !== anchor.g)) continue;
