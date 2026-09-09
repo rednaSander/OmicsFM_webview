@@ -1,6 +1,6 @@
 .omics-chrome button,.mobile-menu button,.mobile-search button{font-family:'JetBrains Mono',monospace;cursor:pointer}
 .theme-toggle,.mobile-menu-toggle,.mobile-map-tools button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid var(--ui-bg-2a2a31,#2A2A31);background:var(--ui-bg-000,#000);color:var(--ui-fg-f4f4f5,#F4F4F5)}
-.theme-toggle{position:relative;flex:none;z-index:70;width:40px;height:40px;cursor:pointer;background:var(--ui-bg-1b1b20,#1B1B20);border-color:transparent}
+.theme-toggle{position:relative;flex:none;z-index:70;width:40px;height:40px;cursor:pointer;background:var(--ui-bg-000,#000);border-color:transparent}
 .theme-toggle .theme-moon,html[data-theme=light] .theme-toggle .theme-sun{display:none}
 html[data-theme=light] .theme-toggle .theme-moon{display:block}
 .theme-toggle:focus-visible{outline:2px solid var(--ui-fg-8b5cff,#8B5CFF);outline-offset:3px}

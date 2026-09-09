@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.93c632c52b9f.js"></script>
+<script src="./assets/runtime/display.4952f5e12749.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -520,7 +520,7 @@ class Component extends DCLogic {
       const light=window.OmicsFMDisplay.ui.theme==='light',ink=light?g.canvas.getContext('2d'):ctx;
       const purple=label.color==='#8B5CFF'||label.color==='#5100FD';
       ink.fillStyle=light?(purple?'#5100FD':label.color):'rgba(10,10,12,.94)';
-      ink.fillRect(x-width/2,y-height/2,width,height);
+      if(light||!mobile)ink.fillRect(x-width/2,y-height/2,width,height);
       ink.fillStyle=light?(purple?'#F4F4F5':'#0A0A0C'):(label.textColor||label.color);
       lines.forEach((line,index)=>ink.fillText(line,x-width/2+8,y+(index-(lines.length-1)/2)*lineHeight));
       placed.push({text,x,y,width,height});
@@ -600,7 +600,8 @@ class Component extends DCLogic {
     const tot = d ? { p: d.features.proteomics.n, b: d.features.bulk.n, s: d.features.single_cell.n } : {};
     const stat = (k, t) => d ? `${fam} · ${n[k] ?? 0} of ${t.toLocaleString()} · UMAP` : 'loading…';
     const si = this.state.scene, sc = this.SCENES[si], col = this.MOD[sc.mod], atlas = this.state.carousel?.samples[sc.mod], network = this.state.carousel?.network;
-    const readout = sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · UMAP · ${sc.family}`
+    const readout = window.OmicsFMDisplay.isMobile() ? `${this.MODNAME[sc.mod]} · ${sc.kind==='family'?'identity':sc.kind==='samples'?'SST':'attention · brain'}`
+      : sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · UMAP · ${sc.family}`
       : sc.kind === 'samples' ? `${this.MODNAME[sc.mod]} · SST · UMAP · ${atlas?.n.toLocaleString() ?? '…'} ${sc.mod === 'single_cell' ? 'cells' : 'profiles'}`
       : `${this.MODNAME[sc.mod]} · attention · brain · ${network?.edges.length.toLocaleString() ?? '…'} edges · communities`;
     const tag = `${this.MODNAME[sc.mod]} · ${sc.kind === 'family' ? (sc.mod === 'proteomics' ? 'Proteins' : 'Genes') : sc.kind === 'samples' ? 'Samples' : 'Attention'}`;
