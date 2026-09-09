@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.362493e64a1c.js"></script>
+<script src="./assets/runtime/display.ac6659d45bc1.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -604,7 +604,7 @@ class Component extends DCLogic {
     const readout = window.OmicsFMDisplay.isMobile() ? `${this.MODNAME[sc.mod]} · ${sc.kind==='family'?'identity':sc.kind==='samples'?'SST':'attention · brain'}`
       : sc.kind === 'family' ? `${this.MODNAME[sc.mod]} · identity · ${sc.family}`
       : sc.kind === 'samples' ? `${this.MODNAME[sc.mod]} · SST · ${atlas?.n.toLocaleString() ?? '…'} ${sc.mod === 'single_cell' ? 'cells' : 'profiles'}`
-      : `${this.MODNAME[sc.mod]} · attention · brain · ${network?.edges.length.toLocaleString() ?? '…'} edges · communities`;
+      : `${this.MODNAME[sc.mod]} · attention · brain · ${network?.edges.length.toLocaleString() ?? '…'} edges`;
     const tag = `${this.MODNAME[sc.mod]} · ${sc.kind === 'family' ? (sc.mod === 'proteomics' ? 'Proteins' : 'Genes') : sc.kind === 'samples' ? 'Samples' : 'Attention'}`;
     return {
       representationIndex: String(this.state.representation+1).padStart(2,'0')+' / 03',

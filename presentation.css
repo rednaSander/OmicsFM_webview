@@ -25,6 +25,7 @@ html[data-mobile=false][data-theme=light] .representation-cards>div{background:#
 html[data-mobile=false][data-theme=light] .modality-content>div:first-child{padding-bottom:18px!important}
 .mobile-footer-logo{display:none}
 .mobile-hero-bottom-left{display:none}
+html[data-mobile=false] [data-screen-label="Carousel card"]>div:first-child{background:transparent!important;color:inherit!important}
 .modality-content{display:contents}
 html[data-mobile=false] #modality-single_cell{container:single-cell-card / inline-size}
 /* Three 136px links, two 12px gaps and 64px horizontal padding need 496px. */
