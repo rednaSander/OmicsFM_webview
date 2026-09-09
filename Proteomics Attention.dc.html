@@ -7,7 +7,7 @@
 <script src="assets/vendor/react.production.min.js"></script>
 <script src="assets/vendor/react-dom.production.min.js"></script>
 <script src="assets/vendor/vis-network.min.js"></script>
-<script src="./assets/runtime/display.b3acbe2c3e95.js"></script>
+<script src="./assets/runtime/display.230a18aabc4d.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -75,14 +75,6 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ui-b
     <a class="viewer-paper-link" href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:{{ ui.BG['#000'] }};border:2px solid transparent;color:{{ ui.FG['#000']['#C0FE04'] }};font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
   </div>
 </header>
-
-<div data-screen-label="Title bar" style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:52px;padding:0 32px;background:{{ ui.BG['#000'] }};border-top:4px solid {{ ui.BG['#0A0A0C'] }};flex:none;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500">
-  <div style="display:flex;align-items:center;gap:16px;min-width:0"><span style="color:{{ ui.FG['transparent']['#C0FE04'] }};white-space:nowrap;flex:none">01 · Proteomics · Attention</span><span style="color:{{ ui.FG['transparent']['#5C5C68'] }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Tissue attention networks · learned-identity checkpoint · symmetrised · 30 tissues</span></div>
-  <div style="display:flex;align-items:center;gap:16px;color:{{ ui.FG['transparent']['#9A9AA6'] }};flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden">
-    <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearSel }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:{{ ui.BG['#C0FE04'] }};color:{{ ui.FG['#C0FE04']['#0A0A0C'] }};flex:none;transition:background 120ms ease-out" style-hover="background:var(--ui-bg-f4f4f5,#F4F4F5)"><span>{{ selGene }}</span><span>✕ overview</span></button></sc-if>
-    <sc-if value="{{ showStat }}" hint-placeholder-val="{{ true }}"><span style="overflow:hidden;text-overflow:ellipsis">{{ statLine }}</span></sc-if>
-  </div>
-</div>
 
 <div class="explorer-grid" style="display:grid;grid-template-columns:{{ leftW }} 6px minmax(0,1fr) {{ rightW }};gap:0;flex:1;min-height:0;background:{{ ui.BG['#000'] }}">
 

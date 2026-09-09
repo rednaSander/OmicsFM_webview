@@ -29,7 +29,7 @@ html[data-mobile=false][data-theme=light] .modality-content>div:first-child{padd
 html[data-theme=light] :is([style^="color: rgb(192, 254, 4)"],[style*="; color: rgb(192, 254, 4)"]){background-color:#C0FE04!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 html[data-theme=light] :is([style^="color: rgb(139, 92, 255)"],[style*="; color: rgb(139, 92, 255)"],[style^="color: rgb(81, 0, 253)"],[style*="; color: rgb(81, 0, 253)"]){background-color:#5100FD!important;color:#F4F4F5!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 html[data-theme=light] :is([style^="color: rgb(252, 45, 118)"],[style*="; color: rgb(252, 45, 118)"]){background-color:#FC2D76!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
-html[data-theme=light][data-page=explorer] :is(.viewer-modality-label,.viewer-paper-link,[data-screen-label="Title bar"]>div:first-child>span:first-child){background-color:transparent!important;color:#18181F!important}
+html[data-theme=light][data-page=explorer] :is(.viewer-modality-label,.viewer-paper-link){background-color:transparent!important;color:#18181F!important}
 html[data-theme=light] .detection-value{background-color:transparent!important;color:#18181F!important}
 html[data-theme=light] input.detection-slider{background:#18181F}
 html[data-theme=light] input.detection-slider::-webkit-slider-thumb{background:#18181F}
@@ -125,9 +125,6 @@ html[data-mobile=true] .footer-identity>div:last-child{grid-column:1/-1;grid-row
 html[data-mobile=true] .footer-wordmark{display:none!important}
 html[data-mobile=true] .mobile-footer-logo{display:block}
 html[data-mobile=true][data-page=explorer] body{overflow:hidden}
-html[data-mobile=true] [data-screen-label="Title bar"]{height:44px!important;padding:0 16px!important;font-size:10px!important;gap:8px!important;overflow:hidden}
-html[data-mobile=true] [data-screen-label="Title bar"]>div:first-child>span:nth-child(2){display:none!important}
-html[data-mobile=true] [data-screen-label="Title bar"]>div:last-child{display:none!important}
 html[data-mobile=true] .explorer-grid{display:block!important;position:relative;overflow:hidden;margin-bottom:calc(60px + env(safe-area-inset-bottom))}
 html[data-mobile=true] .explorer-grid>[title^="Drag to resize"]{display:none!important}
 html[data-mobile=true] [data-screen-label=Plot],html[data-mobile=true] [data-screen-label=Network]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important}

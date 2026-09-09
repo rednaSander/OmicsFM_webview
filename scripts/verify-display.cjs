@@ -53,7 +53,8 @@ assert.equal(window.scrollY,360, 'Scroll reveals 160 pixels below the cards');
     const header=html.slice(html.indexOf('<header'),html.indexOf('</header>'));
     assert(header.includes('height:72px'),name);
     if (name !== 'Home.dc.html') {
-      const paper=header.match(/<a href="https:\/\/www.biorxiv.org\/[\s\S]*?<\/a>/)[0];
+      const paper=header.match(/<a\b[^>]*href="https:\/\/www.biorxiv.org\/[\s\S]*?<\/a>/)[0];
+      assert(!html.includes('data-screen-label="Title bar"'),name);
       assert(paper.includes('border:2px solid transparent'),name);
       assert(paper.includes('style-hover="border-color:currentColor"'),name);
     }
