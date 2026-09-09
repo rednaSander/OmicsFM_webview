@@ -49,7 +49,8 @@ async function loadComponent(name, search = '') {
     clearInterval: callback => intervals.delete(callback),
     setTimeout: callback => timers.push(callback), clearTimeout() {},
   };
-  vm.runInNewContext(read('display.js'), sandbox, {filename:'display.js'});
+  const displayAsset = source.html.match(/<script src="\.\/(assets\/runtime\/display\.[a-f0-9]+\.js)"><\/script>/)[1];
+  vm.runInNewContext(read(displayAsset), sandbox, {filename:displayAsset});
   const Component = vm.runInNewContext(`${source.script}\nComponent`, sandbox, { filename: name });
   const instance = new Component();
   instance.renderVals();

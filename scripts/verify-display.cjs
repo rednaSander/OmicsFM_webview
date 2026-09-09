@@ -43,7 +43,11 @@ assert.equal(window.scrollY,360, 'Scroll reveals 160 pixels below the cards');
   }
   for (const name of fs.readdirSync(root).filter(name=>name.endsWith('.dc.html'))) {
     const html=fs.readFileSync(path.join(root,name),'utf8');
-    assert(html.includes('src="./display.js"'),name);
+    const displayAsset=html.match(/src="\.\/(assets\/runtime\/display\.([a-f0-9]+)\.js)"/);
+    assert(displayAsset, `${name}: runtime must have a versioned URL`);
+    const runtime=fs.readFileSync(path.join(root,displayAsset[1]),'utf8').replace(/\r\n/g,'\n');
+    assert.equal(runtime,fs.readFileSync(path.join(root,'display.js'),'utf8').replace(/\r\n/g,'\n'));
+    assert.equal(require('node:crypto').createHash('sha256').update(runtime).digest('hex').slice(0,12),displayAsset[2]);
     assert(html.includes('height:var(--omics-viewport-height,100vh)'),name);
     const header=html.slice(html.indexOf('<header'),html.indexOf('</header>'));
     assert(header.includes('height:72px'),name);
