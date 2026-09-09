@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.4952f5e12749.js"></script>
+<script src="./assets/runtime/display.6f449e325532.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -62,14 +62,15 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
   <canvas ref="{{ hA }}" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};width:calc(100% - {{ colW }});height:100%;display:block;opacity:{{ opA }};transition:opacity 600ms ease-out"></canvas>
   <canvas ref="{{ hB }}" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};width:calc(100% - {{ colW }});height:100%;display:block;opacity:{{ opB }};transition:opacity 600ms ease-out"></canvas>
   <div class="hero-readout" style="position:absolute;top:24px;left:{{ edgePad }};right:{{ readoutRight }};display:flex;justify-content:space-between;gap:24px;align-items:flex-start;line-height:1.6;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }};pointer-events:none">
-    <span style="display:flex;gap:16px;max-width:60%"><span style="color:{{ ui.FG['transparent']['#9A9AA6'] }};flex:none">{{ sceneIndex }}</span><span><span style="color:{{ ui.FG['transparent'][sceneColor] }};transition:color 400ms">{{ sceneModality }}</span><span>{{ sceneReadoutRest }}</span></span></span><span style="flex:none;text-align:right">COMPOMICS · VIB-UGENT · APACHE 2.0</span>
+    <span style="display:flex;gap:16px;max-width:60%"><span class="hero-scene-index" style="color:{{ ui.FG['transparent']['#9A9AA6'] }};flex:none">{{ sceneIndex }}</span><span><span style="color:{{ ui.FG['transparent'][sceneColor] }};transition:color 400ms">{{ sceneModality }}</span><span>{{ sceneReadoutRest }}</span></span></span><span style="flex:none;text-align:right">COMPOMICS · VIB-UGENT · APACHE 2.0</span>
   </div>
   <div class="hero-axes" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};pointer-events:none">
     <span style="position:absolute;top:12px;left:12px;width:14px;height:14px;border-top:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-left:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
     <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-right:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
     <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-right:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
+    <span class="mobile-hero-bottom-left" style="position:absolute;bottom:12px;left:12px;width:14px;height:14px;border-bottom:1px solid {{ ui.FG['transparent']['#5C5C68'] }};border-left:1px solid {{ ui.FG['transparent']['#5C5C68'] }}"></span>
     <sc-if value="{{ sceneHasAxes }}" hint-placeholder-val="{{ true }}">
-    <div style="position:absolute;right:28px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }}">{{ sceneAxisX }} → · {{ sceneAxisY }} ↑</div>
+    <div class="hero-axis-label" style="position:absolute;right:28px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }}">{{ sceneAxisX }} → · {{ sceneAxisY }} ↑</div>
     </sc-if>
   </div>
   <div class="hero-rail" style="position:absolute;top:0;bottom:0;right:0;width:{{ colW }};background:{{ ui.BG['#000'] }};overflow:hidden">
