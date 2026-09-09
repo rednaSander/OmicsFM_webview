@@ -25,6 +25,9 @@ html[data-mobile=false][data-theme=light] .representation-cards>div{background:#
 html[data-mobile=false][data-theme=light] .modality-content>div:first-child{padding-bottom:18px!important}
 .mobile-footer-logo{display:none}
 .modality-content{display:contents}
+html[data-mobile=false] #modality-single_cell{container:single-cell-card / inline-size}
+/* Three 136px links, two 12px gaps and 64px horizontal padding need 496px. */
+@container single-cell-card (width < 496px){.modality-content>div:last-child>a{flex-basis:100%!important}}
 /* DC serializes inline accent colours to RGB. Only match the text colour itself. */
 html[data-theme=light] :is([style^="color: rgb(192, 254, 4)"],[style*="; color: rgb(192, 254, 4)"]){background-color:#C0FE04!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 html[data-theme=light] :is([style^="color: rgb(139, 92, 255)"],[style*="; color: rgb(139, 92, 255)"],[style^="color: rgb(81, 0, 253)"],[style*="; color: rgb(81, 0, 253)"]){background-color:#5100FD!important;color:#F4F4F5!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
