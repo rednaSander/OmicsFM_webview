@@ -66,7 +66,7 @@ html[data-mobile=true] [data-screen-label="Title bar"]>div:last-child{display:no
 html[data-mobile=true] .explorer-grid{display:block!important;position:relative;overflow:hidden;margin-bottom:calc(60px + env(safe-area-inset-bottom))}
 html[data-mobile=true] .explorer-grid>[title^="Drag to resize"]{display:none!important}
 html[data-mobile=true] [data-screen-label=Plot],html[data-mobile=true] [data-screen-label=Network]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important}
-html[data-mobile=true] [data-screen-label=Plot]>canvas{touch-action:none}
+[data-screen-label=Plot]>canvas{touch-action:none}
 html[data-mobile=true] [data-screen-label=Network] button{min-height:40px;min-width:44px}
 html[data-mobile=true] [data-screen-label=Plot]>div[style*="pointer-events"]>div{left:18px!important;right:18px!important;font-size:10px!important;gap:8px!important}
 html[data-mobile=true] [data-screen-label=Controls],html[data-mobile=true] [data-screen-label=Inspector]{display:none!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:20;overscroll-behavior:contain;overflow:auto!important}

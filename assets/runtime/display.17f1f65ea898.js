@@ -1,3 +1,75 @@
+// Match an 80% browser view without changing the visitor's browser settings.
+(() => {
+  const isMobile = () => window.innerWidth <= 900 || (window.innerWidth <= 1100 && !!window.matchMedia?.('(pointer: coarse)').matches);
+  const activeScale = () => isMobile() ? 1 : 0.8;
+  const viewportHeight = () => window.innerHeight / activeScale();
+  const updateViewport = () => {
+    document.documentElement.style.zoom = String(activeScale());
+    if (document.documentElement.dataset) document.documentElement.dataset.mobile = String(isMobile());
+    document.documentElement.style.setProperty('--omics-viewport-height', `${viewportHeight()}px`);
+  };
+  const pointer = (element, x, y) => {
+    const rect = element.getBoundingClientRect();
+    return [(x - rect.left) * element.clientWidth / rect.width,
+      (y - rect.top) * element.clientHeight / rect.height];
+  };
+  let scrollFrame;
+  window.OmicsFMDisplay = {
+    get scale() { return activeScale(); }, isMobile, viewportHeight, pointer,
+  homeHeaderLayout(width) {
+    const W = Math.max(320, width), k = Math.max(.6, Math.min(1, W / 1440));
+    const edge = 12, colW = Math.round((W <= 1600 ? 202 : 270) * k);
+    const pad = W >= 1200 ? 12 : 8, gap = W >= 1800 ? 32 : W >= 1400 ? 18 : W >= 1200 ? 12 : 4;
+    const searchW = Math.round(Math.max(180, 300 * k)), showCode = W >= 1280;
+    const targetFont = W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12;
+    const textUnits = [...['Proteomics', 'Bulk transcriptomics', 'Single-cell transcriptomics'], 'About', 'Compare'].reduce((n, label) => n + label.length * .74, 0);
+    const chrome = edge + 60 + 48 + colW + 12 + (showCode ? 52 : 0);
+    const showSearch = W >= 1180 && W - chrome - searchW - 12 >= textUnits * 11 + 10 * pad + 4 * gap;
+    const available = W - chrome - (showSearch ? searchW + 12 : 0);
+    const font = Math.floor(Math.min(targetFont, (available - 10 * pad - 4 * gap - 4) / textUnits) * 10) / 10;
+    return {navFont: Math.max(1, font) + 'px', navGap: gap + 'px', navPad: pad + 'px',
+      searchW: searchW + 'px', showSearch, showCode,
+      navAvailableWidth: available, navRequiredWidth: textUnits * Math.max(1, font) + 10 * pad + 4 * gap};
+  },
+    explorerHeaderLayout(width, modality) {
+      const W = Math.max(320, width), k = Math.max(.6, Math.min(1, W / 1440));
+      const navFont = this.homeHeaderLayout(W).navFont;
+      const colW = Math.round(Math.max(240, 340 * k));
+      const gap = W >= 1200 ? 8 : 2;
+      const labels = ['Home', '/', modality, '/', 'Samples', ...(modality === 'Single-cell transcriptomics' ? [] : ['Attention']), modality === 'Proteomics' ? 'Proteins' : 'Genes'];
+      const navWidth = labels.reduce((sum, label) => sum + label.length * .74 * parseFloat(navFont) + (label === '/' ? 0 : 24), 0) + (labels.length - 1) * gap;
+      const available = W - 12 - 60 - 32 - navWidth - colW - 24;
+      const searchW = Math.max(180, Math.min(320, available));
+      return {navFont, navGap:gap + 'px', edgePad:'12px', colW:colW + 'px',
+        showSearch:W >= 1180 && available >= 180, searchW:searchW + 'px'};
+    },
+    scrollToEnd(element) {
+      if (!element) return;
+      cancelAnimationFrame(scrollFrame);
+      const from = window.scrollY;
+      const rect = element.getBoundingClientRect();
+      const to = Math.max(0, isMobile() ? from + rect.top - 72 : from + rect.bottom - window.innerHeight + 160);
+      const started = performance.now();
+      const step = now => {
+        const progress = Math.min(1, (now - started) / 650);
+        const eased = progress * progress * (3 - 2 * progress);
+        window.scrollTo({top:from + (to - from) * eased, behavior:'instant'});
+        if (progress < 1) scrollFrame = requestAnimationFrame(step);
+      };
+      scrollFrame = requestAnimationFrame(step);
+    },
+    adaptNetwork(network) {
+      // vis-network assumes one screen pixel per layout pixel for input.
+      network.interactionHandler.getPointer = position => {
+        const [x, y] = pointer(network.canvas.frame.canvas, position.x, position.y);
+        return { x, y };
+      };
+    },
+  };
+  updateViewport();
+  window.addEventListener('resize', updateViewport);
+})();
+
 // Responsive navigation, accessible theme controls, and touch interaction.
 (() => {
   const display = window.OmicsFMDisplay;
@@ -186,3 +258,5 @@
   };
   applyTheme();
 })();
+
+if (document.createElement) { const style=document.createElement("style"); style.textContent=".omics-chrome button,.mobile-menu button,.mobile-search button{font-family:'JetBrains Mono',monospace;cursor:pointer}\n.theme-toggle,.mobile-menu-toggle,.mobile-map-tools button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid var(--ui-bg-2a2a31,#2A2A31);background:var(--ui-bg-000,#000);color:var(--ui-fg-f4f4f5,#F4F4F5)}\n.theme-toggle{position:fixed;right:16px;bottom:16px;z-index:70;width:36px;height:36px;box-shadow:0 2px 12px #0002}\n.theme-toggle:hover,.mobile-menu-toggle:hover{border-color:currentColor}\n.omics-chrome :focus-visible,.mobile-menu :focus-visible,.mobile-search :focus-visible{outline:2px solid var(--ui-fg-8b5cff,#8B5CFF);outline-offset:3px}\n.mobile-menu-toggle,.mobile-panel-tabs,.mobile-map-tools,.mobile-search,.mobile-map-help{display:none}\n.mobile-menu{position:fixed;inset:12px 12px auto auto;margin:0;max-width:calc(100vw - 24px);width:420px;max-height:calc(100dvh - 24px);overflow-y:auto;padding:20px;border:1px solid var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-fg-f4f4f5,#F4F4F5);background:var(--ui-bg-000,#000);font-family:'Space Grotesk',sans-serif}\n.mobile-menu::backdrop{background:#0009;backdrop-filter:blur(4px)}\n.menu-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;font-size:19px}\n.menu-heading button{width:44px;height:44px;font-size:28px;background:transparent;border:0;color:inherit}\n.mobile-menu section{padding:20px 0;border-block:1px solid var(--ui-bg-2a2a31,#2A2A31)}\n.mobile-menu h2{font-size:16px;margin:0 0 12px}\n.mobile-menu section>div{display:flex;gap:8px;flex-wrap:wrap}\n.mobile-menu a{display:inline-flex;align-items:center;min-height:44px;padding:10px 12px;font:13px 'JetBrains Mono',monospace;color:inherit;text-decoration:none}\n.mobile-menu a[aria-current=page]{background:var(--ui-bg-1b1b20,#1B1B20);box-shadow:inset 0 -2px #8B5CFF}\n.mobile-menu>a{display:flex}\nhtml[data-mobile=true]{scroll-padding-top:72px}\nhtml[data-mobile=true] body{overflow-x:hidden}\nhtml[data-mobile=true] [data-screen-label=Header]{height:64px!important;padding:0 16px!important;position:sticky!important;top:0;z-index:65!important;flex:none}\nhtml[data-mobile=true] [data-screen-label=Header]>a:first-child{height:40px!important}\nhtml[data-mobile=true] [data-screen-label=Header]>a:first-child img{width:48px!important;height:40px!important}\nhtml[data-mobile=true] [data-screen-label=Header]>:not(a:first-child){display:none!important}\nhtml[data-mobile=true] .theme-toggle{top:10px;right:66px;bottom:auto;width:44px;height:44px;box-shadow:none}\nhtml[data-mobile=true] .mobile-menu-toggle{display:flex;position:fixed;top:10px;right:12px;z-index:70}\nhtml[data-mobile=true] input,html[data-mobile=true] select{font-size:16px!important}\nhtml[data-mobile=true] button,html[data-mobile=true] input,html[data-mobile=true] select{touch-action:manipulation}\nhtml[data-mobile=true] .home-content{padding:48px 20px 0!important;gap:56px!important}\nhtml[data-mobile=true] [data-screen-label=Hero]{--mobile-plot-height:clamp(300px,49svh,460px);height:auto!important;min-height:0!important;padding-top:var(--mobile-plot-height)}\nhtml[data-mobile=true] [data-screen-label=Hero]>canvas{width:100%!important;height:var(--mobile-plot-height)!important;right:0!important;bottom:auto!important;touch-action:pan-y}\nhtml[data-mobile=true] .hero-rail{display:none!important}\nhtml[data-mobile=true] .hero-readout{top:12px!important;left:16px!important;right:16px!important;font-size:10px!important;gap:8px!important}\nhtml[data-mobile=true] .hero-readout>span:first-child{max-width:100%!important;gap:8px!important}\nhtml[data-mobile=true] .hero-readout>span:last-child{display:none!important}\nhtml[data-mobile=true] .hero-axes{height:var(--mobile-plot-height)!important;right:0!important;bottom:auto!important}\nhtml[data-mobile=true] .hero-axes>div{display:none!important}\nhtml[data-mobile=true] .hero-dots{left:50%!important;right:auto!important;top:calc(var(--mobile-plot-height) - 44px)!important;transform:translateX(-50%)!important;flex-direction:row!important;gap:2px!important}\nhtml[data-mobile=true] .hero-dots button{height:44px!important;width:26px!important;align-items:center}\nhtml[data-mobile=true] .hero-dots button span{height:15px!important;width:4px!important}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"]{position:relative!important;width:100%!important;bottom:auto!important;left:auto!important;gap:10px!important;padding:18px 20px 0!important;min-height:218px}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"]>div:first-child{font-size:10px!important;letter-spacing:.06em!important}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"]>div:first-child>span:first-child{white-space:nowrap;flex:none}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"]>div:nth-child(2){font-size:24px!important}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"]>p{font-size:15px!important;line-height:1.55!important}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"]>div:last-child{margin:4px -20px 0 0!important}\nhtml[data-mobile=true] [data-screen-label=\"Carousel card\"] a{height:46px!important;font-size:12px!important;padding:0 20px!important}\nhtml[data-mobile=true] [data-screen-label=\"Modality bar\"]{grid-template-columns:1fr!important;height:auto!important;gap:1px!important;font-size:12px!important}\nhtml[data-mobile=true] [data-screen-label=\"Modality bar\"]>a{min-height:58px;padding:12px 20px!important;gap:10px!important}\nhtml[data-mobile=true] [data-screen-label=\"Modality bar\"]>a>span:last-child{font-size:10px!important}\nhtml[data-mobile=true] #modalities{grid-template-columns:1fr!important;gap:16px!important;padding:16px 0!important}\nhtml[data-mobile=true] #modalities>div>div{padding-left:20px!important;padding-right:20px!important}\nhtml[data-mobile=true] #modalities>div>div:last-child{padding-bottom:20px!important}\nhtml[data-mobile=true] #modalities a{min-height:46px}\nhtml[data-mobile=true] #what{grid-template-columns:1fr!important;gap:32px!important}\nhtml[data-mobile=true] #what p{font-size:16px!important;line-height:1.65!important;text-align:left!important}\nhtml[data-mobile=true] .home-content h2{font-size:28px!important}\nhtml[data-mobile=true] [data-screen-label=Tasks]{margin:0 -20px!important;padding:48px 20px!important}\nhtml[data-mobile=true] .task-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important}\nhtml[data-mobile=true] .task-grid canvas{transform:none!important}\nhtml[data-mobile=true] .compare-grid{grid-template-columns:1fr!important}\nhtml[data-mobile=true] .compare-grid>div{aspect-ratio:1.2!important}\nhtml[data-mobile=true] #about{padding:32px 20px 88px!important;margin-top:56px!important;grid-template-columns:1fr!important;gap:28px!important}\nhtml[data-mobile=true][data-page=explorer] body{overflow:hidden}\nhtml[data-mobile=true] [data-screen-label=\"Title bar\"]{height:44px!important;padding:0 16px!important;font-size:10px!important;gap:8px!important;overflow:hidden}\nhtml[data-mobile=true] [data-screen-label=\"Title bar\"]>div:first-child>span:nth-child(2){display:none!important}\nhtml[data-mobile=true] [data-screen-label=\"Title bar\"]>div:last-child{display:none!important}\nhtml[data-mobile=true] .explorer-grid{display:block!important;position:relative;overflow:hidden;margin-bottom:calc(60px + env(safe-area-inset-bottom))}\nhtml[data-mobile=true] .explorer-grid>[title^=\"Drag to resize\"]{display:none!important}\nhtml[data-mobile=true] [data-screen-label=Plot],html[data-mobile=true] [data-screen-label=Network]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important}\n[data-screen-label=Plot]>canvas{touch-action:none}\nhtml[data-mobile=true] [data-screen-label=Network] button{min-height:40px;min-width:44px}\nhtml[data-mobile=true] [data-screen-label=Plot]>div[style*=\"pointer-events\"]>div{left:18px!important;right:18px!important;font-size:10px!important;gap:8px!important}\nhtml[data-mobile=true] [data-screen-label=Controls],html[data-mobile=true] [data-screen-label=Inspector]{display:none!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:20;overscroll-behavior:contain;overflow:auto!important}\nhtml[data-mobile=true][data-panel=filters] [data-screen-label=Controls],html[data-mobile=true][data-panel=details] [data-screen-label=Inspector]{display:flex!important}\nhtml[data-mobile=true] [data-screen-label=Controls] button,html[data-mobile=true] [data-screen-label=Inspector] button{min-height:42px}\nhtml[data-mobile=true] [data-screen-label=Controls] button{font-size:13px!important}\nhtml[data-mobile=true] [data-screen-label=Controls]>div{flex-shrink:0!important}\nhtml[data-mobile=true] [data-screen-label=Controls]>div[style*=\"overflow-y:auto\"]{overflow:visible!important;min-height:0!important;flex:0 0 auto!important}\nhtml[data-mobile=true] [data-screen-label=Controls]>.mobile-legend{overflow:visible!important;min-height:0!important;flex:0 0 auto!important}\nhtml[data-mobile=true] .mobile-panel-tabs{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:1fr 1.5fr 1fr;z-index:60;background:var(--ui-bg-000,#000);border-top:1px solid var(--ui-bg-2a2a31,#2A2A31);height:calc(60px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}\nhtml[data-mobile=true] .mobile-panel-tabs button{border:0;border-top:2px solid transparent;background:transparent;color:var(--ui-fg-9a9aa6,#9A9AA6);font-size:12px}\nhtml[data-mobile=true] .mobile-panel-tabs button[aria-pressed=true]{color:var(--ui-fg-f4f4f5,#F4F4F5);border-top-color:#8B5CFF}\nhtml[data-mobile=true][data-panel=map] .mobile-map-tools{position:fixed;right:12px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:30;display:flex;flex-direction:column;gap:6px}\nhtml[data-mobile=true] .mobile-map-tools button{font-size:23px}\nhtml[data-mobile=true] .mobile-map-help{display:block;position:absolute;left:18px;bottom:16px;max-width:calc(100% - 80px);font:10px/1.6 'JetBrains Mono',monospace;white-space:pre-line;color:var(--ui-fg-9a9aa6,#9A9AA6);pointer-events:none;background:var(--ui-bg-0a0a0c,#0A0A0C);z-index:2}\nhtml[data-mobile=true] [data-screen-label=Network] .mobile-map-help{bottom:52px}\nhtml[data-mobile=true] .mobile-search{display:flex;flex-wrap:wrap;gap:8px;padding:20px 20px 0;flex:none}\n.mobile-search input{flex:1;min-width:0;height:46px;padding:0 12px;border:1px solid var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-fg-f4f4f5,#F4F4F5);background:var(--ui-bg-000,#000);font:16px 'Space Grotesk',sans-serif;border-radius:0}\n.mobile-search>button{width:64px;min-height:46px;border:0;background:var(--ui-bg-1b1b20,#1B1B20);color:var(--ui-fg-f4f4f5,#F4F4F5)}\n.mobile-search-results{flex:0 0 100%;display:flex;flex-direction:column}\n.mobile-search-results button{text-align:left;border:0;border-bottom:1px solid var(--ui-bg-2a2a31,#2A2A31);padding:10px;background:var(--ui-bg-000,#000);color:var(--ui-fg-f4f4f5,#F4F4F5)}\n@media(max-width:600px){html[data-mobile=true] .task-grid{grid-template-columns:1fr!important}}\n@media(prefers-reduced-motion:reduce){html[data-mobile=true] *{scroll-behavior:auto!important}}\n"; document.head.append(style); }
