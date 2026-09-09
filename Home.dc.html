@@ -556,7 +556,7 @@ class Component extends DCLogic {
       for (const p of f.pts) if (p[2] === fi) { ctx.beginPath(); ctx.arc(ox + (p[0] - b.x0) * s, h - (oy + (p[1] - b.y0) * s), 2.2, 0, Math.PI * 2); ctx.fill(); }
       if (k) { ctx.strokeStyle = '#2A2A31'; ctx.beginPath(); ctx.moveTo(k * cw, 24); ctx.lineTo(k * cw, h - 8); ctx.stroke(); }
     });
-    ctx.font='500 13px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#F4F4F5';ctx.fillText('HISTONES',w/2,13);
+    ctx.font='500 13px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#F4F4F5';ctx.fillText('HISTONES',w/2,Math.max(32,h*.03+22));
   }
   drawAll() {
     if (!this.state.data) return;
