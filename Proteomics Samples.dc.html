@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.65ce5c89812d.js"></script>
+<script src="./assets/runtime/display.832a6f6a5c02.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -253,6 +253,8 @@ class Component extends DCLogic {
     const c = this.cv.current, d = this.state.d, g = this.geom(); if (!c || !d || !g) return;
     const dpr = window.devicePixelRatio || 1;
     if (c.width !== g.w * dpr || c.height !== g.h * dpr) { c.width = g.w * dpr; c.height = g.h * dpr; }
+    const labels=this._mapLabels=[];
+    const ls = window.OmicsFMDisplay.mapLabelScale(this.state.view.k);
     const ctx = window.OmicsFMDisplay.canvasContext(c); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, g.w, g.h);
     const r = Math.max(1.4, Math.min(4.2, 2.2 * Math.sqrt(this.state.view.k))), n = d.n, { sel, hover, hoverNb } = this.state;
     const q = this.state.query.trim();
@@ -265,28 +267,30 @@ class Component extends DCLogic {
     ctx.globalAlpha = 1;
     // class centroids as labels (only in class mode, no isolation)
     if (this.state.field === 'class' && this.state.iso < 0 && !q) {
-      ctx.font = `500 ${window.OmicsFMDisplay.isMobile()?11:14}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const placed = [];
+      ctx.font = `500 ${Math.max(8,14*ls)}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const placed = labels;
       for (const a of this.anchors('class', i => d.cls[i], () => true)) {
         if (a.n < 60) continue;
         let [lx, ly] = this.toScreen(g, a.x, a.y);
-        const t = d.classes[a.g].name.toUpperCase(), tw = ctx.measureText(t).width + 10, th = 24;
-        for (let tries = 0; tries < 6; tries++) { const hit = placed.find(p => Math.abs(p.x - lx) < (p.w + tw) / 2 && Math.abs(p.y - ly) < th); if (!hit) break; ly = hit.y + th + 2; }
-        placed.push({ x: lx, y: ly, w: tw });
+        const t = d.classes[a.g].name.toUpperCase(), tw = ctx.measureText(t).width + 10*ls, th = 24*ls;
+        const box=window.OmicsFMDisplay.placeMapLabel(placed,lx,ly,tw,th,g);
+        if(!box) continue;
+        lx=box.x;ly=box.y;
         ctx.fillStyle = 'rgba(10,10,12,.8)'; ctx.fillRect(lx - tw / 2, ly - th / 2, tw, th); ctx.fillStyle = '#F4F4F5'; ctx.fillText(t, lx, ly);
       }
     }
     // project labels (PXD) at each project's densest spot, in project mode
     if (this.inProj()) {
-      ctx.font = '500 13px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `500 ${Math.max(8,13*ls)}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const { iso, projHover } = this.state, field = this.state.field;
-      const placed = [];
+      const placed = labels;
       this.anchors('proj:' + field + ':' + iso, i => d.cats.pxd.idx[i], i => this.catOf(i) === iso).forEach((a, rank) => {
         const p = a.g; if ((a.n < 3 || rank >= 20) && projHover !== p) return;
-        let [lx, ly] = this.toScreen(g, a.x, a.y); ly -= 14;
-        const t = d.cats.pxd.values[p], tw = ctx.measureText(t).width + 8, th = 22;
-        for (let tries = 0; tries < 6; tries++) { const hit = placed.find(q => Math.abs(q.x - lx) < (q.w + tw) / 2 && Math.abs(q.y - ly) < th); if (!hit) break; ly = hit.y + th + 2; }
-        placed.push({ x: lx, y: ly, w: tw });
+        let [lx, ly] = this.toScreen(g, a.x, a.y); ly -= 14*ls;
+        const t = d.cats.pxd.values[p], tw = ctx.measureText(t).width + 8*ls, th = 22*ls;
+        const box=window.OmicsFMDisplay.placeMapLabel(placed,lx,ly,tw,th,g);
+        if(!box) return;
+        lx=box.x;ly=box.y;
         const hl = projHover === p; ctx.fillStyle = hl ? this.projColor(p) : 'rgba(10,10,12,.85)'; ctx.fillRect(lx - tw / 2, ly - th / 2, tw, th); ctx.fillStyle = hl ? '#0A0A0C' : this.projColor(p); ctx.fillText(t, lx, ly);
       });
     }
@@ -365,7 +369,7 @@ class Component extends DCLogic {
       onDown: e => { const [mx, my] = this.pos(e); this._down = [mx, my]; this.setState({ drag: { mx, my, x0: view.x, y0: view.y } }); },
       onUp: () => this.setState({ drag: null }),
       onPick: e => { const [mx, my] = this.pos(e); if (this._down && Math.hypot(mx - this._down[0], my - this._down[1]) > 4) return; const i = this.nearest(mx, my); this.setState({ sel: i, hoverNb: -1 }); },
-      onWheel: e => { e.preventDefault(); const [mx, my] = this.pos(e); const g = this.geom(); if (!g) return; const f = Math.exp(-e.deltaY * 0.0021), k2 = Math.max(0.4, Math.min(12, view.k * f)), cx = g.w / 2, cy = g.h / 2; const r = k2 / view.k; this.setState({ view: { k: k2, x: mx - cx - (mx - cx - view.x) * r, y: my - cy - (my - cy - view.y) * r } }); },
+      onWheel: e => { e.preventDefault(); const [mx, my] = this.pos(e); const g = this.geom(); if (!g) return; const f = Math.exp(-e.deltaY * (e.deltaY < 0 ? 0.001575 : 0.0021)), k2 = Math.max(0.4, Math.min(12, view.k * f)), cx = g.w / 2, cy = g.h / 2; const r = k2 / view.k; this.setState({ view: { k: k2, x: mx - cx - (mx - cx - view.x) * r, y: my - cy - (my - cy - view.y) * r } }); },
       resetView: clamp,
       showTip: !!showTip, tipX: showTip ? this._tip[0] + 'px' : '0px', tipY: showTip ? this._tip[1] + 'px' : '0px',
       tipColor: showTip ? this.colorOf(tipI) : '#5C5C68', tipTitle: showTip ? d.cats.tissue.values[d.cats.tissue.idx[tipI]] : '', tipSub: showTip ? [d.cats.disease.values[d.cats.disease.idx[tipI]], d.cats.instrument.values[d.cats.instrument.idx[tipI]], d.cats.acquisition.values[d.cats.acquisition.idx[tipI]]].filter(v => v && v !== '—').join(' · ') : '', tipId: showTip ? d.ids[tipI] : '',

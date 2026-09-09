@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.65ce5c89812d.js"></script>
+<script src="./assets/runtime/display.832a6f6a5c02.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -265,6 +265,8 @@ class Component extends DCLogic {
   draw() {
     const c = this.cv.current, d = this.state.d, g = this.geom(); if (!c || !d || !g) return;
     const dpr = window.devicePixelRatio || 1; if (c.width !== g.w * dpr || c.height !== g.h * dpr) { c.width = g.w * dpr; c.height = g.h * dpr; }
+    const labels=this._mapLabels=[];
+    const ls = window.OmicsFMDisplay.mapLabelScale(this.state.view.k);
     const ctx = window.OmicsFMDisplay.canvasContext(c); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, g.w, g.h);
     const { sel, hover, hoverNb, mode, fam, ov, path } = this.state, q = this.state.query.trim(), n = d.n;
     const r = Math.max(1.8, Math.min(4.6, 2.4 * Math.sqrt(this.state.view.k)));
@@ -279,23 +281,38 @@ class Component extends DCLogic {
     const keys = Object.keys(byCol).sort((a, b) => (a === '#3A3A44' ? -1 : b === '#3A3A44' ? 1 : 0));
     for (const k of keys) { ctx.fillStyle = k; const rr = k === '#C0FE04' ? r * 0.75 : r * 0.55; for (const i of byCol[k]) { ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), rr, 0, 6.283); ctx.fill(); } }
     ctx.globalAlpha = 1;
+    let selectedLabel=null;
+    if(sel>=0&&this.visible(sel)) {
+      ctx.font=`600 ${Math.max(8,15*ls)}px "JetBrains Mono", monospace`;
+      const width=ctx.measureText(d.gene[sel]).width+10*ls;
+      selectedLabel=window.OmicsFMDisplay.placeMapLabel(labels,g.X(sel)+12+width/2,g.Y(sel),width,24*ls,g);
+    }
     // family labels
     if (ov.labels && !q && path < 0 && !(mode === 'fam' && fam >= 0)) {
-      ctx.font = `500 ${window.OmicsFMDisplay.isMobile()?11:14}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const placed = [];
+      ctx.font = `500 ${Math.max(8,14*ls)}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const placed = labels;
       for (const a of this.anchors()) {
         if (a.n < 15) continue;
-        let [lx, ly] = g.P(a.x, a.y); const t = d.families[a.f].name.toUpperCase(), tw = ctx.measureText(t).width + 10, th = 24;
-        for (let tries = 0; tries < 6; tries++) { const hit = placed.find(p => Math.abs(p.x - lx) < (p.w + tw) / 2 && Math.abs(p.y - ly) < th); if (!hit) break; ly = hit.y + th + 2; }
-        placed.push({ x: lx, y: ly, w: tw });
+        let [lx, ly] = g.P(a.x, a.y); const t = d.families[a.f].name.toUpperCase(), tw = ctx.measureText(t).width + 10*ls, th = 24*ls;
+        const box=window.OmicsFMDisplay.placeMapLabel(placed,lx,ly,tw,th,g);
+        if(!box) continue;
+        lx=box.x;ly=box.y;
         ctx.fillStyle = 'rgba(10,10,12,.8)'; ctx.fillRect(lx - tw / 2, ly - th / 2, tw, th); ctx.fillStyle = mode === 'fam' ? this.famColor(a.f) : '#F4F4F5'; ctx.fillText(t, lx, ly);
       }
     }
     // selected family label
-    if (mode === 'fam' && fam >= 0 && !q && path < 0) { const a = this.anchors().find(a => a.f === fam); if (a) { ctx.font = '500 15px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const [lx, ly] = g.P(a.x, a.y); const t = d.families[fam].name.toUpperCase(), tw = ctx.measureText(t).width + 12; ctx.fillStyle = '#C0FE04'; ctx.fillRect(lx - tw / 2, ly - 28, tw, 28); ctx.fillStyle = '#0A0A0C'; ctx.fillText(t, lx, ly - 14); } }
+    if (mode === 'fam' && fam >= 0 && !q && path < 0) {
+      const a=this.anchors().find(a=>a.f===fam);
+      if(a) {
+        ctx.font=`500 ${Math.max(8,15*ls)}px "JetBrains Mono", monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+        const [lx,ly]=g.P(a.x,a.y),text=d.families[fam].name.toUpperCase(),width=ctx.measureText(text).width+12*ls;
+        const box=window.OmicsFMDisplay.placeMapLabel(labels,lx,ly-14*ls,width,28*ls,g);
+        if(box) {ctx.fillStyle='#C0FE04';ctx.fillRect(box.x-width/2,box.y-box.height/2,width,box.height);ctx.fillStyle=window.OmicsFMDisplay.ui.theme==='light'?'#18181F':'#0A0A0C';ctx.fillText(text,box.x,box.y);}
+      }
+    }
     // query hits: white ring + label
     if (q || path >= 0) {
-      ctx.font = '500 13px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let labelled = 0;
-      for (let i = 0; i < n; i++) { if (!this.visible(i) || this.dimmed(i)) continue; ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 5, 0, 6.283); ctx.strokeStyle = '#F4F4F5'; ctx.lineWidth = 2; ctx.stroke(); if (labelled < 40) { ctx.fillStyle = '#F4F4F5'; ctx.fillText(d.gene[i], g.X(i) + 8, g.Y(i)); labelled++; } }
+      ctx.font = `500 ${Math.max(8,13*ls)}px "JetBrains Mono", monospace`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let labelled = 0;
+      for (let i = 0; i < n; i++) { if (!this.visible(i) || this.dimmed(i)) continue; ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 5, 0, 6.283); ctx.strokeStyle = '#F4F4F5'; ctx.lineWidth = 2; ctx.stroke(); if (labelled < 40 && i !== sel) { const width=ctx.measureText(d.gene[i]).width+8*ls,box=window.OmicsFMDisplay.placeMapLabel(labels,g.X(i)+8+width/2,g.Y(i),width,22*ls,g); if(box){ctx.fillStyle='#F4F4F5';ctx.fillText(d.gene[i],box.x-width/2+4*ls,box.y);labelled++;} } }
     }
     // identity neighbours of selected
     if (sel >= 0 && d.neigh[sel]) {
@@ -305,7 +322,7 @@ class Component extends DCLogic {
     }
     const ring = (i, col) => { ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 8, 0, 6.283); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = this.colorOf(i); ctx.beginPath(); ctx.arc(g.X(i), g.Y(i), 4.5, 0, 6.283); ctx.fill(); };
     if (hover >= 0 && hover !== sel) ring(hover, '#9A9AA6');
-    if (sel >= 0) { ring(sel, '#C0FE04'); ctx.font = '600 15px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#C0FE04'; ctx.fillText(d.gene[sel], g.X(sel) + 12, g.Y(sel)); }
+    if (sel >= 0) { ring(sel, '#C0FE04'); if(selectedLabel){ctx.font=`600 ${Math.max(8,15*ls)}px "JetBrains Mono", monospace`;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillStyle='#C0FE04';ctx.fillText(d.gene[sel],selectedLabel.x-selectedLabel.width/2+5*ls,selectedLabel.y);} }
   }
   nearest(mx, my) {
     const g = this.geom(), d = this.state.d; if (!g) return -1; let best = -1, bd = window.OmicsFMDisplay.isMobile() ? 400 : 100;
@@ -356,7 +373,7 @@ class Component extends DCLogic {
       onMove: e => { const [mx, my] = this.pos(e); if (this.state.drag) { const dr = this.state.drag; this.setState({ view: { k: view.k, x: dr.x0 + mx - dr.mx, y: dr.y0 + my - dr.my } }); return; } const i = this.nearest(mx, my); this._tip = [mx, my]; if (i !== hover) this.setState({ hover: i }); else this.forceUpdate(); },
       onLeave: () => this.setState({ hover: -1, drag: null }), onDown: e => { const [mx, my] = this.pos(e); this._down = [mx, my]; this.setState({ drag: { mx, my, x0: view.x, y0: view.y } }); }, onUp: () => this.setState({ drag: null }),
       onPick: e => { const [mx, my] = this.pos(e); if (this._down && Math.hypot(mx - this._down[0], my - this._down[1]) > 4) return; const i = this.nearest(mx, my); this.setState({ sel: i, hoverNb: -1 }); },
-      onWheel: e => { e.preventDefault(); const [mx, my] = this.pos(e); const g = this.geom(); if (!g) return; const f = Math.exp(-e.deltaY * 0.0021), k2 = Math.max(0.4, Math.min(14, view.k * f)), cx = g.w / 2, cy = g.h / 2, r = k2 / view.k; this.setState({ view: { k: k2, x: mx - cx - (mx - cx - view.x) * r, y: my - cy - (my - cy - view.y) * r } }); },
+      onWheel: e => { e.preventDefault(); const [mx, my] = this.pos(e); const g = this.geom(); if (!g) return; const f = Math.exp(-e.deltaY * (e.deltaY < 0 ? 0.001575 : 0.0021)), k2 = Math.max(0.4, Math.min(14, view.k * f)), cx = g.w / 2, cy = g.h / 2, r = k2 / view.k; this.setState({ view: { k: k2, x: mx - cx - (mx - cx - view.x) * r, y: my - cy - (my - cy - view.y) * r } }); },
       resetView: () => this.setState({ view: { k: 1, x: 0, y: 0 } }),
       showTip: !!showTip, tipX: showTip ? this._tip[0] + 'px' : '0px', tipY: showTip ? this._tip[1] + 'px' : '0px', tipColor: showTip ? this.colorOf(hover) : '#5C5C68', tipGene: showTip ? d.gene[hover] : '', tipAcc: showTip ? d.acc[hover] : '', tipDesc: showTip ? d.desc[hover] : '', tipMeta: showTip ? `${famName(hover)} · ${d.det[hover]} % of proteomes` : '',
       hasSel: !!(d && sel >= 0), noSel: !(d && sel >= 0) && !this.state.infoClosed, infoClosed: !(d && sel >= 0) && !!this.state.infoClosed, openInfo: () => this.setState({ infoClosed: false }), closeInfo: () => this.setState({ infoClosed: true }),

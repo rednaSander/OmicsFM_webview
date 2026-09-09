@@ -16,6 +16,10 @@
 .mobile-menu>a{display:flex}
 .mobile-modality-toggle{display:none}
 .modality-content{display:contents}
+/* DC serializes inline accent colours to RGB. Only match the text colour itself. */
+html[data-theme=light] :is([style^="color: rgb(192, 254, 4)"],[style*="; color: rgb(192, 254, 4)"]){background-color:#C0FE04!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+html[data-theme=light] :is([style^="color: rgb(139, 92, 255)"],[style*="; color: rgb(139, 92, 255)"],[style^="color: rgb(81, 0, 253)"],[style*="; color: rgb(81, 0, 253)"]){background-color:#5100FD!important;color:#F4F4F5!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+html[data-theme=light] :is([style^="color: rgb(252, 45, 118)"],[style*="; color: rgb(252, 45, 118)"]){background-color:#FC2D76!important;color:#0A0A0C!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 html[data-mobile=true]{scroll-padding-top:72px}
 html[data-mobile=true] body{overflow-x:hidden}
 html[data-mobile=true] [data-screen-label=Header]{height:64px!important;padding:0 16px!important;position:sticky!important;top:0;z-index:65!important;flex:none}
@@ -62,6 +66,12 @@ html[data-mobile=true] .modality-content>div:last-child{padding-bottom:20px!impo
 html[data-mobile=true] #modalities a{min-height:46px}
 html[data-mobile=true] #what{grid-template-columns:1fr!important;gap:32px!important}
 html[data-mobile=true] #what p{font-size:16px!important;line-height:1.65!important;text-align:left!important}
+html[data-mobile=true] .representation-cards{grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:calc(100% - 24px);grid-auto-rows:auto!important;min-width:0;max-width:100%;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0;overscroll-behavior-x:contain;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:#9A9AA6 transparent}
+html[data-mobile=true] .representation-cards>div{scroll-snap-align:start;scroll-snap-stop:always;background:#E7E7ED!important;color:#18181F!important;padding:24px!important}
+html[data-mobile=true] .representation-cards>div>div{color:#18181F!important}
+html[data-mobile=true] .representation-cards>div>p{color:#555562!important}
+html[data-mobile=true] .representation-cards>div>div:first-child{color:#676775!important}
+html[data-mobile=true] .representation-cards:focus-visible{outline:2px solid #C0FE04;outline-offset:4px}
 html[data-mobile=true] .home-content h2{font-size:28px!important}
 html[data-mobile=true] [data-screen-label=Tasks]{margin:0 -20px!important;padding:48px 20px!important}
 html[data-mobile=true] .task-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important}

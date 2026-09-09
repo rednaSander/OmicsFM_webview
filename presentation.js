@@ -4,7 +4,7 @@
   let theme = 'dark', component, chrome, menu, panel = 'map';
   try { theme = localStorage.getItem('omicsfm-theme') === 'light' ? 'light' : 'dark'; } catch (_) {}
   const surfaces = {'#000':'#E7E7ED','#000000':'#E7E7ED','#0A0A0C':'#FFFFFF','#131316':'#FFFFFF','#1B1B20':'#F5F5F8','#1F1F25':'#F0F0F4','#2A2A31':'#D2D2DB','#F4F4F5':'#22222B'};
-  const ink = {'#F4F4F5':'#18181F','#FFF':'#18181F','#FFFFFF':'#18181F','#E3E3E8':'#303039','#9A9AA6':'#555562','#5C5C68':'#676775','#C0FE04':'#4F7100','#8B5CFF':'#5100FD','#BCA4FF':'#6230C8','#AA83FF':'#6331C8','#FC2D76':'#BF1752','#FFB020':'#8A5600'};
+  const ink = {'#F4F4F5':'#18181F','#FFF':'#18181F','#FFFFFF':'#18181F','#E3E3E8':'#303039','#9A9AA6':'#555562','#5C5C68':'#676775','#C0FE04':'#C0FE04','#8B5CFF':'#8B5CFF','#BCA4FF':'#BCA4FF','#AA83FF':'#AA83FF','#FC2D76':'#FC2D76','#FFB020':'#FFB020'};
   const context = {'#36363F':'#B8B8C4','#3A3A44':'#B8B8C4','#45454F':'#A9A9B7','#1F1F25':'#DDDDE5','#26262C':'#C8C8D2','#6C6C78':'#707080'};
   const key = value => typeof value === 'string' ? value.toUpperCase() : value;
   const neutral = value => value && (key(value) in surfaces || key(value) in context);
@@ -48,7 +48,7 @@
       updateChrome();
     },
   };
-  const contexts = new WeakMap(), pointContexts = new WeakMap();
+  const contexts = new WeakMap();
   display.themeNetwork = c => {
     // Transform presentation colours at the dataset boundary, leaving cached layout logic intact.
     for (const dataset of [c.nodesDS,c.edgesDS]) for (const name of ['add','update']) {
@@ -62,25 +62,26 @@
   ui.BG = new Proxy({}, {get:(_,color)=>ui.bg(color)});
   ui.FG = new Proxy({}, {get:(_,background)=>new Proxy({}, {get:(_,color)=>ui.fg(color,background)})});
   ui.LOGO = new Proxy({}, {get:(_,src)=>ui.logo(src)});
-  display.canvasContext = (canvas, {preservePointAccents=false}={}) => {
-    const ctx = canvas.getContext('2d');
-    if (theme !== 'light') return ctx;
-    const cache=preservePointAccents?pointContexts:contexts;
-    if (!cache.has(ctx)) {
-      let pointColor;
-      cache.set(ctx,new Proxy(ctx,{
-        get(target,prop) {
-          // Keep carousel dots in their brand colours; text still uses accessible ink.
-          if(preservePointAccents&&prop==='fill')return (...args)=>{const previous=target.fillStyle;if(pointColor)target.fillStyle=pointColor;try{return target.fill(...args);}finally{target.fillStyle=previous;}};
-          const value=Reflect.get(target,prop,target);return typeof value==='function'?value.bind(target):value;
-        },
-        set(target,prop,value) {
-          if(prop==='fillStyle')pointColor=['#C0FE04','#FC2D76'].includes(key(value))?value:null;
-          return Reflect.set(target,prop,prop==='fillStyle'||prop==='strokeStyle'?ui.plot(value):value,target);
-        },
-      }));
-    }
-    return cache.get(ctx);
+  display.canvasContext = canvas => {
+    const ctx=canvas.getContext('2d');
+    if(theme!=='light')return ctx;
+    if(!contexts.has(ctx))contexts.set(ctx,new Proxy(ctx,{
+      get(target,prop){
+        if(prop==='fillText')return (text,x,y,...args)=>{
+          const badge={'#C0FE04':['#C0FE04','#0A0A0C'],'#8B5CFF':['#5100FD','#F4F4F5'],'#5100FD':['#5100FD','#F4F4F5'],'#FC2D76':['#FC2D76','#0A0A0C']}[key(target.fillStyle)];
+          if(!badge)return target.fillText(text,x,y,...args);
+          const previous=target.fillStyle,size=Number(target.font.match(/[\d.]+(?=px)/)?.[0])||12;
+          const width=Math.min(target.measureText(text).width,args[0]||Infinity),align=target.textAlign;
+          const left=x-(align==='center'?width/2:align==='right'||align==='end'?width:0);
+          const top=y-(target.textBaseline==='middle'?size/2:target.textBaseline==='top'||target.textBaseline==='hanging'?0:size);
+          target.fillStyle=badge[0];target.fillRect(left-2,top-2,width+4,size+4);target.fillStyle=badge[1];
+          try{return target.fillText(text,x,y,...args);}finally{target.fillStyle=previous;}
+        };
+        const value=Reflect.get(target,prop,target);return typeof value==='function'?value.bind(target):value;
+      },
+      set(target,prop,value){return Reflect.set(target,prop,prop==='fillStyle'||prop==='strokeStyle'?ui.plot(value):value,target);},
+    }));
+    return contexts.get(ctx);
   };
   function applyTheme() {
     const root=document.documentElement;

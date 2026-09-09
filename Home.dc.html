@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.65ce5c89812d.js"></script>
+<script src="./assets/runtime/display.832a6f6a5c02.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -153,7 +153,7 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
   <p style="margin:0;font-size:17px;line-height:1.6;color:{{ ui.FG['transparent']['#9A9AA6'] }};text-wrap:pretty;text-align:justify;hyphens:auto">This website has one aim: to let anybody explore the biological structure the model learned on its own. During training it saw zero annotations. No tissue labels, no protein families, no pathways, no interactions; only abundance values. Every label you can toggle in the explorers (tissue, disease, protein family, curated complex membership) is an overlay drawn from external sources such as PRIDE metadata, CORUM, Gene Ontology, STRING and Reactome, placed on top of the model’s representations after the fact. Where an overlay lines up with the structure, the model found it by itself; where it does not, that is worth a look too.</p><p style="margin:0;font-size:17px;line-height:1.6;color:{{ ui.FG['transparent']['#F4F4F5'] }};text-wrap:pretty"><span style="color:{{ ui.FG['transparent']['#C0FE04'] }};font-weight:600">Three biologically meaningful representations</span> fall out of pretraining. This site lets you explore each of them.</p>
     </div>
   </div>
-    <div style="display:grid;grid-template-columns:1fr;grid-auto-rows:1fr;gap:12px">
+    <div class="representation-cards" tabindex="0" role="region" aria-label="Three learned representations" style="display:grid;grid-template-columns:1fr;grid-auto-rows:1fr;gap:12px">
     <div style="display:flex;flex-direction:column;gap:12px;padding:28px 28px 32px;background:{{ ui.BG['#131316'] }};min-width:0">
       <div style="display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span style="color:{{ ui.FG['transparent']['#C0FE04'] }}">01 · Samples</span><span>SST</span></div>
       <div style="font-size:22px;font-weight:500;letter-spacing:-0.01em;line-height:1.2;text-wrap:balance">One vector per sample.</div>
@@ -317,7 +317,7 @@ class Component extends DCLogic {
   CHIPS = ['cytosolic ribosome', 'histones', 'keratins', 'proteasome', 'immunoglobulins', 'tubulins', 'OXPHOS complexes', 'collagens'];
   PAL = ['#4E9AF1','#F28E2B','#59A14F','#E15759','#76B7B2','#EDC948','#B07AA1','#AEC7E8','#9C755F','#BAB0AC','#1F77B4','#FFBB78','#2CA02C','#98DF8A','#D62728','#FF9896','#8C564B','#C49C94','#17BECF','#9EDAE5'];
   MOD = { proteomics: '#C0FE04', bulk: '#8B5CFF', single_cell: '#FC2D76' };
-  heroColor(mod) { return mod === 'single_cell' ? '#FC2D76' : '#C0FE04'; }
+  heroColor(mod) { return this.MOD[mod]; }
   MODNAME = { proteomics: 'Proteomics', bulk: 'Bulk transcriptomics', single_cell: 'Single-cell transcriptomics' };
   homeHeaderLayout(width) { return window.OmicsFMDisplay.homeHeaderLayout(width); }
   SCENES = [
@@ -361,7 +361,7 @@ class Component extends DCLogic {
     const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
     if (!w || !h) return null;
     if (c.width !== w * dpr || c.height !== h * dpr) { c.width = w * dpr; c.height = h * dpr; }
-    const ctx = window.OmicsFMDisplay.canvasContext(c, {preservePointAccents:c===this.hA.current||c===this.hB.current}); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    const ctx = window.OmicsFMDisplay.canvasContext(c); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
     return { ctx, w, h };
   }
   bounds(pts) {

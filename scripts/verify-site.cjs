@@ -24,7 +24,7 @@ function checkLocalLinks(name) {
   return { html, template, script };
 }
 
-async function loadComponent(name, search = '') {
+async function loadComponent(name, search = '', viewport = {}) {
   const source = checkLocalLinks(name), timers = [], intervals = new Set();
   let drawCalls = 0;
   const ctx = new Proxy({ measureText: text => ({ width: text.length * 7 }) }, {
@@ -42,7 +42,7 @@ async function loadComponent(name, search = '') {
     URLSearchParams, location: {search},
     DCLogic: Logic, React: { createRef: () => ({ current: canvas() }) }, console,
     OmicsFM: { loadJSON: async file => json(file) },
-    window: { devicePixelRatio: 1, innerHeight: 900, addEventListener() {}, removeEventListener() {} },
+    window: { devicePixelRatio: 1, innerHeight: 900, addEventListener() {}, removeEventListener() {}, ...viewport },
     ResizeObserver: class { observe() {} disconnect() {} },
     requestAnimationFrame: callback => callback(),
     setInterval: callback => { intervals.add(callback); return callback; },

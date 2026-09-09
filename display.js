@@ -43,6 +43,21 @@
       return {navFont, navGap:gap + 'px', edgePad:'12px', colW:colW + 'px',
         showSearch:W >= 1180 && available >= 180, searchW:searchW + 'px'};
     },
+    mapLabelScale(zoom = 1) {
+      return isMobile() ? Math.max(.58, .8 * Math.sqrt(Math.min(1, zoom))) : 1;
+    },
+    placeMapLabel(placed, x, y, width, height, bounds) {
+      if (![x,y,width,height].every(Number.isFinite) || x<0 || x>bounds.w || y<0 || y>bounds.h || width>bounds.w-16) return null;
+      const cx=Math.max(8+width/2,Math.min(bounds.w-8-width/2,x));
+      const cy=Math.max(40+height/2,Math.min(bounds.h-44-height/2,y));
+      for(const [dx,dy] of [[0,0],[0,-height-4],[0,height+4],[-width/2-10,0],[width/2+10,0],[0,-2*(height+4)],[0,2*(height+4)]]) {
+        const box={x:cx+dx,y:cy+dy,width,height};
+        if(box.x-width/2<8||box.x+width/2>bounds.w-8||box.y-height/2<40||box.y+height/2>bounds.h-44)continue;
+        if(placed.some(p=>Math.abs(p.x-box.x)<(p.width+width)/2+3&&Math.abs(p.y-box.y)<(p.height+height)/2+3))continue;
+        placed.push(box);return box;
+      }
+      return null;
+    },
     scrollToEnd(element) {
       if (!element) return;
       cancelAnimationFrame(scrollFrame);
