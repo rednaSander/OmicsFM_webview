@@ -7,7 +7,7 @@
 <script src="assets/vendor/react.production.min.js"></script>
 <script src="assets/vendor/react-dom.production.min.js"></script>
 <script src="assets/vendor/vis-network.min.js"></script>
-<script src="./assets/runtime/display.c6e69813616c.js"></script>
+<script src="./assets/runtime/display.93c632c52b9f.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -72,7 +72,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ui-b
       <svg class="theme-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
       <svg class="theme-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 15.2A9 9 0 0 1 8.8 4a9 9 0 1 0 11.2 11.2Z"></path></svg>
     </button>
-    <a class="viewer-paper-link" href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:{{ ui.BG['#000'] }};border:2px solid transparent;color:{{ ui.FG['#000']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
+    <a class="viewer-paper-link" href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;background:{{ ui.BG['#000'] }};border:2px solid transparent;color:{{ ui.FG['#000']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:border-color 120ms ease-out" style-hover="border-color:currentColor">Read the paper</a>
   </div>
 </header>
 
@@ -158,7 +158,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ui-b
       <div style="position:absolute;top:22px;left:32px;right:32px;display:flex;justify-content:space-between;gap:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }};white-space:nowrap;overflow:hidden"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0"><span class="viewer-modality-label" style="color:{{ ui.FG['transparent']['#8B5CFF'] }}">Bulk transcriptomics</span> · attention · {{ readout }}</span><span style="display:flex;gap:16px;pointer-events:auto"><button onClick="{{ togglePhysics }}" style="border:0;cursor:pointer;font:inherit;padding:4px 8px;background:{{ ui.BG[physBg] }};color:{{ ui.FG[physBg][physFg] }};transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:var(--ui-bg-2a2a31,#2A2A31);color:var(--ui-on-2a2a31-f4f4f5,#F4F4F5)">{{ physLabel }}</button><button onClick="{{ fitView }}" style="border:0;cursor:pointer;font:inherit;padding:4px 8px;background:{{ ui.BG['#1B1B20'] }};color:{{ ui.FG['#1B1B20']['#F4F4F5'] }}" style-hover="background:var(--ui-bg-2a2a31,#2A2A31)">fit</button></span></div>
       <div style="position:absolute;bottom:22px;left:32px;right:32px;display:flex;flex-direction:column;gap:8px">
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }}"><span style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:2px;background:{{ ui.BG['#F4F4F5'] }}"></span>curated pair</span><span style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:2px;background:{{ ui.BG['#5C5C68'] }}"></span>unannotated</span></div>
-      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }}">Drag nodes · scroll to zoom · click a node or edge · double-click to fit</div></sc-if>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;color:{{ ui.FG['transparent']['#9A9AA6'] }}">Drag nodes · scroll to zoom · double-click a node for details · double-click empty space to fit</div></sc-if>
       </div>
     </div>
     <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:0;right:0;bottom:64px;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }};white-space:nowrap">{{ loadingLabel }}</div></div></sc-if>
@@ -186,10 +186,10 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ui-b
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}"><span>Top {{ selK }} attention partners</span><span>attention</span></div>
           <div style="display:flex;flex-direction:column;gap:1px">
             <sc-for list="{{ partners }}" as="p" hint-placeholder-count="10">
-              <button onClick="{{ p.pick }}" onMouseEnter="{{ p.over }}" onMouseLeave="{{ pOut }}" style="display:grid;grid-template-columns:minmax(0,1fr) 56px auto;grid-template-rows:auto auto;align-items:center;gap:4px 10px;padding:7px 10px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ ui.BG[p.bg] }};color:{{ ui.FG[p.bg]['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20)">
+              <button class="attention-partner" onClick="{{ p.pick }}" onMouseEnter="{{ p.over }}" onMouseLeave="{{ pOut }}" style="display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;align-items:center;gap:8px 10px;padding:10px;border:0;cursor:pointer;font:inherit;text-align:left;background:{{ ui.BG[p.bg] }};color:{{ ui.FG[p.bg]['#F4F4F5'] }};transition:background 120ms ease-out" style-hover="background:var(--ui-bg-1b1b20,#1B1B20)">
                 <span style="display:flex;align-items:baseline;gap:8px;min-width:0"><span style="font-size:12.5px;font-weight:500">{{ p.gene }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:{{ ui.FG['transparent']['#5C5C68'] }}">{{ p.rank }}</span></span>
-                <span style="height:4px;background:{{ ui.BG['#1B1B20'] }};position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ p.barW }};background:{{ ui.BG[p.barColor] }}"></span></span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ ui.FG['transparent']['#9A9AA6'] }}">{{ p.att }}</span>
+                <span class="attention-bar" style="grid-column:1 / -1;grid-row:2;height:8px;background:{{ ui.BG['#1B1B20'] }};position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ p.barW }};background:{{ ui.BG[p.barColor] }}"></span></span>
+                <span class="attention-score" style="grid-column:2;grid-row:1;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:{{ ui.FG['transparent']['#F4F4F5'] }}">{{ p.att }}</span>
                 <span style="grid-column:1 / -1;display:flex;gap:3px;flex-wrap:wrap"><sc-for list="{{ p.dbs }}" as="db" hint-placeholder-count="0"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:1px 4px;background:{{ ui.BG[db.bg] }};color:{{ ui.FG[db.bg][db.fg] }}">{{ db.label }}</span></sc-for></span>
               </button>
             </sc-for>
@@ -226,7 +226,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--ui-b
         <div style="display:flex;flex-direction:column;gap:1px">
           <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:12.5px;line-height:1.4"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Clusters</span>the community map: top 3,000 edges, coloured by Leiden community, named by its best KEGG enrichment.</div>
           <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:12.5px;line-height:1.4"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Network</span>the raw graph; choose a preset of 500, 1,500, 3,000 or 5,000 strongest edges.</div>
-          <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:12.5px;line-height:1.4"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>a node, or search any of the {{ nProteins }} genes in this tissue, to see its 25 strongest partners and which databases already know them.</div>
+          <div style="padding:10px 12px;background:{{ ui.BG['#131316'] }};font-size:12.5px;line-height:1.4"><span style="color:{{ ui.FG['transparent']['#8B5CFF'] }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Double-click</span>a node, or search any of the {{ nProteins }} genes in this tissue, to see its 25 strongest partners and which databases already know them.</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
           <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:{{ ui.FG['transparent']['#5C5C68'] }}">Try</div>
@@ -323,8 +323,8 @@ class Component extends DCLogic {
     });
     window.OmicsFMDisplay?.adaptNetwork(this.net);
     window.OmicsFMDisplay.themeNetwork(this);
-    this.net.on('click', p => { if (p.nodes.length) this.select(p.nodes[0]); else if (p.edges.length) { const id = p.edges[0]; if (typeof id === 'number' || /^\d+$/.test(id)) this.setState({ selEdge: +id }); } else this.setState({ selEdge: -1 }); });
-    this.net.on('doubleClick', () => this.net.fit({ animation: { duration: 300 } }));
+    this.net.on('click', p => { if (p.nodes.length) return; if (p.edges.length) { const id = p.edges[0]; if (typeof id === 'number' || /^\d+$/.test(id)) this.setState({ selEdge: +id }); } else this.setState({ selEdge: -1 }); });
+    this.net.on('doubleClick', p => { if (p.nodes.length) this.select(p.nodes[0]); else if (!p.edges.length) this.net.fit({ animation: { duration: 300 } }); });
     this.net.on('stabilizationProgress', p => { const pct = Math.round(100 * p.iterations / p.total); if (pct !== this.state.stabPct) this.setState({ stabPct: pct }); });
     this.net.on('stabilizationIterationsDone', () => this.settled());
     this.net.on('hoverNode', () => { this.cv.current.style.cursor = 'grab'; }); this.net.on('blurNode', () => { this.cv.current.style.cursor = 'default'; });

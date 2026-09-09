@@ -131,7 +131,7 @@
       for (const [id,text] of [['map','Map'],['filters','Filters & search'],['details','Details']]) {const b=document.createElement('button');b.type='button';b.dataset.panel=id;b.textContent=text;b.onclick=()=>ui.openPanel(id);tabs.append(b);}chrome.append(tabs);
       const tools=document.createElement('div');tools.className='mobile-map-tools';tools.setAttribute('aria-label','Map controls');
       for (const [text,label,factor] of [['+','Zoom in',1.4],['−','Zoom out',1/1.4],['↺','Reset map',0]]) {const b=document.createElement('button');b.type='button';b.textContent=text;b.setAttribute('aria-label',label);b.onclick=()=>zoom(factor);tools.append(b);}chrome.append(tools);
-      const help=document.createElement('div');help.className='mobile-map-help';help.textContent='Pinch to zoom · drag to pan\n'+(component.ensureNetwork?'Tap a node to explore its partners':'Tap a point for details');
+      const help=document.createElement('div');help.className='mobile-map-help';help.textContent=component.ensureNetwork?'Drag nodes to move · pinch to zoom\nDouble-tap a node for details':'Pinch to zoom · drag to pan\nTap a point for details';
       document.querySelector('[data-screen-label="Plot"], [data-screen-label="Network"]').append(help);
       const form=document.createElement('form');form.className='mobile-search';form.setAttribute('role','search');
       const original=document.querySelector('header input');
