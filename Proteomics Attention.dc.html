@@ -57,12 +57,12 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;background:#C0FE04;bo
   <div style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
     <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:#1B1B20;color:#9A9AA6;position:relative" style-focus="background:#2A2A31">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
-      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Find a protein: RPL3, PSMB5, P39023…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:13px;min-width:0">
-      <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;cursor:pointer">✕</button></sc-if>
+      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Find a protein: RPL3, PSMB5, P39023…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:15px;min-width:0">
+      <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;cursor:pointer">✕</button></sc-if>
       <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
         <div style="position:absolute;top:44px;left:0;right:0;background:#000;display:flex;flex-direction:column;z-index:50;max-height:320px;overflow-y:auto">
           <sc-for list="{{ results }}" as="r" hint-placeholder-count="0">
-            <button onClick="{{ r.pick }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border:0;cursor:pointer;font:inherit;text-align:left;background:transparent;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#1B1B20"><span style="display:flex;align-items:baseline;gap:8px"><span style="font-weight:600">{{ r.gene }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C5C68">{{ r.acc }}</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:{{ r.tagColor }}">{{ r.tag }}</span></button>
+            <button onClick="{{ r.pick }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border:0;cursor:pointer;font:inherit;text-align:left;background:transparent;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#1B1B20"><span style="display:flex;align-items:baseline;gap:8px"><span style="font-weight:600">{{ r.gene }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C5C68">{{ r.acc }}</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:{{ r.tagColor }}">{{ r.tag }}</span></button>
           </sc-for>
         </div>
       </sc-if>
@@ -386,8 +386,8 @@ class Component extends DCLogic {
     const unannotated = ps.filter(p => !this.isCurated(p[2]) && p[3]).length;
     const edges = d ? (view === 'clusters' ? d.clusterEdges : edgeLimit) : 0;
     return {
-      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: Math.round(Math.max(240, 340 * k)) + 'px', navFont: (W >= 1200 ? 13 : W >= 1000 ? 12 : 11) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
-      showSearch: W >= 1180, searchW: Math.round(Math.max(200, 320 * k)) + 'px', wide: W >= 1100,
+      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: (W >= 1800 ? 280 : 200) + 'px', navFont: (W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
+      showSearch: W >= 1180, searchW: Math.round(Math.max(180, Math.min(320, W - 1100))) + 'px', wide: W >= 1100,
       leftW: (this.state.leftWpx || Math.round(Math.max(240, 340 * k))) + 'px', rightW: (sel < 0 && this.state.selEdge < 0 && this.state.infoClosed ? 56 : Math.round(Math.max(240, 340 * k))) + 'px',
       startResize: e => { e.preventDefault(); this._rs = { x0: e.clientX, w0: this.state.leftWpx || Math.round(Math.max(240, 340 * k)) }; this.setState({ resizing: true }); }, handleColor: this.state.resizing ? '#C0FE04' : '#2A2A31',
       query, hasQuery: !!query.trim(), onQuery: e => this.setState({ query: e.target.value }), clearQuery: () => this.setState({ query: '' }), onQueryKey: e => { if (e.key === 'Enter' && results.length) results[0].pick(); },

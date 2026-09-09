@@ -39,8 +39,8 @@ input::placeholder{color:#5C5C68}
   <div style="display:flex;align-items:center;gap:12px;margin-left:auto;flex:none">
     <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};padding:0 14px;background:#1B1B20;color:#9A9AA6" style-focus="background:#2A2A31">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
-      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Highlight samples: PXD, tissue, instrument, disease…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:13px;min-width:0">
-      <sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#2A2A31"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;cursor:pointer">{{ queryHits }} ✕</button></sc-if>
+      <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Highlight samples: PXD, tissue, instrument, disease…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:15px;min-width:0">
+      <sc-if value="{{ isoOn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetLegend }}" style="display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;padding:6px 10px;background:#1B1B20;color:#F4F4F5;transition:background 120ms ease-out" style-hover="background:#2A2A31"><span>showing only {{ isoLabel }}</span><span>✕</span></button></sc-if><sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearQuery }}" style="border:0;background:#2A2A31;color:#F4F4F5;font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;cursor:pointer">{{ queryHits }} ✕</button></sc-if>
     </label></sc-if>
     <a href="https://www.biorxiv.org/content/10.64898/2026.08.25.747021v1" style="display:flex;align-items:center;justify-content:center;width:{{ colW }};height:72px;margin-left:12px;background:#000;color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:{{ navFont }};font-weight:500;letter-spacing:.1em;text-transform:uppercase;flex:none;white-space:nowrap;transition:background 120ms ease-out,color 120ms ease-out" style-hover="background:#C0FE04;color:#0A0A0C">Read the paper</a>
   </div>
@@ -93,7 +93,7 @@ input::placeholder{color:#5C5C68}
       <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
       <div style="position:absolute;top:22px;left:32px;right:32px;display:flex;justify-content:space-between;gap:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;white-space:nowrap;overflow:hidden"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0"><span style="color:#C0FE04">Proteomics</span> · SST · UMAP · coloured by {{ fieldLabel }}{{ projSuffix }}</span><span>{{ zoomLabel }}</span></div>
       <div style="position:absolute;bottom:22px;left:32px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6">UMAP 1 → · UMAP 2 ↑</div>
-      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;bottom:22px;right:32px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;white-space:nowrap">Scroll to zoom · drag to pan · double-click to reset</div></sc-if>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;bottom:22px;right:32px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6;max-width:calc(100% - 280px);text-align:right;white-space:normal">Scroll to zoom · drag to pan · double-click to reset</div></sc-if>
     </div>
     <sc-if value="{{ showTip }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;left:{{ tipX }};top:{{ tipY }};transform:translate(14px,14px);pointer-events:none;background:#000;color:#F4F4F5;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:200px;max-width:280px;font-size:12px;line-height:1.4">
@@ -142,13 +142,13 @@ input::placeholder{color:#5C5C68}
     <sc-if value="{{ noSel }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;flex-direction:column;gap:20px;padding:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68"><span>What am I looking at?</span><button onClick="{{ closeInfo }}" title="Hide panel" style="border:0;background:#1B1B20;color:#F4F4F5;font:inherit;font-size:10px;padding:3px 8px;cursor:pointer;flex:none" style-hover="background:#2A2A31">Hide ✕</button></div>
-        <p style="margin:0;font-size:14px;line-height:1.55;color:#F4F4F5;text-wrap:pretty;text-align:justify;hyphens:auto">Each point is one proteome: the model’s sample summary token for one PRIDE run, reduced to two dimensions. Samples that the model represents similarly sit close together.</p>
-        <p style="margin:0;font-size:13px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:justify;hyphens:auto">Without ever seeing a tissue label, samples from the same tissue land together even when they come from different projects, instruments and years. Samples are still often organised by project, but the projects themselves are organised biologically relative to one another. Where a project does not sit with the rest of its tissue, two explanations compete and are often confounded: technical variability (a batch effect from sample preparation, labelling or instrument) or biological variability, such as disease. Take <button onClick="{{ goExample }}" style="border:0;background:transparent;padding:0;font:inherit;color:#C0FE04;cursor:pointer;text-decoration:underline;text-underline-offset:2px">PXD007592</button>: annotated as skin, its samples sit mostly in brain. PRIDE describes it as brain metastases of melanoma, so its position is biologically plausible. Isolate a tissue and show its projects to find your own cases.</p>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:#F4F4F5;text-wrap:pretty;text-align:left">Each point is one proteome: the model’s sample summary token for one PRIDE run, reduced to two dimensions. Samples that the model represents similarly sit close together.</p>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:#9A9AA6;text-wrap:pretty;text-align:left">Without ever seeing a tissue label, samples from the same tissue land together even when they come from different projects, instruments and years. Samples are still often organised by project, but the projects themselves are organised biologically relative to one another. Where a project does not sit with the rest of its tissue, two explanations compete and are often confounded: technical variability (a batch effect from sample preparation, labelling or instrument) or biological variability, such as disease. Take <button onClick="{{ goExample }}" style="border:0;background:transparent;padding:0;font:inherit;color:#C0FE04;cursor:pointer;text-decoration:underline;text-underline-offset:2px">PXD007592</button>: annotated as skin, its samples sit mostly in brain. PRIDE describes it as brain metastases of melanoma, so its position is biologically plausible. Isolate a tissue and show its projects to find your own cases.</p>
         <div style="display:flex;flex-direction:column;gap:1px">
-          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Hover</span>a point to read its metadata.</div>
-          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>to pin it and see its ten nearest neighbours in the model’s space.</div>
-          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Legend</span>click a class to isolate it, then “Show projects” to colour its PRIDE projects.</div>
-          <div style="padding:10px 12px;background:#131316;font-size:12.5px;line-height:1.4"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Search</span>a PXD or instrument to light up matching samples.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Hover</span>a point to read its metadata.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Click</span>to pin it and see its ten nearest neighbours in the model’s space.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Legend</span>click a class to isolate it, then “Show projects” to colour its PRIDE projects.</div>
+          <div style="padding:10px 12px;background:#131316;font-size:14px;line-height:1.5"><span style="color:#C0FE04;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px">Search</span>a PXD or instrument to light up matching samples.</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
           <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68">Try</div>
@@ -263,12 +263,12 @@ class Component extends DCLogic {
     ctx.globalAlpha = 1;
     // class centroids as labels (only in class mode, no isolation)
     if (this.state.field === 'class' && this.state.iso < 0 && !q) {
-      ctx.font = '500 11px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '500 14px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const placed = [];
       for (const a of this.anchors('class', i => d.cls[i], () => true)) {
         if (a.n < 60) continue;
         let [lx, ly] = this.toScreen(g, a.x, a.y);
-        const t = d.classes[a.g].name.toUpperCase(), tw = ctx.measureText(t).width + 10, th = 18;
+        const t = d.classes[a.g].name.toUpperCase(), tw = ctx.measureText(t).width + 10, th = 24;
         for (let tries = 0; tries < 6; tries++) { const hit = placed.find(p => Math.abs(p.x - lx) < (p.w + tw) / 2 && Math.abs(p.y - ly) < th); if (!hit) break; ly = hit.y + th + 2; }
         placed.push({ x: lx, y: ly, w: tw });
         ctx.fillStyle = 'rgba(10,10,12,.8)'; ctx.fillRect(lx - tw / 2, ly - th / 2, tw, th); ctx.fillStyle = '#F4F4F5'; ctx.fillText(t, lx, ly);
@@ -276,13 +276,13 @@ class Component extends DCLogic {
     }
     // project labels (PXD) at each project's densest spot, in project mode
     if (this.inProj()) {
-      ctx.font = '500 10px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '500 13px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const { iso, projHover } = this.state, field = this.state.field;
       const placed = [];
       this.anchors('proj:' + field + ':' + iso, i => d.cats.pxd.idx[i], i => this.catOf(i) === iso).forEach((a, rank) => {
         const p = a.g; if ((a.n < 3 || rank >= 20) && projHover !== p) return;
         let [lx, ly] = this.toScreen(g, a.x, a.y); ly -= 14;
-        const t = d.cats.pxd.values[p], tw = ctx.measureText(t).width + 8, th = 16;
+        const t = d.cats.pxd.values[p], tw = ctx.measureText(t).width + 8, th = 22;
         for (let tries = 0; tries < 6; tries++) { const hit = placed.find(q => Math.abs(q.x - lx) < (q.w + tw) / 2 && Math.abs(q.y - ly) < th); if (!hit) break; ly = hit.y + th + 2; }
         placed.push({ x: lx, y: ly, w: tw });
         const hl = projHover === p; ctx.fillStyle = hl ? this.projColor(p) : 'rgba(10,10,12,.85)'; ctx.fillRect(lx - tw / 2, ly - th / 2, tw, th); ctx.fillStyle = hl ? '#0A0A0C' : this.projColor(p); ctx.fillText(t, lx, ly);
@@ -346,9 +346,9 @@ class Component extends DCLogic {
     const clamp = () => this.setState({ view: { k: 1, x: 0, y: 0 } });
     const W = this.state.headerW || 1440, k = Math.max(0.6, Math.min(1, W / 1440));
     return {
-      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: Math.round(Math.max(240, 340 * k)) + 'px',
-      navFont: (W >= 1200 ? 13 : W >= 1000 ? 12 : 11) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
-      showSearch: W >= 1180, searchW: Math.round(Math.max(200, 320 * k)) + 'px', wide: W >= 1100,
+      hdrRef: this.hdrRef, edgePad: Math.round(32 * k) + 'px', colW: (W >= 1800 ? 280 : 200) + 'px',
+      navFont: (W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12) + 'px', navGap: (W >= 1200 ? 8 : 2) + 'px',
+      showSearch: W >= 1180, searchW: Math.round(Math.max(180, Math.min(320, W - 1100))) + 'px', wide: W >= 1100,
       leftW: (this.state.leftWpx || Math.round(Math.max(240, 340 * k))) + 'px', rightW: (!(this.state.d && this.state.sel >= 0) && this.state.infoClosed ? 56 : Math.round(Math.max(240, 340 * k))) + 'px',
       query, hasQuery: !!query.trim(), queryHits: queryHits.toLocaleString(), onQuery: e => this.setState({ query: e.target.value, iso: e.target.value.trim() ? -1 : iso, projMode: e.target.value.trim() ? false : this.state.projMode }), clearQuery: () => this.setState({ query: '' }),
       visibleCount, totalCount: d ? d.n.toLocaleString() : '', fieldLabel: fieldLabel.toLowerCase(), projSuffix: this.inProj() ? ' · projects within ' + this.labelOfCat(iso) : '',

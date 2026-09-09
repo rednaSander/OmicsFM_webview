@@ -43,8 +43,8 @@ input::placeholder{color:#5C5C68}
     <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}"><div style="display:flex;justify-content:flex-end;flex:none">
     <label style="display:flex;align-items:center;gap:8px;height:40px;width:{{ searchW }};flex:none;padding:0 14px;background:#1B1B20;color:#9A9AA6" style-focus="background:#2A2A31">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#9A9AA6" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"></circle><path d="M9.5 9.5 13 13"></path></svg>
-      <input type="text" placeholder="Search a protein, gene, tissue or project…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:13px;min-width:0">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9A9AA6;background:#2A2A31;padding:1px 5px">/</span>
+      <input type="text" placeholder="Search a protein, gene, tissue or project…" style="flex:1;background:transparent;border:0;outline:0;color:#F4F4F5;font:inherit;font-size:15px;min-width:0">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9A9AA6;background:#2A2A31;padding:1px 5px">/</span>
     </label>
     </div></sc-if>
     <sc-if value="{{ showCode }}" hint-placeholder-val="{{ true }}"><a href="https://github.com/CompOmics/OmicsFM" title="Code &amp; downloads" style="display:flex;flex:none;width:40px;height:40px;align-items:center;justify-content:center;background:#1B1B20;color:#9A9AA6" style-hover="color:#0A0A0C;background:#F4F4F5">
@@ -59,7 +59,7 @@ input::placeholder{color:#5C5C68}
 <section data-screen-label="Hero" onMouseEnter="{{ pauseCarousel }}" onMouseLeave="{{ resumeCarousel }}" onFocus="{{ focusCarousel }}" onBlur="{{ blurCarousel }}" style="position:relative;overflow:hidden;height:{{ heroH }};min-height:480px;background:#0A0A0C">
   <canvas ref="{{ hA }}" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};width:calc(100% - {{ colW }});height:100%;display:block;opacity:{{ opA }};transition:opacity 600ms ease-out"></canvas>
   <canvas ref="{{ hB }}" style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};width:calc(100% - {{ colW }});height:100%;display:block;opacity:{{ opB }};transition:opacity 600ms ease-out"></canvas>
-  <div style="position:absolute;top:24px;left:{{ edgePad }};right:{{ readoutRight }};display:flex;justify-content:space-between;gap:24px;align-items:flex-start;line-height:1.6;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;pointer-events:none">
+  <div style="position:absolute;top:24px;left:{{ edgePad }};right:{{ readoutRight }};display:flex;justify-content:space-between;gap:24px;align-items:flex-start;line-height:1.6;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#5C5C68;pointer-events:none">
     <span style="display:flex;gap:16px;max-width:60%"><span style="color:#9A9AA6;flex:none">{{ sceneIndex }}</span><span><span style="color:{{ sceneColor }};transition:color 400ms">{{ sceneModality }}</span><span>{{ sceneReadoutRest }}</span></span></span><span style="flex:none;text-align:right">COMPOMICS · VIB-UGENT · GHENT · APACHE 2.0</span>
   </div>
   <div style="position:absolute;top:0;bottom:0;left:0;right:{{ colW }};pointer-events:none">
@@ -67,7 +67,7 @@ input::placeholder{color:#5C5C68}
     <span style="position:absolute;top:12px;right:12px;width:14px;height:14px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
     <span style="position:absolute;bottom:12px;right:12px;width:14px;height:14px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span>
     <sc-if value="{{ sceneHasAxes }}" hint-placeholder-val="{{ true }}">
-    <div style="position:absolute;right:28px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6">{{ sceneAxisX }} → · {{ sceneAxisY }} ↑</div>
+    <div style="position:absolute;right:28px;bottom:24px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:#9A9AA6">{{ sceneAxisX }} → · {{ sceneAxisY }} ↑</div>
     </sc-if>
   </div>
   <div style="position:absolute;top:0;bottom:0;right:0;width:{{ colW }};background:#000;overflow:hidden">
@@ -79,9 +79,9 @@ input::placeholder{color:#5C5C68}
     </sc-for>
   </div>
   <div ref="{{ hCard }}" data-screen-label="Carousel card" style="position:absolute;left:0;bottom:48px;width:{{ cardW }};display:flex;flex-direction:column;gap:9px;padding:18px 22px 0 22px;background:{{ sceneColor }};color:{{ sceneFg }};transition:background 400ms ease-out,color 400ms ease-out">
-    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.8"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
+    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.1em;text-transform:uppercase;opacity:.8"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
     <div style="font-size:{{ cardTitleFont }};font-weight:600;line-height:1.2;letter-spacing:-0.01em;text-wrap:balance">{{ sceneTitle }}</div>
-    <p style="margin:0;font-size:15px;line-height:1.45;text-wrap:pretty">{{ sceneText }}</p>
+    <p style="margin:0;font-size:17px;line-height:1.5;text-wrap:pretty;text-align:left">{{ sceneText }}</p>
     <div style="display:flex;justify-content:flex-end;margin:5px -22px 0 0">
       <a href="{{ sceneUrl }}" style="display:inline-flex;align-items:center;height:44px;padding:0 22px;background:#0A0A0C;color:{{ sceneLinkColor }};font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color 400ms ease-out;outline:2px solid transparent;outline-offset:-2px" style-hover="outline-color:currentColor">Start exploring</a>
     </div>
@@ -181,8 +181,8 @@ input::placeholder{color:#5C5C68}
         <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
       </div>
       <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
-        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">Find proteins the model links to yours</div>
-        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">Type a protein, pick a tissue, see its top attention partners and which ones curated databases already know.</div>
+        <div style="font-size:16px;font-weight:500;line-height:1.35;min-height:2.7em;text-wrap:pretty;text-align:left">Find proteins the model links to yours</div>
+        <div style="font-size:16px;color:#9A9AA6;line-height:1.5;text-align:left">Type a protein, pick a tissue, see its top attention partners and which ones curated databases already know.</div>
         <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW0 }};height:1px;background:#C0FE04;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Attention</span></div>
       </div>
     </a>
@@ -195,8 +195,8 @@ input::placeholder{color:#5C5C68}
         <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
       </div>
       <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
-        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">See whether tissues separate</div>
-        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">Brain samples highlighted against the other tissues. Open the map to compare tissues, diseases and independent projects.</div>
+        <div style="font-size:16px;font-weight:500;line-height:1.35;min-height:2.7em;text-wrap:pretty;text-align:left">See whether tissues separate</div>
+        <div style="font-size:16px;color:#9A9AA6;line-height:1.5;text-align:left">Brain samples highlighted against the other tissues. Open the map to compare tissues, diseases and independent projects.</div>
         <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW1 }};height:1px;background:#C0FE04;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Samples</span></div>
       </div>
     </a>
@@ -209,8 +209,8 @@ input::placeholder{color:#5C5C68}
         <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
       </div>
       <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
-        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">Browse protein families the model discovered</div>
-        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">Highlight keratins, histones or another family on the current identity map, then inspect nearby proteins.</div>
+        <div style="font-size:16px;font-weight:500;line-height:1.35;min-height:2.7em;text-wrap:pretty;text-align:left">Browse protein families the model discovered</div>
+        <div style="font-size:16px;color:#9A9AA6;line-height:1.5;text-align:left">Highlight keratins, histones or another family on the current identity map, then inspect nearby proteins.</div>
         <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#C0FE04;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW2 }};height:1px;background:#C0FE04;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Proteins</span></div>
       </div>
     </a>
@@ -223,8 +223,8 @@ input::placeholder{color:#5C5C68}
         <sc-if value="{{ showBrackets }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:6px;left:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #5C5C68;border-right:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;left:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-left:1px solid #5C5C68"></span><span style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-bottom:1px solid #5C5C68;border-right:1px solid #5C5C68"></span></sc-if>
       </div>
       <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1">
-        <div style="font-size:16px;font-weight:500;line-height:1.35;text-wrap:pretty">Ask whether proteomics and RNA agree</div>
-        <div style="font-size:13px;color:#9A9AA6;line-height:1.5">The same protein in three learned spaces. Shared neighbourhoods are robust; proteomics-only ones hint at post-transcriptional control.</div>
+        <div style="font-size:16px;font-weight:500;line-height:1.35;min-height:2.7em;text-wrap:pretty;text-align:left">Ask whether proteomics and RNA agree</div>
+        <div style="font-size:16px;color:#9A9AA6;line-height:1.5;text-align:left">The same protein in three learned spaces. Shared neighbourhoods are robust; proteomics-only ones hint at post-transcriptional control.</div>
         <div style="margin-top:auto;padding-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#F4F4F5;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:{{ tArrowW3 }};height:1px;background:#F4F4F5;transition:width 400ms cubic-bezier(.2,.8,.2,1)"></span><span>Compare</span></div>
       </div>
     </a>
@@ -316,7 +316,7 @@ class Component extends DCLogic {
     const edge = 12, colW = Math.round((W <= 1600 ? 202 : 270) * k);
     const pad = W >= 1200 ? 12 : 8, gap = W >= 1800 ? 32 : W >= 1400 ? 18 : W >= 1200 ? 12 : 4;
     const searchW = Math.round(Math.max(180, 300 * k)), showCode = W >= 1280;
-    const targetFont = W >= 1200 ? 13 : W >= 1000 ? 12 : 11;
+    const targetFont = W >= 1800 ? 16 : W >= 1400 ? 15 : W >= 1200 ? 14 : W >= 1000 ? 13 : 12;
     const textUnits = [...Object.values(this.MODNAME), 'About', 'Compare'].reduce((n, label) => n + label.length * .74, 0);
     const chrome = edge + 60 + 48 + colW + 12 + (showCode ? 52 : 0);
     const showSearch = W >= 1180 && W - chrome - searchW - 12 >= textUnits * 11 + 10 * pad + 4 * gap;
@@ -395,7 +395,7 @@ class Component extends DCLogic {
       ctx.fillStyle = color; ctx.beginPath(); ctx.arc(X(p), Y(p), (opts.rTop ?? 2.6), 0, Math.PI * 2); ctx.fill();
     }
     if (opts.labels) {
-      ctx.font = (opts.labelFont || '500 11px "JetBrains Mono", monospace'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = (opts.labelFont || '500 13px "JetBrains Mono", monospace'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       for (const { text, pts: lp, color, position, offsetX = 0, offsetY = 0 } of opts.labels) {
         if (!lp.length) continue;
         let mx = 0, my = 0; for (const p of lp) { mx += X(p); my += Y(p); } mx /= lp.length; my /= lp.length;
@@ -405,7 +405,7 @@ class Component extends DCLogic {
           mx = Math.max(...(nearby.length ? nearby : lp).map(X)) + (opts.rTop ?? 2.6) + 7 + tw / 2;
         }
         mx += offsetX; my += offsetY;
-        ctx.fillStyle = 'rgba(10,10,12,.75)'; ctx.fillRect(mx - tw / 2 - 5, my - 9, tw + 10, 18);
+        ctx.fillStyle = 'rgba(10,10,12,.75)'; ctx.fillRect(mx - tw / 2 - 5, my - 12, tw + 10, 24);
         ctx.fillStyle = color; ctx.fillText(text, mx, my);
       }
     }
@@ -438,13 +438,13 @@ class Component extends DCLogic {
     const focused=n.pts.filter(p=>p[3]===community);
     for(const [a,b] of n.edges){const on=n.pts[a][3]===community&&n.pts[b][3]===community;ctx.strokeStyle=on?'rgba(244,244,245,.5)':'rgba(108,108,120,.16)';ctx.lineWidth=on?.8:.5;ctx.beginPath();ctx.moveTo(X(n.pts[a]),Y(n.pts[a]));ctx.lineTo(X(n.pts[b]),Y(n.pts[b]));ctx.stroke();}
     for(const p of n.pts){const on=p[3]===community;ctx.fillStyle=on?'#C0FE04':'#45454F';ctx.beginPath();ctx.arc(X(p),Y(p),on?2.1:1.1,0,Math.PI*2);ctx.fill();}
-    if(focused.length){const x=Math.max(42,Math.min(w-42,focused.reduce((sum,p)=>sum+X(p),0)/focused.length)),y=Math.max(16,Math.min(h-16,focused.reduce((sum,p)=>sum+Y(p),0)/focused.length-20));ctx.font='500 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#0A0A0C';ctx.fillRect(x-36,y-8,72,16);ctx.fillStyle='#C0FE04';ctx.fillText('RIBOSOME',x,y);}
+    if(focused.length){const x=Math.max(42,Math.min(w-42,focused.reduce((sum,p)=>sum+X(p),0)/focused.length)),y=Math.max(16,Math.min(h-16,focused.reduce((sum,p)=>sum+Y(p),0)/focused.length-20));ctx.font='500 13px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#0A0A0C';ctx.fillRect(x-42,y-12,84,24);ctx.fillStyle='#C0FE04';ctx.fillText('RIBOSOME',x,y);}
   }
   drawSamples(c) {
     const s=this.state.carousel?.samples.proteomics;if(!s)return;
     const brain=s.classes.findIndex(cl=>cl.name==='brain'),points=s.pts.filter(p=>p[2]===brain);
     this.scatter(c,s.pts,p=>p[2]===brain?{top:true,color:'#C0FE04'}:'#36363F',
-      {pad:16,r:1.1,rTop:2,alpha:.7,stretchX:1.65,labelFont:'500 10px "JetBrains Mono", monospace',labels:[{text:'BRAIN',pts:points,color:'#C0FE04',offsetX:0,offsetY:-48}]});
+      {pad:16,r:1.1,rTop:2,alpha:.7,stretchX:1.65,labelFont:'500 13px "JetBrains Mono", monospace',labels:[{text:'BRAIN',pts:points,color:'#C0FE04',offsetX:0,offsetY:-48}]});
   }
   heroArea(c) {
     const card = this.hCard.current, h = c.clientHeight, w = c.clientWidth;
@@ -482,13 +482,13 @@ class Component extends DCLogic {
   }
   heroLabels(g, labels) {
     const {ctx,w,h,X,Y,b,blocked}=g,placed=[];
-    ctx.font=`500 ${labels.length===1?14:13}px "JetBrains Mono", monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='500 16px "JetBrains Mono", monospace';ctx.textAlign='left';ctx.textBaseline='middle';
     for(const label of labels) {
       if(!label.pts.length) continue;
       const grid=new Map(),cw=(b.x1-b.x0||1)/35,ch=(b.y1-b.y0||1)/35;
       for(const p of label.pts) {const key=Math.floor((p[0]-b.x0)/cw)+','+Math.floor((p[1]-b.y0)/ch),cell=grid.get(key)||[0,0,0];cell[0]++;cell[1]+=p[0];cell[2]+=p[1];grid.set(key,cell);}
       const mode=[...grid.values()].sort((a,b)=>b[0]-a[0])[0],anchor=[mode[1]/mode[0],mode[2]/mode[0]],ax=X(anchor),ay=Y(anchor);
-      const text=label.text.toUpperCase(),lines=text.split('\n'),lineHeight=17,width=Math.max(...lines.map(line=>ctx.measureText(line).width))+16,height=23+(lines.length-1)*lineHeight;
+      const text=label.text.toUpperCase(),lines=text.split('\n'),lineHeight=21,width=Math.max(...lines.map(line=>ctx.measureText(line).width))+16,height=28+(lines.length-1)*lineHeight;
       const valid=(x,y)=>x-width/2>=18&&x+width/2<=w-24&&y-height/2>=76&&y+height/2<=h-34&&
         !(x-width/2<blocked.right&&y+height/2>blocked.top)&&!placed.some(p=>Math.abs(p.x-x)<(p.width+width)/2+7&&Math.abs(p.y-y)<(p.height+height)/2+6);
       let position=null;
@@ -499,7 +499,7 @@ class Component extends DCLogic {
       if(!position) continue;
       const {x,y}=position;
       ctx.fillStyle='rgba(10,10,12,.94)';ctx.fillRect(x-width/2,y-height/2,width,height);ctx.fillStyle=label.textColor||label.color;
-      lines.forEach((line,index)=>ctx.fillText(line,x,y+(index-(lines.length-1)/2)*lineHeight));
+      lines.forEach((line,index)=>ctx.fillText(line,x-width/2+8,y+(index-(lines.length-1)/2)*lineHeight));
       placed.push({text,x,y,width,height});
     }
     this._heroLabels=placed;
@@ -542,7 +542,7 @@ class Component extends DCLogic {
     const f=this.state.carousel?.features.proteomics;if(!f)return;
     const fi=f.families.indexOf('keratins'),family=f.pts.filter(p=>p[2]===fi);
     this.scatter(c,f.pts,p=>p[2]===fi?{top:true,color:'#C0FE04'}:'#36363F',
-      {pad:20,r:1,rTop:2.3,alpha:.8,labelFont:'500 10px "JetBrains Mono", monospace',labels:[{text:'KERATINS',pts:family,color:'#C0FE04',position:'right'}]});
+      {pad:20,r:1,rTop:2.3,alpha:.8,labelFont:'500 13px "JetBrains Mono", monospace',labels:[{text:'KERATINS',pts:family,color:'#C0FE04',position:'right'}]});
   }
   drawAgree(c) {
     const d = this.state.data; const g = this.prep(c); if (!g || !d) return;
@@ -556,7 +556,7 @@ class Component extends DCLogic {
       for (const p of f.pts) if (p[2] === fi) { ctx.beginPath(); ctx.arc(ox + (p[0] - b.x0) * s, h - (oy + (p[1] - b.y0) * s), 2.2, 0, Math.PI * 2); ctx.fill(); }
       if (k) { ctx.strokeStyle = '#2A2A31'; ctx.beginPath(); ctx.moveTo(k * cw, 24); ctx.lineTo(k * cw, h - 8); ctx.stroke(); }
     });
-    ctx.font='500 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#F4F4F5';ctx.fillText('HISTONES',w/2,13);
+    ctx.font='500 13px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#F4F4F5';ctx.fillText('HISTONES',w/2,13);
   }
   drawAll() {
     if (!this.state.data) return;
@@ -615,9 +615,9 @@ class Component extends DCLogic {
       })(),
       // bar: longest cell is "03 · Single-cell transcriptomics" + "4,550,106 cells" ≈ 50 mono chars; fit into one third of the width
       ...(() => {
-        const W = this.state.headerW || 1440, stacked = W < 1800;
+        const W = this.state.headerW || 1440, stacked = W < 2000;
         const pad = W < 1200 ? 12 : 24, sp = .04;
-        const font = Math.max(10, Math.min(stacked ? 13 : 14, Math.floor((W / 3 - 2 * pad - 8) / ((stacked ? 31 : 47) * .64))));
+        const font = Math.max(10, Math.min(stacked ? 15 : 17, Math.floor((W / 3 - 2 * pad - 8) / ((stacked ? 31 : 47) * .64))));
         return { barFont: font + 'px', barPad: pad + 'px', barGap: stacked ? '2px' : '16px', barSpacing: sp + 'em',
           barDirection: stacked ? 'column' : 'row', barAlign: stacked ? 'flex-start' : 'center', barJustify: stacked ? 'center' : 'space-between' };
       })(),
