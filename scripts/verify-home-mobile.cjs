@@ -11,6 +11,8 @@ const base=process.env.OMICSFM_TEST_URL||'http://localhost:8000/';
    await page.goto(base+'Home.dc.html');await page.waitForFunction(()=>window.testHome?.state.data);await page.evaluate(()=>testHome.stopTimer());
    const toggles=page.locator('.mobile-modality-toggle');
    assert.equal(await toggles.count(),3);
+   const hero=await page.locator('[data-screen-label=Hero]').boundingBox(),first=await toggles.first().boundingBox();assert(Math.abs(first.y-hero.y-hero.height)<2,'No gap below the off-white carousel card');
+   for(let i=0;i<2;i++){const a=await toggles.nth(i).boundingBox(),b=await toggles.nth(i+1).boundingBox();assert(Math.abs(b.y-a.y-a.height)<1,'No white slivers between modality rows');}
    for(const theme of ['dark','light']){
     if(theme==='light')await page.getByRole('button',{name:'Switch to light mode',exact:true}).click();
     if(theme==='light'){
@@ -20,8 +22,10 @@ const base=process.env.OMICSFM_TEST_URL||'http://localhost:8000/';
     for(let i=0;i<3;i++){
      const button=toggles.nth(i),panel=page.locator('.modality-content').nth(i);
      assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await panel.isVisible(),false);
-     await button.click();await page.waitForTimeout(80);
+     await button.click();await page.waitForTimeout(750);
+     assert(Math.abs((await button.boundingBox()).y-72)<3,'Opening scrolls the modality below the fixed header');
      assert.equal(await button.getAttribute('aria-expanded'),'true');assert(await panel.isVisible());
+     if(theme==='light'){const band=await panel.locator(':scope>div').first().evaluate(el=>({bg:getComputedStyle(el).backgroundColor,padding:parseFloat(getComputedStyle(el).paddingBottom)}));assert.equal(band.bg,await button.evaluate(el=>getComputedStyle(el).backgroundColor));assert(band.padding>=18,'Colour band extends below project count');}
      const br=await button.boundingBox(),pr=await panel.boundingBox();assert(Math.abs(pr.y-br.y-br.height)<2,'Panel immediately below its own heading');
      if(i<2)assert((await toggles.nth(i+1).boundingBox()).y>=pr.y+pr.height,'Next heading below expanded panel');
      assert(await panel.locator('a').first().isVisible());
@@ -34,11 +38,15 @@ const base=process.env.OMICSFM_TEST_URL||'http://localhost:8000/';
      await page.evaluate(i=>{testHome.goScene(i);testHome.stopTimer();},scene);await page.waitForTimeout(100);
      const colors=await page.evaluate(()=>{const c=(testHome.state.front?testHome.hB:testHome.hA).current,d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let lime=0,pink=0,purple=0;for(let i=0;i<d.length;i+=4){const [r,g,b,a]=d.slice(i,i+4);if(a<100)continue;if(r>180&&g>240&&b<30)lime++;if(r>240&&g<70&&b>90&&b<140)pink++;if([[139,92,255],[170,131,255],[81,0,253]].some(v=>Math.abs(r-v[0])<3&&Math.abs(g-v[1])<3&&Math.abs(b-v[2])<3))purple++;}return {lime,pink,purple,sc:testHome.SCENES[testHome.state.scene].mod};});
      assert(colors[{proteomics:'lime',bulk:'purple',single_cell:'pink'}[colors.sc]]>10,`${width} ${theme} scene ${scene+1}: brand points ${JSON.stringify(colors)}`);
+     const annotations=await page.evaluate(()=>({labels:testHome._heroLabels,points:testHome._heroFit.highlighted.map(p=>[testHome._heroFit.X(p),testHome._heroFit.Y(p)]),expected:testHome.SCENES[testHome.state.scene].family==='immunoglobulins'?2:1}));
+     assert.equal(annotations.labels.length,annotations.expected,'Every carousel annotation is visible');
+     for(const label of annotations.labels)assert(!annotations.points.some(p=>Math.abs(p[0]-label.x)<label.width/2+6&&Math.abs(p[1]-label.y)<label.height/2+6),'Labels clear highlighted dots');
+     assert.equal(await page.locator('[data-screen-label="Carousel card"]').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(231, 231, 237)');
      const height=(await page.locator('[data-screen-label="Carousel card"]').boundingBox()).height;assert(height<270,`${width}: compact card ${height}`);
     }
     const cards=page.locator('.representation-cards');
     await cards.scrollIntoViewIfNeeded();await cards.evaluate(el=>el.scrollTo({left:0,behavior:'instant'}));await page.waitForTimeout(100);
-    assert.equal(await cards.locator(':scope>div').first().evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(231, 231, 237)');
+    assert.equal(await cards.locator(':scope>div').first().evaluate(el=>getComputedStyle(el).backgroundColor),theme==='light'?'rgb(231, 231, 237)':'rgb(19, 19, 22)');
     const box=await cards.boundingBox(),x=Math.round(box.x+box.width-30),y=Math.round(box.y+Math.min(box.height/2,220));
     const session=await context.newCDPSession(page);
     await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});

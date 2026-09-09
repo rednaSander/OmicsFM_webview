@@ -7,7 +7,7 @@
 <script src="./assets/vendor/react.production.min.js"></script>
 <script src="./assets/vendor/react-dom.production.min.js"></script>
 <script src="./site.js"></script>
-<script src="./assets/runtime/display.832a6f6a5c02.js"></script>
+<script src="./assets/runtime/display.63751266a030.js"></script>
 <script src="./support.js"></script>
 <link rel="icon" type="image/svg+xml" href="assets/brand/fold/favicon-stacked-white.svg">
 </head>
@@ -80,7 +80,7 @@ input::placeholder{color:var(--ui-fg-5c5c68,#5C5C68)}
     </sc-for>
   </div>
   <div ref="{{ hCard }}" data-screen-label="Carousel card" style="position:absolute;left:0;bottom:48px;width:{{ cardW }};display:flex;flex-direction:column;gap:{{ cardGap }};padding:{{ cardPadTop }} {{ cardPad }} 0 {{ cardPad }};background:{{ ui.BG[sceneColor] }};color:{{ ui.FG[sceneColor][sceneFg] }};transition:background 400ms ease-out,color 400ms ease-out">
-    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:{{ cardMetaFont }};letter-spacing:.1em;text-transform:uppercase;opacity:.8"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
+    <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:{{ cardMetaFont }};letter-spacing:.1em;text-transform:uppercase;opacity:.8;background:{{ ui.BG[sceneColor] }};color:{{ ui.FG[sceneColor][sceneFg] }}"><span>{{ sceneIndex }}</span><span>·</span><span>{{ sceneTag }}</span></div>
     <div style="font-size:{{ cardTitleFont }};font-weight:600;line-height:1.2;letter-spacing:-0.01em;text-wrap:balance">{{ sceneTitle }}</div>
     <p style="margin:0;font-size:{{ cardBodyFont }};line-height:1.45;text-wrap:pretty;text-align:left">{{ sceneText }}</p>
     <div style="display:flex;justify-content:flex-end;margin:4px -{{ cardPad }} 0 0">
@@ -362,7 +362,7 @@ class Component extends DCLogic {
     if (!w || !h) return null;
     if (c.width !== w * dpr || c.height !== h * dpr) { c.width = w * dpr; c.height = h * dpr; }
     const ctx = window.OmicsFMDisplay.canvasContext(c); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
-    return { ctx, w, h };
+    return { ctx, w, h, canvas:c };
   }
   bounds(pts) {
     let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
@@ -486,6 +486,7 @@ class Component extends DCLogic {
   heroLabels(g, labels) {
     const {ctx,w,h,X,Y,b,blocked}=g,placed=[],mobile=window.OmicsFMDisplay.isMobile();
     ctx.font=`500 ${mobile?12:16}px "JetBrains Mono", monospace`;ctx.textAlign='left';ctx.textBaseline='middle';
+    const highlighted=(g.highlighted||labels.flatMap(label=>label.pts)).map(p=>[X(p),Y(p)]);
     for(const label of labels) {
       if(!label.pts.length) continue;
       const grid=new Map(),cw=(b.x1-b.x0||1)/35,ch=(b.y1-b.y0||1)/35;
@@ -493,16 +494,23 @@ class Component extends DCLogic {
       const mode=[...grid.values()].sort((a,b)=>b[0]-a[0])[0],anchor=[mode[1]/mode[0],mode[2]/mode[0]],ax=X(anchor),ay=Y(anchor);
       const text=label.text.toUpperCase(),lines=text.split('\n'),lineHeight=21,width=Math.max(...lines.map(line=>ctx.measureText(line).width))+16,height=28+(lines.length-1)*lineHeight;
       const valid=(x,y)=>x-width/2>=18&&x+width/2<=w-24&&y-height/2>=(mobile?44:76)&&y+height/2<=h-34&&
-        !(x-width/2<blocked.right&&y+height/2>blocked.top)&&!placed.some(p=>Math.abs(p.x-x)<(p.width+width)/2+7&&Math.abs(p.y-y)<(p.height+height)/2+6);
+        !(x-width/2<blocked.right&&y+height/2>blocked.top)&&!placed.some(p=>Math.abs(p.x-x)<(p.width+width)/2+7&&Math.abs(p.y-y)<(p.height+height)/2+6)&&
+        !highlighted.some(p=>Math.abs(p[0]-x)<width/2+7&&Math.abs(p[1]-y)<height/2+7)&&
+        (y+height/2+7<=ay||x+width/2+7<=ax||x-width/2-7>=ax);
       let position=null;
       for(let radius=mobile?14:(label.distance??22);radius<Math.max(w,h)&&!position;radius+=14) {
-        for(let k=0;k<24;k++) {const a=-Math.PI/2+k*Math.PI/12,x=ax+(mobile?0:(label.offsetX??0))+Math.cos(a)*radius,y=ay+(mobile?0:(label.offsetY??0))+Math.sin(a)*radius;if(valid(x,y)){position={x,y};break;}}
+        for(const a of [-Math.PI/2,0,Math.PI,-Math.PI/4,-3*Math.PI/4,-Math.PI/6,-5*Math.PI/6]) {const x=ax+(mobile?0:(label.offsetX??0))+Math.cos(a)*radius,y=ay+(mobile?0:(label.offsetY??0))+Math.sin(a)*radius;if(valid(x,y)){position={x,y};break;}}
       }
       if(!position) {for(let y=90;y<h-40&&!position;y+=28)for(let x=width/2+20;x<w-width/2-24;x+=20)if(valid(x,y)){position={x,y};break;}}
       if(!position) continue;
       const {x,y}=position;
-      ctx.fillStyle='rgba(10,10,12,.94)';ctx.fillRect(x-width/2,y-height/2,width,height);ctx.fillStyle=label.textColor||label.color;
-      lines.forEach((line,index)=>ctx.fillText(line,x-width/2+8,y+(index-(lines.length-1)/2)*lineHeight));
+      // Draw one solid badge in light mode, without the theme adapter adding another layer.
+      const light=window.OmicsFMDisplay.ui.theme==='light',ink=light?g.canvas.getContext('2d'):ctx;
+      const purple=label.color==='#8B5CFF'||label.color==='#5100FD';
+      ink.fillStyle=light?(purple?'#5100FD':label.color):'rgba(10,10,12,.94)';
+      ink.fillRect(x-width/2,y-height/2,width,height);
+      ink.fillStyle=light?(purple?'#F4F4F5':'#0A0A0C'):(label.textColor||label.color);
+      lines.forEach((line,index)=>ink.fillText(line,x-width/2+8,y+(index-(lines.length-1)/2)*lineHeight));
       placed.push({text,x,y,width,height});
     }
     this._heroLabels=placed;
@@ -637,7 +645,12 @@ class Component extends DCLogic {
       sceneIndex: String(si + 1).padStart(2, '0') + ' / ' + String(this.SCENES.length).padStart(2, '0'),
       ...Object.fromEntries(['proteomics','bulk','single_cell'].flatMap(mod => [
         ['open_'+mod, this.state.openModality === mod],
-        ['toggle_'+mod, () => this.setState({openModality:this.state.openModality===mod?null:mod})],
+        ['toggle_'+mod, () => {
+          const opening=this.state.openModality!==mod;
+          this.setState({openModality:opening?mod:null},()=>{
+            if(opening&&window.OmicsFMDisplay.isMobile())requestAnimationFrame(()=>window.OmicsFMDisplay.scrollToEnd(document.getElementById('modality-'+mod)));
+          });
+        }],
       ])),
       revealModalities: e => { e.preventDefault(); window.OmicsFMDisplay.scrollToEnd(document.getElementById('modalities')); },
       sceneReadout: readout, sceneModality: this.MODNAME[sc.mod], sceneReadoutRest: readout.slice(this.MODNAME[sc.mod].length),

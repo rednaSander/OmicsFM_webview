@@ -34,6 +34,7 @@ const {loadComponent} = require('./verify-site.cjs');
         assert(h._heroLabels.every(p=>p.height===49),'Two-line annotation bounds must include both lines');
       }
       h._heroLabels.forEach((p,j) => {
+        assert(!g.highlighted.some(q=>Math.abs(g.X(q)-p.x)<p.width/2+6&&Math.abs(g.Y(q)-p.y)<p.height/2+6),`Label covers highlighted dots: ${w}, scene ${i+1}`);
         assert(p.x-p.width/2>=0&&p.x+p.width/2<=w&&p.y-p.height/2>=0&&p.y+p.height/2<=height);
         assert(!(p.x-p.width/2<cardWidth+12&&p.y+p.height/2>height-cardHeight-60),`Label overlaps card: ${w}, scene ${i+1}`);
         for (const q of h._heroLabels.slice(j+1)) assert(Math.abs(p.x-q.x)>=(p.width+q.width)/2||Math.abs(p.y-q.y)>=(p.height+q.height)/2);
