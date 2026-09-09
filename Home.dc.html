@@ -424,7 +424,7 @@ class Component extends DCLogic {
     const focused=n.pts.filter(p=>p[3]===community);
     for(const [a,b] of n.edges){const on=n.pts[a][3]===community&&n.pts[b][3]===community;ctx.strokeStyle=on?'rgba(244,244,245,.5)':'rgba(108,108,120,.16)';ctx.lineWidth=on?.8:.5;ctx.beginPath();ctx.moveTo(X(n.pts[a]),Y(n.pts[a]));ctx.lineTo(X(n.pts[b]),Y(n.pts[b]));ctx.stroke();}
     for(const p of n.pts){const on=p[3]===community;ctx.fillStyle=on?'#C0FE04':'#45454F';ctx.beginPath();ctx.arc(X(p),Y(p),on?2.1:1.1,0,Math.PI*2);ctx.fill();}
-    if(focused.length){const x=Math.max(42,Math.min(w-42,focused.reduce((sum,p)=>sum+X(p),0)/focused.length-60)),y=Math.max(16,Math.min(h-16,focused.reduce((sum,p)=>sum+Y(p),0)/focused.length));ctx.font='500 13px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#0A0A0C';ctx.fillRect(x-42,y-12,84,24);ctx.fillStyle='#C0FE04';ctx.fillText('RIBOSOME',x,y);}
+    if(focused.length){const x=Math.max(42,Math.min(w-42,focused.reduce((sum,p)=>sum+X(p),0)/focused.length-80)),y=Math.max(16,Math.min(h-16,focused.reduce((sum,p)=>sum+Y(p),0)/focused.length));ctx.font='500 13px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#0A0A0C';ctx.fillRect(x-42,y-12,84,24);ctx.fillStyle='#C0FE04';ctx.fillText('RIBOSOME',x,y);}
   }
   drawSamples(c) {
     const s=this.state.carousel?.samples.proteomics;if(!s)return;
